@@ -125,15 +125,6 @@ var app;
 //# sourceMappingURL=../common/common.module.js.map
 var app;
 (function (app) {
-    var ui;
-    (function (ui) {
-        angular.module("app.ui", []);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../ui/ui.module.js.map
-var app;
-(function (app) {
     var toDo;
     (function (toDo) {
         angular.module("app.toDo", [
@@ -200,6 +191,15 @@ var app;
 })(app || (app = {}));
 
 //# sourceMappingURL=../toDo/toDo.routes.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        angular.module("app.ui", []);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../ui/ui.module.js.map
 var app;
 (function (app) {
     var common;
@@ -298,92 +298,6 @@ var app;
 })(app || (app = {}));
 
 //# sourceMappingURL=../../common/directives/workSpinner.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        var AppHeader = (function () {
-            function AppHeader() {
-                this.templateUrl = "src/app/ui/appHeader/appHeader.html";
-                this.replace = true;
-                this.restrict = "E";
-                this.controller = "appHeaderController";
-                this.controllerAs = "appHeader";
-                this.scope = {
-                    title: "@"
-                };
-                this.link = function (scope, element, attributes) {
-                };
-            }
-            AppHeader.instance = function () {
-                return new AppHeader();
-            };
-            return AppHeader;
-        })();
-        ui.AppHeader = AppHeader;
-        angular.module("app.ui").directive("appHeader", [AppHeader.instance]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/appHeader/appHeader.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        var AppHeaderController = (function () {
-            function AppHeaderController() {
-            }
-            return AppHeaderController;
-        })();
-        ui.AppHeaderController = AppHeaderController;
-        angular.module("app.ui").controller("appHeaderController", [AppHeaderController]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/appHeader/appHeaderController.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        var AppFooter = (function () {
-            function AppFooter() {
-                this.templateUrl = "src/app/ui/appFooter/appFooter.html";
-                this.replace = true;
-                this.restrict = "E";
-                this.controller = "appFooterController";
-                this.controllerAs = "appFooter";
-                this.scope = {
-                    viewBag: "="
-                };
-                this.link = function (scope, element, attributes) {
-                };
-            }
-            AppFooter.instance = function () {
-                return new AppFooter();
-            };
-            return AppFooter;
-        })();
-        ui.AppFooter = AppFooter;
-        angular.module("app.ui").directive("appFooter", [AppFooter.instance]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/appFooter/appFooter.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        var AppFooterController = (function () {
-            function AppFooterController() {
-            }
-            return AppFooterController;
-        })();
-        ui.AppFooterController = AppFooterController;
-        angular.module("app.ui").controller("appFooterController", [AppFooterController]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/appFooter/appFooterController.js.map
 var app;
 (function (app) {
     var toDo;
@@ -611,3 +525,89 @@ var app;
 })(app || (app = {}));
 
 //# sourceMappingURL=../../toDo/services/toDoService.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        var AppFooter = (function () {
+            function AppFooter() {
+                this.templateUrl = "src/app/ui/appFooter/appFooter.html";
+                this.replace = true;
+                this.restrict = "E";
+                this.controller = "appFooterController";
+                this.controllerAs = "appFooter";
+                this.scope = {
+                    viewBag: "="
+                };
+                this.link = function (scope, element, attributes) {
+                };
+            }
+            AppFooter.instance = function () {
+                return new AppFooter();
+            };
+            return AppFooter;
+        })();
+        ui.AppFooter = AppFooter;
+        angular.module("app.ui").directive("appFooter", [AppFooter.instance]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appFooter/appFooter.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        var AppFooterController = (function () {
+            function AppFooterController() {
+            }
+            return AppFooterController;
+        })();
+        ui.AppFooterController = AppFooterController;
+        angular.module("app.ui").controller("appFooterController", [AppFooterController]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appFooter/appFooterController.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        var AppHeader = (function () {
+            function AppHeader() {
+                this.templateUrl = "src/app/ui/appHeader/appHeader.html";
+                this.replace = true;
+                this.restrict = "E";
+                this.controller = "appHeaderController";
+                this.controllerAs = "appHeader";
+                this.scope = {
+                    title: "@"
+                };
+                this.link = function (scope, element, attributes) {
+                };
+            }
+            AppHeader.instance = function () {
+                return new AppHeader();
+            };
+            return AppHeader;
+        })();
+        ui.AppHeader = AppHeader;
+        angular.module("app.ui").directive("appHeader", [AppHeader.instance]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appHeader/appHeader.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        var AppHeaderController = (function () {
+            function AppHeaderController() {
+            }
+            return AppHeaderController;
+        })();
+        ui.AppHeaderController = AppHeaderController;
+        angular.module("app.ui").controller("appHeaderController", [AppHeaderController]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appHeader/appHeaderController.js.map
