@@ -1,0 +1,11 @@
+﻿<div class="to-do-list-item">
+    
+    <h1>{{ toDoItem.name}}</h1>
+    
+    <p>{{ toDoItem.description }}</p>
+
+    <div>
+        <a ng-href="#/todo/detail/{{ toDoItem.id }}">Detail</a>&nbsp;&nbsp;|
+        <a ng-href="#/todo/edit/{{ toDoItem.id }}">Edit</a>
+    </div>
+</div>

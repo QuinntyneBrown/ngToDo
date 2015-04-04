@@ -1,0 +1,18 @@
+﻿<div class="to-do-form">
+    
+    <form novalidate>
+        
+        <div class="form-group">
+            <label>Name</label>
+            <input type="text" class="form-control" data-ng-model="toDoForm.toDo.name" />
+        </div>
+        
+        <div class="form-group">
+            <label>Description</label>
+            <input type="text" class="form-control" data-ng-model="toDoForm.toDo.description" />
+        </div>
+        
+        <button type="submit" class="btn btn-primary" data-ng-click="toDoForm.create()">create</button>
+
+    </form>
+</div>
