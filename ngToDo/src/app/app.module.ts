@@ -15,23 +15,25 @@
             "$httpProvider",
             "$locationProvider",
             "apiEndpointProvider",         
-            "templateMappingsProvider",
+            "featureComponentsMappingsProvider",
             config])
-        .controller("appController", ["$rootScope","$router",AppController]);
+        .controller("appController", ["$location","$rootScope","$router", "token",AppController]);
 
     function config($componentLoaderProvider:any,
         $httpProvider: ng.IHttpProvider,
         $locationProvider: ng.ILocationProvider,
         apiEndpointProvider: common.IApiEndpointProvider,
-        templateMappingsProvider:any) {
+        featureComponentsMappingsProvider: common.IFeatureComponentsMappingsProvider) {
 
-        var mappings = templateMappingsProvider.mappings;
+        var mappings = featureComponentsMappingsProvider.mappings;
 
         $componentLoaderProvider.setTemplateMapping((name) => {
             for (var i = 0; i < mappings.length; i++) {
-                if (name === mappings[i].componentName) {
-                    return 'src/app/' + mappings[i].moduleName + '/views/' + name + '.html';                        
-                }
+                for (var c = 0; c < mappings[i].components.length; c++) {
+                    if (name === mappings[i].components[c]) {
+                        return 'src/app/' + mappings[i].feature + '/views/' + name + '.html';
+                    }    
+                }                
             }            
         });
 

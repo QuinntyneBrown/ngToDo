@@ -79,8 +79,8 @@ var app;
             this.$rootScope = $rootScope;
             this.storage = storage;
             this.name = name;
-            this.onRouteChangeStart = function (event, newUrl) {
-                if (newUrl.originalPath == "/login") {
+            this.onRouteChangeStart = function (event, newState) {
+                if (newState.indexOf("/login") > 0) {
                     _this.data = null;
                     _this.set({ data: null });
                 }
@@ -97,8 +97,10 @@ var app;
                 return _this.data;
             };
             this.set = function (params) {
+                _this.data = params.data;
+                _this.storage.put({ name: _this.key, value: params.data });
             };
-            $rootScope.$on("$routeChangeStart", this.onRouteChangeStart);
+            $rootScope.$on("$locationChangeStart", this.onRouteChangeStart);
         }
         return SessionStorageProperty;
     })();
@@ -139,6 +141,16 @@ var app;
         return Storage;
     })();
     app.Storage = Storage;
+    var AuthenticatedController = (function () {
+        function AuthenticatedController(token) {
+            this.token = token;
+        }
+        AuthenticatedController.prototype.canActivate = function () {
+            return this.token.get();
+        };
+        return AuthenticatedController;
+    })();
+    app.AuthenticatedController = AuthenticatedController;
 })(app || (app = {}));
 
 //# sourceMappingURL=app.base.js.map

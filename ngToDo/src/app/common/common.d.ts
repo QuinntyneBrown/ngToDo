@@ -8,7 +8,7 @@
         baseUrl: string;
     }
 
-    export interface IApiEndpointProvider {
+    export interface IApiEndpointProvider extends ng.IServiceProvider {
         configure(baseUrl: string): void;
     }
 
@@ -18,5 +18,14 @@
 
     export interface IWorkSpinnerScope extends ng.IScope {
         requestCount: number;
+    }
+
+    export interface IFeatureComponentsMapping {
+        feature: string;
+        components: string[]
+    }
+
+    export interface IFeatureComponentsMappingsProvider extends ng.IServiceProvider {
+        mappings: IFeatureComponentsMapping[];
     }
 } 

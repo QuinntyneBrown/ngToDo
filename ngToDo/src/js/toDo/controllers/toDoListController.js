@@ -1,16 +1,25 @@
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
 var app;
 (function (app) {
     var toDo;
     (function (toDo) {
         "use strict";
-        var ToDoListController = (function () {
-            function ToDoListController($q, toDoService) {
+        var ToDoListController = (function (_super) {
+            __extends(ToDoListController, _super);
+            function ToDoListController($q, toDoService, token) {
                 var _this = this;
+                _super.call(this, token);
                 this.$q = $q;
                 this.toDoService = toDoService;
-                this.canActivate = function () {
+                this.token = token;
+                this.activate = function () {
                     var deferred = _this.$q.defer();
-                    _this.toDoService.getRecent().then(function (results) {
+                    _this.toDoService.getAll().then(function (results) {
                         _this.toDos = results;
                         deferred.resolve(true);
                     }).catch(function (Error) {
@@ -20,8 +29,8 @@ var app;
                 };
             }
             return ToDoListController;
-        })();
-        angular.module("app.toDo").controller("ToDoListController", ["$q", "toDoService", ToDoListController]);
+        })(app.AuthenticatedController);
+        angular.module("app.toDo").controller("ToDoListController", ["$q", "toDoService", "token", ToDoListController]);
     })(toDo = app.toDo || (app.toDo = {}));
 })(app || (app = {}));
 

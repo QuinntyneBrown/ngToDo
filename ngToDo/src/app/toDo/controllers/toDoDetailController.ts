@@ -9,7 +9,7 @@
             
         }
 
-        public canActivate = () => {
+        public activate = () => {
 
             var deferred = this.$q.defer();
 

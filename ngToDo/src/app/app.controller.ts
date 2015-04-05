@@ -1,9 +1,16 @@
 ﻿module app {
     
     export class AppController {
-        constructor($rootScope:ng.IRootScopeService,$router:any) {
+        constructor(private $location: ng.ILocationService, $rootScope: ng.IRootScopeService, $router: any, token: ISessionStorageProperty) {
+
+            $rootScope.$on("$locationChangeStart",(event: ng.IAngularEvent, newState: string, oldState: string) => {
+                if (!token.get() && newState.indexOf('/login') < 0) {
+                    $location.path("/login");
+                }
+            });
+
             $router.config([
-                { path: '/', component: 'toDoRecent' },
+                { path: '/', component: 'login' },
                 { path: '/toDo/recent', component: 'toDoRecent' },
                 { path: '/toDo/list', component: 'toDoList' },
                 { path: '/toDo/detail/:toDoId', component: 'toDoMasterDetail' },

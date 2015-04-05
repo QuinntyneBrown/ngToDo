@@ -11,15 +11,17 @@ var app;
         "$httpProvider",
         "$locationProvider",
         "apiEndpointProvider",
-        "templateMappingsProvider",
+        "featureComponentsMappingsProvider",
         config
-    ]).controller("appController", ["$rootScope", "$router", app.AppController]);
-    function config($componentLoaderProvider, $httpProvider, $locationProvider, apiEndpointProvider, templateMappingsProvider) {
-        var mappings = templateMappingsProvider.mappings;
+    ]).controller("appController", ["$location", "$rootScope", "$router", "token", app.AppController]);
+    function config($componentLoaderProvider, $httpProvider, $locationProvider, apiEndpointProvider, featureComponentsMappingsProvider) {
+        var mappings = featureComponentsMappingsProvider.mappings;
         $componentLoaderProvider.setTemplateMapping(function (name) {
             for (var i = 0; i < mappings.length; i++) {
-                if (name === mappings[i].componentName) {
-                    return 'src/app/' + mappings[i].moduleName + '/views/' + name + '.html';
+                for (var c = 0; c < mappings[i].components.length; c++) {
+                    if (name === mappings[i].components[c]) {
+                        return 'src/app/' + mappings[i].feature + '/views/' + name + '.html';
+                    }
                 }
             }
         });

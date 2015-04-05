@@ -2,14 +2,14 @@
 
     "use strict";
 
-    class ToDoFormController implements IToDoFormController {
+    class ToDoFormController extends AuthenticatedController {
 
-        constructor(private $q: ng.IQService, private toDoService: IToDoService, private $routeParams) {
-
+        constructor(private $q: ng.IQService, private toDoService: IToDoService, private $routeParams, public token: ISessionStorageProperty ) {
+            super(token);
 
         }
 
-        public canActivate = () => {
+        public activate = () => {
 
             var deferred = this.$q.defer();
 
@@ -37,5 +37,5 @@
     }
 
     angular.module("app.toDo")
-        .controller("ToDoFormController", ["$q", "toDoService","$routeParams", ToDoFormController]);
+        .controller("ToDoFormController", ["$q", "toDoService","$routeParams", "token", ToDoFormController]);
 } 

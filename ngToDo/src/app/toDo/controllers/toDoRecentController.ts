@@ -2,13 +2,14 @@
 
     "use strict";
 
-    class ToDoRecentController  {
+    class ToDoRecentController extends AuthenticatedController  {
 
-        constructor(private $q: ng.IQService, private toDoService: IToDoService) {
-
+        constructor(private $q: ng.IQService, private toDoService: IToDoService, public token: ISessionStorageProperty) {
+            super(token);
         }
 
-        public canActivate = () => {
+
+        public activate = () => {
 
             var deferred = this.$q.defer();
 
@@ -32,5 +33,5 @@
     }
 
     angular.module("app.toDo")
-        .controller("ToDoRecentController", ["$q","toDoService",ToDoRecentController]);
+        .controller("ToDoRecentController", ["$q","toDoService","token", ToDoRecentController]);
 } 

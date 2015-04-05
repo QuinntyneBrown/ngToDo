@@ -9,7 +9,7 @@ var app;
                 this.$q = $q;
                 this.toDoService = toDoService;
                 this.$routeParams = $routeParams;
-                this.canActivate = function () {
+                this.activate = function () {
                     var deferred = _this.$q.defer();
                     _this.toDoService.getById(_this.$routeParams.toDoId).then(function (results) {
                         _this.toDo = results;

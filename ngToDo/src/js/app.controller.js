@@ -1,9 +1,15 @@
 var app;
 (function (app) {
     var AppController = (function () {
-        function AppController($rootScope, $router) {
+        function AppController($location, $rootScope, $router, token) {
+            this.$location = $location;
+            $rootScope.$on("$locationChangeStart", function (event, newState, oldState) {
+                if (!token.get() && newState.indexOf('/login') < 0) {
+                    $location.path("/login");
+                }
+            });
             $router.config([
-                { path: '/', component: 'toDoRecent' },
+                { path: '/', component: 'login' },
                 { path: '/toDo/recent', component: 'toDoRecent' },
                 { path: '/toDo/list', component: 'toDoList' },
                 { path: '/toDo/detail/:toDoId', component: 'toDoMasterDetail' },

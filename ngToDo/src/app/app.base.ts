@@ -104,11 +104,11 @@
 
         constructor(private $rootScope: ng.IRootScopeService, private storage: any, private name: string) {
 
-            $rootScope.$on("$routeChangeStart", this.onRouteChangeStart);
+            $rootScope.$on("$locationChangeStart", this.onRouteChangeStart);
         }
 
-        public onRouteChangeStart = (event: ng.IAngularEvent, newUrl: any) => {
-            if (newUrl.originalPath == "/login") {
+        public onRouteChangeStart = (event: ng.IAngularEvent, newState: string) => {
+            if (newState.indexOf("/login") > 0) {
                 this.data = null;
                 this.set({ data: null });
             }
@@ -129,7 +129,8 @@
         }
 
         public set = (params: any) => {
-
+            this.data = params.data;
+            this.storage.put({ name: this.key, value: params.data });
         }
 
         private data: any;
@@ -175,5 +176,19 @@
             localStorage.setItem(this.storageId, JSON.stringify(items));
         }
 
+    }
+
+
+    export class AuthenticatedController {
+
+        constructor(public token: ISessionStorageProperty) {
+            
+        }
+
+        public canActivate() {
+
+            return this.token.get();
+
+        }
     }
 }

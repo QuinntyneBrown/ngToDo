@@ -390,15 +390,17 @@
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\app\common\common.module.ts" />
     <TypeScriptCompile Include="src\app\common\services\apiEndpointProvider.ts" />
+    <TypeScriptCompile Include="src\app\common\services\formEncode.ts" />
     <TypeScriptCompile Include="src\app\common\services\requestCounter.ts" />
     <TypeScriptCompile Include="src\app\common\directives\workSpinner.ts" />
     <TypeScriptCompile Include="src\app\common\services\storage.ts" />
-    <TypeScriptCompile Include="src\app\common\services\templateMappingsProvider.ts" />
+    <TypeScriptCompile Include="src\app\common\services\featureComponentsMappingsProvider.ts" />
     <TypeScriptCompile Include="src\app\security\controllers\loginController.ts" />
     <TypeScriptCompile Include="src\app\security\directives\loginForm.ts" />
     <TypeScriptCompile Include="src\app\security\directives\loginFormController.ts">
       <DependentUpon>loginForm.ts</DependentUpon>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="src\app\security\security.d.ts" />
     <TypeScriptCompile Include="src\app\security\security.module.ts" />
     <TypeScriptCompile Include="src\app\security\services\authorizationInterceptor.ts" />
     <TypeScriptCompile Include="src\app\security\services\currentUser.ts" />

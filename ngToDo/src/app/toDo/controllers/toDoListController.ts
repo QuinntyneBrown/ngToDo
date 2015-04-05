@@ -2,17 +2,17 @@
 
     "use strict";
 
-    class ToDoListController implements IToDoListController {
+    class ToDoListController extends  AuthenticatedController {
 
-        constructor(private $q: ng.IQService, private toDoService: IToDoService) {
-
+        constructor(private $q: ng.IQService, private toDoService: IToDoService, public token: ISessionStorageProperty) {
+            super(token);
         }
 
-        public canActivate = () => {
+        public activate = () => {
 
             var deferred = this.$q.defer();
 
-            this.toDoService.getRecent().then((results) => {
+            this.toDoService.getAll().then((results) => {
 
                 this.toDos = results;
 
@@ -32,5 +32,5 @@
     }
 
     angular.module("app.toDo")
-        .controller("ToDoListController", ["$q", "toDoService", ToDoListController]);
+        .controller("ToDoListController", ["$q", "toDoService","token", ToDoListController]);
 } 

@@ -5,9 +5,12 @@ var app;
         angular.module("app.security", [
             "app.common",
             "app.ui"
-        ]).config(["templateMappingsProvider", config]);
-        function config(templateMappingsProvider) {
-            templateMappingsProvider.push({ moduleName: "security", componentName: "login" });
+        ]).config(["featureComponentsMappingsProvider", config]);
+        function config(featureComponentsMappingsProvider) {
+            featureComponentsMappingsProvider.mappings.push({
+                feature: "security",
+                components: ["login"]
+            });
         }
     })(security = app.security || (app.security = {}));
 })(app || (app = {}));
