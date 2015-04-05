@@ -289,6 +289,37 @@ var app;
     var common;
     (function (common) {
         "use strict";
+        var WorkSpinner = (function () {
+            function WorkSpinner(requestCounter) {
+                var _this = this;
+                this.requestCounter = requestCounter;
+                this.restrict = "E";
+                this.replace = true;
+                this.scope = {};
+                this.template = "<div ng-show='requestCount' class='work-spinner'><i class='fa fa-spinner fa-spin fade'></i></div>";
+                this.link = function (scope) {
+                    scope.$watch(function () {
+                        return _this.requestCounter.getRequestCount();
+                    }, function (requestCount) {
+                        scope.requestCount = requestCount;
+                    });
+                };
+            }
+            WorkSpinner.instance = function (requestCounter) {
+                return new WorkSpinner(requestCounter);
+            };
+            return WorkSpinner;
+        })();
+        angular.module("app.common").directive("workSpinner", ["requestCounter", WorkSpinner.instance]);
+    })(common = app.common || (app.common = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../common/directives/workSpinner.js.map
+var app;
+(function (app) {
+    var common;
+    (function (common) {
+        "use strict";
         var ApiEndpointProvider = (function () {
             function ApiEndpointProvider() {
                 this.config = {
@@ -603,6 +634,43 @@ var app;
 })(app || (app = {}));
 
 //# sourceMappingURL=../../toDo/controllers/toDoRecentController.js.map
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var app;
+(function (app) {
+    var toDo;
+    (function (toDo) {
+        "use strict";
+        var toDoService = (function (_super) {
+            __extends(toDoService, _super);
+            function toDoService($http, $cacheFactory, $q, apiEndpoint) {
+                var _this = this;
+                _super.call(this, $http, $cacheFactory, $q, apiEndpoint.baseUrl + "todo/");
+                this.$http = $http;
+                this.$cacheFactory = $cacheFactory;
+                this.$q = $q;
+                this.apiEndpoint = apiEndpoint;
+                this.getRecent = function () {
+                    var deferred = _this.$q.defer();
+                    _this.$http({ method: "GET", url: _this.baseUri + "getRecent" }).then(function (results) {
+                        deferred.resolve(results.data);
+                    }).catch(function (error) {
+                        deferred.reject(error);
+                    });
+                    return deferred.promise;
+                };
+            }
+            return toDoService;
+        })(app.DataService);
+        angular.module("app.toDo").service("toDoService", ["$http", "$cacheFactory", "$q", "apiEndpoint", toDoService]);
+    })(toDo = app.toDo || (app.toDo = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../toDo/services/toDoService.js.map
 var app;
 (function (app) {
     var toDo;
@@ -686,43 +754,6 @@ var app;
 })(app || (app = {}));
 
 //# sourceMappingURL=../../toDo/directives/toDoItemsController.js.map
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-var app;
-(function (app) {
-    var toDo;
-    (function (toDo) {
-        "use strict";
-        var toDoService = (function (_super) {
-            __extends(toDoService, _super);
-            function toDoService($http, $cacheFactory, $q, apiEndpoint) {
-                var _this = this;
-                _super.call(this, $http, $cacheFactory, $q, apiEndpoint.baseUrl + "todo/");
-                this.$http = $http;
-                this.$cacheFactory = $cacheFactory;
-                this.$q = $q;
-                this.apiEndpoint = apiEndpoint;
-                this.getRecent = function () {
-                    var deferred = _this.$q.defer();
-                    _this.$http({ method: "GET", url: _this.baseUri + "getRecent" }).then(function (results) {
-                        deferred.resolve(results.data);
-                    }).catch(function (error) {
-                        deferred.reject(error);
-                    });
-                    return deferred.promise;
-                };
-            }
-            return toDoService;
-        })(app.DataService);
-        angular.module("app.toDo").service("toDoService", ["$http", "$cacheFactory", "$q", "apiEndpoint", toDoService]);
-    })(toDo = app.toDo || (app.toDo = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../toDo/services/toDoService.js.map
 var app;
 (function (app) {
     var ui;
@@ -812,34 +843,3 @@ var app;
 
 
 //# sourceMappingURL=../../ui/hamburgerButton/hamburgerButton.js.map
-var app;
-(function (app) {
-    var common;
-    (function (common) {
-        "use strict";
-        var WorkSpinner = (function () {
-            function WorkSpinner(requestCounter) {
-                var _this = this;
-                this.requestCounter = requestCounter;
-                this.restrict = "E";
-                this.replace = true;
-                this.scope = {};
-                this.template = "<div ng-show='requestCount' class='work-spinner'><i class='fa fa-spinner fa-spin fade'></i></div>";
-                this.link = function (scope) {
-                    scope.$watch(function () {
-                        return _this.requestCounter.getRequestCount();
-                    }, function (requestCount) {
-                        scope.requestCount = requestCount;
-                    });
-                };
-            }
-            WorkSpinner.instance = function (requestCounter) {
-                return new WorkSpinner(requestCounter);
-            };
-            return WorkSpinner;
-        })();
-        angular.module("app.common").directive("workSpinner", ["requestCounter", WorkSpinner.instance]);
-    })(common = app.common || (app.common = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../common/directives/workSpinner.js.map
