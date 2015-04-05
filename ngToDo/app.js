@@ -145,14 +145,15 @@ var app;
 var app;
 (function (app) {
     var AppController = (function () {
-        function AppController($router) {
+        function AppController($rootScope, $router) {
             $router.config([
                 { path: '/', component: 'toDoRecent' },
                 { path: '/toDo/recent', component: 'toDoRecent' },
                 { path: '/toDo/list', component: 'toDoList' },
                 { path: '/toDo/detail/:toDoId', component: 'toDoMasterDetail' },
                 { path: '/toDo/create', component: 'toDoForm' },
-                { path: '/toDo/edit/:toDoId', component: 'toDoForm' }
+                { path: '/toDo/edit/:toDoId', component: 'toDoForm' },
+                { path: '/login', component: 'login' }
             ]);
         }
         return AppController;
@@ -174,11 +175,17 @@ var app;
         "$httpProvider",
         "$locationProvider",
         "apiEndpointProvider",
+        "templateMappingsProvider",
         config
-    ]).controller("appController", ["$router", app.AppController]);
-    function config($componentLoaderProvider, $httpProvider, $locationProvider, apiEndpointProvider) {
+    ]).controller("appController", ["$rootScope", "$router", app.AppController]);
+    function config($componentLoaderProvider, $httpProvider, $locationProvider, apiEndpointProvider, templateMappingsProvider) {
+        var mappings = templateMappingsProvider.mappings;
         $componentLoaderProvider.setTemplateMapping(function (name) {
-            return 'src/app/toDo/views/' + name + '.html';
+            for (var i = 0; i < mappings.length; i++) {
+                if (name === mappings[i].componentName) {
+                    return 'src/app/' + mappings[i].moduleName + '/views/' + name + '.html';
+                }
+            }
         });
         $httpProvider.interceptors.push("authorizationInterceptor");
         $httpProvider.interceptors.push("requestCounter");
@@ -203,7 +210,10 @@ var app;
         angular.module("app.security", [
             "app.common",
             "app.ui"
-        ]);
+        ]).config(["templateMappingsProvider", config]);
+        function config(templateMappingsProvider) {
+            templateMappingsProvider.push({ moduleName: "security", componentName: "login" });
+        }
     })(security = app.security || (app.security = {}));
 })(app || (app = {}));
 
@@ -224,7 +234,13 @@ var app;
         angular.module("app.toDo", [
             "app.common",
             "app.ui"
-        ]);
+        ]).config(["templateMappingsProvider", config]);
+        function config(templateMappingsProvider) {
+            templateMappingsProvider.push({ moduleName: "toDo", componentName: "toDoRecent" });
+            templateMappingsProvider.push({ moduleName: "toDo", componentName: "toDoForm" });
+            templateMappingsProvider.push({ moduleName: "toDo", componentName: "toDoList" });
+            templateMappingsProvider.push({ moduleName: "toDo", componentName: "toDoDetail" });
+        }
     })(toDo = app.toDo || (app.toDo = {}));
 })(app || (app = {}));
 
@@ -264,23 +280,16 @@ var app;
 (function (app) {
     var security;
     (function (security) {
-        var LoginForm = (function () {
-            function LoginForm() {
+        var LoginController = (function () {
+            function LoginController() {
             }
-            LoginForm.instance = function () {
-                return new LoginForm();
-            };
-            return LoginForm;
+            return LoginController;
         })();
-        security.LoginForm = LoginForm;
-        angular.module("app.security").directive("loginForm", [LoginForm.instance]);
+        angular.module("app.security").controller("LoginController", [LoginController]);
     })(security = app.security || (app.security = {}));
 })(app || (app = {}));
 
-//# sourceMappingURL=../../security/directives/loginForm.js.map
-
-
-//# sourceMappingURL=../../security/directives/loginFormController.js.map
+//# sourceMappingURL=../../security/controllers/loginController.js.map
 var app;
 (function (app) {
     var common;
@@ -373,18 +382,48 @@ var app;
 //# sourceMappingURL=../../common/services/storage.js.map
 var app;
 (function (app) {
+    var common;
+    (function (common) {
+        "use strict";
+        var TemplateMappingsProvider = (function () {
+            function TemplateMappingsProvider() {
+                this.mappings = [];
+            }
+            TemplateMappingsProvider.prototype.push = function (map) {
+                this.mappings.push(map);
+            };
+            TemplateMappingsProvider.prototype.$get = function () {
+                return this.mappings;
+            };
+            return TemplateMappingsProvider;
+        })();
+        common.TemplateMappingsProvider = TemplateMappingsProvider;
+        angular.module("app.common").provider("templateMappings", TemplateMappingsProvider);
+    })(common = app.common || (app.common = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../common/services/templateMappingsProvider.js.map
+var app;
+(function (app) {
     var security;
     (function (security) {
-        var LoginController = (function () {
-            function LoginController() {
+        var LoginForm = (function () {
+            function LoginForm() {
             }
-            return LoginController;
+            LoginForm.instance = function () {
+                return new LoginForm();
+            };
+            return LoginForm;
         })();
-        angular.module("app.security").controller("LoginController", [LoginController]);
+        security.LoginForm = LoginForm;
+        angular.module("app.security").directive("loginForm", [LoginForm.instance]);
     })(security = app.security || (app.security = {}));
 })(app || (app = {}));
 
-//# sourceMappingURL=../../security/controllers/loginController.js.map
+//# sourceMappingURL=../../security/directives/loginForm.js.map
+
+
+//# sourceMappingURL=../../security/directives/loginFormController.js.map
 var app;
 (function (app) {
     var security;

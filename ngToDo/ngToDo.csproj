@@ -393,6 +393,7 @@
     <TypeScriptCompile Include="src\app\common\services\requestCounter.ts" />
     <TypeScriptCompile Include="src\app\common\directives\workSpinner.ts" />
     <TypeScriptCompile Include="src\app\common\services\storage.ts" />
+    <TypeScriptCompile Include="src\app\common\services\templateMappingsProvider.ts" />
     <TypeScriptCompile Include="src\app\security\controllers\loginController.ts" />
     <TypeScriptCompile Include="src\app\security\directives\loginForm.ts" />
     <TypeScriptCompile Include="src\app\security\directives\loginFormController.ts">

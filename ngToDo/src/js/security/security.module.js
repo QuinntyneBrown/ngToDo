@@ -5,7 +5,10 @@ var app;
         angular.module("app.security", [
             "app.common",
             "app.ui"
-        ]);
+        ]).config(["templateMappingsProvider", config]);
+        function config(templateMappingsProvider) {
+            templateMappingsProvider.push({ moduleName: "security", componentName: "login" });
+        }
     })(security = app.security || (app.security = {}));
 })(app || (app = {}));
 

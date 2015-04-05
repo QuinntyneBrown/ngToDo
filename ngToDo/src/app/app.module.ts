@@ -15,16 +15,24 @@
             "$httpProvider",
             "$locationProvider",
             "apiEndpointProvider",         
+            "templateMappingsProvider",
             config])
-        .controller("appController", ["$router",AppController]);
+        .controller("appController", ["$rootScope","$router",AppController]);
 
     function config($componentLoaderProvider:any,
         $httpProvider: ng.IHttpProvider,
         $locationProvider: ng.ILocationProvider,
-        apiEndpointProvider: common.IApiEndpointProvider) {
+        apiEndpointProvider: common.IApiEndpointProvider,
+        templateMappingsProvider:any) {
+
+        var mappings = templateMappingsProvider.mappings;
 
         $componentLoaderProvider.setTemplateMapping((name) => {
-            return 'src/app/toDo/views/' + name + '.html';
+            for (var i = 0; i < mappings.length; i++) {
+                if (name === mappings[i].componentName) {
+                    return 'src/app/' + mappings[i].moduleName + '/views/' + name + '.html';                        
+                }
+            }            
         });
 
         $httpProvider.interceptors.push("authorizationInterceptor");

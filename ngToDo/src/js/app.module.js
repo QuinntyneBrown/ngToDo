@@ -11,11 +11,17 @@ var app;
         "$httpProvider",
         "$locationProvider",
         "apiEndpointProvider",
+        "templateMappingsProvider",
         config
-    ]).controller("appController", ["$router", app.AppController]);
-    function config($componentLoaderProvider, $httpProvider, $locationProvider, apiEndpointProvider) {
+    ]).controller("appController", ["$rootScope", "$router", app.AppController]);
+    function config($componentLoaderProvider, $httpProvider, $locationProvider, apiEndpointProvider, templateMappingsProvider) {
+        var mappings = templateMappingsProvider.mappings;
         $componentLoaderProvider.setTemplateMapping(function (name) {
-            return 'src/app/toDo/views/' + name + '.html';
+            for (var i = 0; i < mappings.length; i++) {
+                if (name === mappings[i].componentName) {
+                    return 'src/app/' + mappings[i].moduleName + '/views/' + name + '.html';
+                }
+            }
         });
         $httpProvider.interceptors.push("authorizationInterceptor");
         $httpProvider.interceptors.push("requestCounter");
