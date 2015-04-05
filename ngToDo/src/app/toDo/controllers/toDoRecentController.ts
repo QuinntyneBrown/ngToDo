@@ -28,7 +28,7 @@
             
         }
 
-        public toDos:any;
+        public toDos:IToDo[];
     }
 
     angular.module("app.toDo")

@@ -113,6 +113,7 @@
       <HintPath>..\packages\SendGrid.SmtpApi.1.2.1\lib\net40\SendGrid.SmtpApi.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.IdentityModel" />
     <Reference Include="System.IdentityModel.Tokens.Jwt">
       <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.4.0.2.202250711\lib\net45\System.IdentityModel.Tokens.Jwt.dll</HintPath>
       <Private>True</Private>
@@ -210,6 +211,7 @@
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.eot" />
     <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="app.less" />
     <None Include="scripts\jquery-1.9.0.intellisense.js" />
     <Content Include="scripts\jquery-1.9.0.js" />
     <Content Include="scripts\jquery-1.9.0.min.js" />
@@ -229,23 +231,46 @@
     <Content Include="scripts\angular-sanitize.min.js.map" />
     <Content Include="scripts\angular.min.js.map" />
     <Content Include="scripts\jquery-1.9.0.min.map" />
+    <Content Include="src\app\app.css">
+      <DependentUpon>app.less</DependentUpon>
+    </Content>
+    <Content Include="src\app\app.min.css">
+      <DependentUpon>app.css</DependentUpon>
+    </Content>
+    <Content Include="src\app\common\directives\workSpinner.css">
+      <DependentUpon>workSpinner.less</DependentUpon>
+    </Content>
+    <Content Include="src\app\common\directives\workSpinner.min.css">
+      <DependentUpon>workSpinner.css</DependentUpon>
+    </Content>
+    <Content Include="src\app\security\directives\loginForm.html">
+      <DependentUpon>loginForm.ts</DependentUpon>
+    </Content>
+    <Content Include="src\app\security\views\login.html" />
     <Content Include="src\app\toDo\directives\toDoItem.html">
       <DependentUpon>toDoItem.ts</DependentUpon>
     </Content>
     <Content Include="src\app\toDo\directives\toDoItems.html">
       <DependentUpon>toDoItems.ts</DependentUpon>
     </Content>
-    <Content Include="src\app\toDo\views\about.html" />
-    <Content Include="src\app\toDo\views\detail.html" />
+    <Content Include="src\app\toDo\views\toDoAbout.html" />
+    <Content Include="src\app\toDo\views\toDoDetail.html" />
     <Content Include="src\app\toDo\views\toDoRecent.html" />
+    <Content Include="src\app\ui\appFooter\appFooter.css">
+      <DependentUpon>appFooter.less</DependentUpon>
+    </Content>
     <Content Include="src\app\ui\appFooter\appFooter.html" />
-    <Content Include="src\app\ui\appFooter\appFooterController.unit.js" />
+    <Content Include="src\app\ui\appFooter\appFooter.min.css">
+      <DependentUpon>appFooter.css</DependentUpon>
+    </Content>
+    <Content Include="src\app\ui\appHeader\appHeader.css">
+      <DependentUpon>appHeader.less</DependentUpon>
+    </Content>
     <Content Include="src\app\ui\appHeader\appHeader.less" />
     <Content Include="src\app\ui\appFooter\appFooter.less" />
     <Content Include="src\app\toDo\toDo.less">
       <DependentUpon>toDo.module.ts</DependentUpon>
     </Content>
-    <Content Include="src\app\ui\appFooter\appFooter.unit.js" />
     <Content Include="src\app\toDo\directives\toDoItem.less">
       <DependentUpon>toDoItem.ts</DependentUpon>
     </Content>
@@ -256,7 +281,24 @@
       <DependentUpon>workSpinner.ts</DependentUpon>
     </Content>
     <Content Include="scripts\jquery-2.1.3.min.map" />
-    <Content Include="src\app\app.less" />
+    <Content Include="src\app\app.less">
+      <DependentUpon>app.module.ts</DependentUpon>
+    </Content>
+    <Content Include="src\app\ui\appFooter\appFooter.css.map">
+      <DependentUpon>appFooter.css</DependentUpon>
+    </Content>
+    <Content Include="src\app\ui\appHeader\appHeader.css.map">
+      <DependentUpon>appHeader.css</DependentUpon>
+    </Content>
+    <Content Include="src\app\app.css.map">
+      <DependentUpon>app.css</DependentUpon>
+    </Content>
+    <Content Include="src\app\common\directives\workSpinner.css.map">
+      <DependentUpon>workSpinner.css</DependentUpon>
+    </Content>
+    <Content Include="src\app\security\directives\loginForm.less">
+      <DependentUpon>loginForm.ts</DependentUpon>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -272,11 +314,12 @@
     <Content Include="Protractor\specs\completeToDoSpecs.js" />
     <Content Include="Protractor\specs\startToDoSpecs.js" />
     <Content Include="Protractor\specs\toDoListSpects.js" />
-    <Content Include="src\app\toDo\views\form.html" />
-    <Content Include="src\app\toDo\views\list.html" />
+    <Content Include="src\app\toDo\views\toDoForm.html" />
+    <Content Include="src\app\toDo\views\toDoList.html" />
     <Content Include="src\app\ui\appHeader\appHeader.html" />
-    <Content Include="src\app\ui\appHeader\appHeader.unit.js" />
-    <Content Include="src\app\ui\appHeader\appHeaderController.unit.js" />
+    <Content Include="src\app\ui\appHeader\appHeader.min.css">
+      <DependentUpon>appHeader.css</DependentUpon>
+    </Content>
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -284,11 +327,31 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Server\Api\IdentityController.cs" />
     <Compile Include="Server\Config\AppConfiguration.cs" />
+    <Compile Include="Server\Config\CryptoConfiguration.cs" />
+    <Compile Include="Server\Config\SecurityConfiguration.cs" />
     <Compile Include="Server\Data\EF\EFRepository.cs" />
-    <Compile Include="Server\Data\EF\IToDoRepository.cs" />
     <Compile Include="Server\Data\EF\ToDoContext.cs" />
-    <Compile Include="Server\Data\IToDoRepository.cs" />
+    <Compile Include="Server\Data\EF\UserRepository.cs" />
+    <Compile Include="Server\Data\IUserRepository.cs" />
+    <Compile Include="Server\Data\MSExcel\BaseRepository.cs" />
+    <Compile Include="Server\Data\MSExcel\UserRepository.cs" />
+    <Compile Include="Server\Dtos\SignInDto.cs" />
+    <Compile Include="Server\Dtos\TokenDto.cs" />
+    <Compile Include="Server\Models\IEntity.cs" />
+    <Compile Include="Server\Models\User.cs" />
+    <Compile Include="Server\OAuth2\JwtOptions.cs" />
+    <Compile Include="Server\OAuth2\JwtWriterFormat.cs" />
+    <Compile Include="Server\OAuth2\OAuthOptions.cs" />
+    <Compile Include="Server\OAuth2\OAuthProvider.cs" />
+    <Compile Include="Server\Dtos\RegistrationRequestDto.cs" />
+    <Compile Include="Server\Services\Contracts\IEncryptionService.cs" />
+    <Compile Include="Server\Services\Contracts\IIdentityService.cs" />
+    <Compile Include="Server\Services\Contracts\ISecurityService.cs" />
+    <Compile Include="Server\Services\EncryptionService.cs" />
+    <Compile Include="Server\Services\IdentityService.cs" />
+    <Compile Include="Server\Services\SecurityService.cs" />
     <Compile Include="Server\StartUp\OwinStartup.cs" />
     <Compile Include="Server\StartUp\UnityConfig.cs" />
     <Compile Include="Server\StartUp\WebApiStartUp.cs" />
@@ -311,9 +374,15 @@
     <TypeScriptCompile Include="scripts\typings\angularjs\angular.d.ts" />
     <TypeScriptCompile Include="scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="scripts\typings\moment\moment.d.ts" />
-    <TypeScriptCompile Include="src\app\app.base.ts" />
-    <TypeScriptCompile Include="src\app\app.controller.ts" />
-    <TypeScriptCompile Include="src\app\app.d.ts" />
+    <TypeScriptCompile Include="src\app\app.base.ts">
+      <DependentUpon>app.module.ts</DependentUpon>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\app\app.controller.ts">
+      <DependentUpon>app.module.ts</DependentUpon>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\app\app.d.ts">
+      <DependentUpon>app.module.ts</DependentUpon>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="src\app\app.module.ts" />
     <TypeScriptCompile Include="src\app\common\common.d.ts">
       <DependentUpon>common.module.ts</DependentUpon>
@@ -322,6 +391,17 @@
     <TypeScriptCompile Include="src\app\common\services\apiEndpointProvider.ts" />
     <TypeScriptCompile Include="src\app\common\services\requestCounter.ts" />
     <TypeScriptCompile Include="src\app\common\directives\workSpinner.ts" />
+    <TypeScriptCompile Include="src\app\common\services\storage.ts" />
+    <TypeScriptCompile Include="src\app\security\controllers\loginController.ts" />
+    <TypeScriptCompile Include="src\app\security\directives\loginForm.ts" />
+    <TypeScriptCompile Include="src\app\security\directives\loginFormController.ts">
+      <DependentUpon>loginForm.ts</DependentUpon>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\app\security\security.module.ts" />
+    <TypeScriptCompile Include="src\app\security\services\authorizationInterceptor.ts" />
+    <TypeScriptCompile Include="src\app\security\services\currentUser.ts" />
+    <TypeScriptCompile Include="src\app\security\services\securityService.ts" />
+    <TypeScriptCompile Include="src\app\security\services\token.ts" />
     <TypeScriptCompile Include="src\app\toDo\controllers\toDoDetailController.ts" />
     <TypeScriptCompile Include="src\app\toDo\controllers\toDoFormController.ts" />
     <TypeScriptCompile Include="src\app\toDo\controllers\toDoRecentController.ts" />
@@ -346,6 +426,7 @@
     <TypeScriptCompile Include="src\app\ui\appFooter\appFooterController.ts" />
     <TypeScriptCompile Include="src\app\ui\appHeader\appHeader.ts" />
     <TypeScriptCompile Include="src\app\ui\appHeader\appHeaderController.ts" />
+    <TypeScriptCompile Include="src\app\ui\hamburgerButton\hamburgerButton.ts" />
     <TypeScriptCompile Include="src\app\ui\ui.module.ts" />
   </ItemGroup>
   <ItemGroup>
@@ -377,7 +458,9 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="src\app\ui\modal\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

@@ -14,7 +14,7 @@ namespace ngToDo.Server.Data.EF
         }
 
         public DbSet<ToDo> ToDos { get; set; }
-
+        public DbSet<User> Users { get; set; }
         
     }
 }

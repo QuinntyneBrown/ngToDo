@@ -4,18 +4,34 @@
 
     class ToDoDetailController implements IToDoDetailController {
         
-        constructor(public toDoService: IToDoService, public $routeParams) {
-            toDoService.getById($routeParams.toDoId).then((toDo) => { return toDo; });
+        constructor(private $q: ng.IQService, private toDoService: IToDoService, private $routeParams) {
+
+            
         }
 
         public canActivate = () => {
-            return this.toDoService.getById(this.$routeParams.toDoId).then((toDo) => { this.toDo = toDo; });
+
+            var deferred = this.$q.defer();
+
+            this.toDoService.getById(this.$routeParams.toDoId).then((results) => {
+
+                this.toDo = results;
+
+                deferred.resolve(true);
+
+            }).catch((Error) => {
+
+                deferred.resolve(false);
+
+            });
+
+            return deferred.promise;
         }
 
         public toDo: IToDo;
     }
 
     angular.module("app.toDo")
-        .controller("ToDoDetailController", ["toDo", ToDoDetailController]);
+        .controller("ToDoDetailController", ["$q", "toDoService", "$routeParams", ToDoDetailController]);
 
 } 

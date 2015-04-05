@@ -3,6 +3,7 @@ var app;
     angular.module("app", [
         "ngNewRouter",
         "app.common",
+        "app.security",
         "app.toDo",
         "app.ui"
     ]).config([
@@ -13,9 +14,9 @@ var app;
     ]).controller("appController", ["$router", app.AppController]);
     function config($componentLoaderProvider, $httpProvider, apiEndpointProvider) {
         $componentLoaderProvider.setTemplateMapping(function (name) {
-            // name is component namegu
             return 'src/app/toDo/views/' + name + '.html';
         });
+        $httpProvider.interceptors.push("authorizationInterceptor");
         $httpProvider.interceptors.push("requestCounter");
         apiEndpointProvider.configure("/api/");
     }

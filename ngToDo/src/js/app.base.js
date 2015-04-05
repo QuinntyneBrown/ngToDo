@@ -73,6 +73,72 @@ var app;
         return DataService;
     })();
     app.DataService = DataService;
+    var SessionStorageProperty = (function () {
+        function SessionStorageProperty($rootScope, storage, name) {
+            var _this = this;
+            this.$rootScope = $rootScope;
+            this.storage = storage;
+            this.name = name;
+            this.onRouteChangeStart = function (event, newUrl) {
+                if (newUrl.originalPath == "/login") {
+                    _this.data = null;
+                    _this.set({ data: null });
+                }
+            };
+            this.get = function () {
+                if (_this.data) {
+                    return _this.data;
+                }
+                try {
+                    _this.data = _this.storage.getByName({ name: _this.key }).value;
+                }
+                catch (error) {
+                }
+                return _this.data;
+            };
+            this.set = function (params) {
+            };
+            $rootScope.$on("$routeChangeStart", this.onRouteChangeStart);
+        }
+        return SessionStorageProperty;
+    })();
+    app.SessionStorageProperty = SessionStorageProperty;
+    var Storage = (function () {
+        function Storage(storageId) {
+            var _this = this;
+            this.storageId = storageId;
+            this.get = function () {
+                return JSON.parse(localStorage.getItem(_this.storageId) || '[]');
+            };
+            this.getByName = function (params) {
+                var items = JSON.parse(localStorage.getItem(_this.storageId) || '[]');
+                for (var i = 0; i < items.length; i++) {
+                    if (params.name === items[i].name) {
+                        return items[i];
+                    }
+                    ;
+                }
+                ;
+                return null;
+            };
+            this.put = function (params) {
+                var items = JSON.parse(localStorage.getItem(_this.storageId) || '[]');
+                for (var i = 0; i < items.length; i++) {
+                    if (params.name === items[i].name) {
+                        items[i].value = params.value;
+                        localStorage.setItem(_this.storageId, JSON.stringify(items));
+                        return;
+                    }
+                    ;
+                }
+                ;
+                items.push(params);
+                localStorage.setItem(_this.storageId, JSON.stringify(items));
+            };
+        }
+        return Storage;
+    })();
+    app.Storage = Storage;
 })(app || (app = {}));
 
 //# sourceMappingURL=app.base.js.map

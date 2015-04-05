@@ -1,0 +1,33 @@
+﻿.app-header {
+  background-color: #222222;
+  height: 50px;
+  border-bottom-style: solid;
+  border-bottom-width: 4px;
+  border-bottom-color: #222222;
+  width: 100%;
+  color: #dddddd;
+}
+.app-header h1,
+.app-header ul,
+.app-header ul li {
+  float: left;
+  display: inline-block;
+}
+.app-header h1 {
+  min-width: 150px;
+  line-height: 50px;
+  vertical-align: middle;
+}
+.app-header ul li a {
+  color: #dddddd;
+  text-decoration: none;
+  display: inline-block;
+  line-height: 50px;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+.app-header > div {
+  max-width: 1024px;
+  margin: 0 auto;
+}
+/*# sourceMappingURL=appHeader.css.map */

@@ -39,4 +39,14 @@
 
         value: any;
     }
+
+    export interface ISessionStorageProperty {
+        get(): any;
+
+        set(params: any): void;
+    }
+
+    export interface IStorage {
+
+    }
 } 

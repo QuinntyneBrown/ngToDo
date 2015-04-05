@@ -9,25 +9,25 @@
               initial-scale=1,
               maximum-scale=1,
               user-scalable=0" />
+        
+        <link href="Content/font-awesome.min.css" rel="stylesheet" />
+        <link href="app.less" rel="stylesheet" />
+
     </head>
 
 <body data-ng-app="app" data-ng-controller="appController as app">
 
     <work-spinner></work-spinner>
 
-    <div id="container">
+    <div class="container">
 
-        <app-header>
-
-        </app-header>
+        <app-header></app-header>
         
         <div ng-viewport class="main-content slide">
 
         </div>
 
-        <app-footer>
-
-        </app-footer>
+        <app-footer></app-footer>
     </div>
 
     <script src="scripts/angular-beta/angular.js"></script>

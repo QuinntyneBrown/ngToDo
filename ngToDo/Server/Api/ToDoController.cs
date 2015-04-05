@@ -8,7 +8,7 @@ namespace ngToDo.Server.Api.v1
 {
     public class ToDoController : ApiController
     {
-        public ToDoController(IToDoRepository repository)
+        public ToDoController(IRepository<ToDo> repository)
         {
             this.repository = repository;
         }
@@ -18,16 +18,17 @@ namespace ngToDo.Server.Api.v1
         {
             using (repository)
             {
-                return Ok(repository.GetAll());    
+                return Ok(repository.GetAll().ToList());    
             }            
         }
 
         [HttpGet]
         public IHttpActionResult GetRecent()
         {
+             
             using (repository)
             {
-                return Ok(repository.GetAll().OrderByDescending(x => x.CreatedDateTime).Take(5));
+                return Ok(repository.GetAll().OrderByDescending(x => x.CreatedDateTime).Take(5).ToList());
             }
         }
 
@@ -73,7 +74,7 @@ namespace ngToDo.Server.Api.v1
             }
         }
 
-        private IToDoRepository repository { get; set; } 
+        private IRepository<ToDo> repository { get; set; } 
 
     }
 }

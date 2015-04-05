@@ -5,8 +5,10 @@
         "ngNewRouter",
 
         "app.common",
+        "app.security",
         "app.toDo",
         "app.ui"
+
     ])
         .config([
             "$componentLoaderProvider",
@@ -20,11 +22,10 @@
         apiEndpointProvider: common.IApiEndpointProvider) {
 
         $componentLoaderProvider.setTemplateMapping((name) => {
-            // name is component namegu
             return 'src/app/toDo/views/' + name + '.html';
         });
 
-            
+        $httpProvider.interceptors.push("authorizationInterceptor");
 
         $httpProvider.interceptors.push("requestCounter");
 

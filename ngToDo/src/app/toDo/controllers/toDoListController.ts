@@ -4,19 +4,33 @@
 
     class ToDoListController implements IToDoListController {
 
-        constructor(public toDos: IToDo[]) {
+        constructor(private $q: ng.IQService, private toDoService: IToDoService) {
 
         }
 
-        public static canActivate = {
-            toDos: [
-                "toDoService", (toDoService: IToDoService) => {
-                    return toDoService.getAll().then((toDos) => { return toDos; });
-                }
-            ]
+        public canActivate = () => {
+
+            var deferred = this.$q.defer();
+
+            this.toDoService.getRecent().then((results) => {
+
+                this.toDos = results;
+
+                deferred.resolve(true);
+
+            }).catch((Error) => {
+
+                deferred.resolve(false);
+
+            });
+
+            return deferred.promise;
+
         }
+
+        public toDos: IToDo[];
     }
 
     angular.module("app.toDo")
-        .controller("ToDoListController", ["toDos", ToDoListController]);
+        .controller("ToDoListController", ["$q", "toDoService", ToDoListController]);
 } 

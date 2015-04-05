@@ -2,8 +2,13 @@
 
 namespace ngToDo.Server.Models
 {
-    public class ToDo
+    public class ToDo: IEntity
     {
+        public ToDo()
+        {
+            this.Status = Status.NEW;
+        }
+
         public int Id { get; set; }
 
         public string Name { get; set; }

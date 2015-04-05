@@ -4,19 +4,38 @@
 
     class ToDoFormController implements IToDoFormController {
 
-        constructor(public toDo: IToDo) {
+        constructor(private $q: ng.IQService, private toDoService: IToDoService, private $routeParams) {
+
 
         }
 
-        public static canActivate = {
-            toDo: [
-                "toDoService", "$routeParams", (toDoService: IToDoService, $routeParams: IToDoDetailRouteParams) => {
-                    return toDoService.getById($routeParams.toDoId).then((toDo) => { return toDo; });
-                }
-            ]
+        public canActivate = () => {
+
+            var deferred = this.$q.defer();
+
+            if (this.$routeParams.toDoId) {
+
+                this.toDoService.getById(this.$routeParams.toDoId).then((results) => {
+
+                    this.toDo = results;
+
+                    deferred.resolve(true);
+
+                }).catch((Error) => {
+
+                    deferred.resolve(false);
+
+                });
+            } else {
+                deferred.resolve(true);
+            }
+
+            return deferred.promise;
         }
+
+        public toDo: IToDo;
     }
 
     angular.module("app.toDo")
-        .controller("ToDoFormController", ["toDo", ToDoFormController]);
+        .controller("ToDoFormController", ["$q", "toDoService","$routeParams", ToDoFormController]);
 } 
