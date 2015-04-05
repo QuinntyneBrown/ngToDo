@@ -9,10 +9,11 @@ var app;
     ]).config([
         "$componentLoaderProvider",
         "$httpProvider",
+        "$locationProvider",
         "apiEndpointProvider",
         config
     ]).controller("appController", ["$router", app.AppController]);
-    function config($componentLoaderProvider, $httpProvider, apiEndpointProvider) {
+    function config($componentLoaderProvider, $httpProvider, $locationProvider, apiEndpointProvider) {
         $componentLoaderProvider.setTemplateMapping(function (name) {
             return 'src/app/toDo/views/' + name + '.html';
         });

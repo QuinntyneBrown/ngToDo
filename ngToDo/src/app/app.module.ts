@@ -13,12 +13,14 @@
         .config([
             "$componentLoaderProvider",
             "$httpProvider",
+            "$locationProvider",
             "apiEndpointProvider",         
             config])
         .controller("appController", ["$router",AppController]);
 
     function config($componentLoaderProvider:any,
         $httpProvider: ng.IHttpProvider,
+        $locationProvider: ng.ILocationProvider,
         apiEndpointProvider: common.IApiEndpointProvider) {
 
         $componentLoaderProvider.setTemplateMapping((name) => {

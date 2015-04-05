@@ -255,6 +255,7 @@
     </Content>
     <Content Include="src\app\toDo\views\toDoAbout.html" />
     <Content Include="src\app\toDo\views\toDoDetail.html" />
+    <Content Include="src\app\toDo\views\toDoMasterDetail.html" />
     <Content Include="src\app\toDo\views\toDoRecent.html" />
     <Content Include="src\app\ui\appFooter\appFooter.css">
       <DependentUpon>appFooter.less</DependentUpon>
@@ -404,6 +405,7 @@
     <TypeScriptCompile Include="src\app\security\services\token.ts" />
     <TypeScriptCompile Include="src\app\toDo\controllers\toDoDetailController.ts" />
     <TypeScriptCompile Include="src\app\toDo\controllers\toDoFormController.ts" />
+    <TypeScriptCompile Include="src\app\toDo\controllers\toDoMasterDetailController.ts" />
     <TypeScriptCompile Include="src\app\toDo\controllers\toDoRecentController.ts" />
     <TypeScriptCompile Include="src\app\toDo\directives\toDoItem.ts" />
     <TypeScriptCompile Include="src\app\toDo\directives\toDoItemController.ts">
@@ -417,9 +419,6 @@
     <TypeScriptCompile Include="src\app\toDo\controllers\toDoListController.ts" />
     <TypeScriptCompile Include="src\app\toDo\services\toDoService.ts" />
     <TypeScriptCompile Include="src\app\toDo\toDo.d.ts">
-      <DependentUpon>toDo.module.ts</DependentUpon>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\app\toDo\toDo.routes.ts">
       <DependentUpon>toDo.module.ts</DependentUpon>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\app\ui\appFooter\appFooter.ts" />

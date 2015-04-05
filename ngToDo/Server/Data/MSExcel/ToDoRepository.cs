@@ -1,4 +1,5 @@
-﻿using Microsoft.Office.Interop.Excel;
+﻿using System;
+using Microsoft.Office.Interop.Excel;
 using ngToDo.Server.Models;
 
 namespace ngToDo.Server.Data.MSExcel
@@ -19,7 +20,11 @@ namespace ngToDo.Server.Data.MSExcel
 
         protected override ToDo BuildFromRow(dynamic row)
         {
-            return new ToDo() {Name = row.Cells[2].Value};
+            return new ToDo()
+            {
+                Id = (int)row.Cells[1].Value,
+                Name = row.Cells[2].Value
+            };
         }
 
         protected override string WorksheetName

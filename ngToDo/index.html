@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>ngToDo : Angular 1.4</title>
-
+        
         <meta name="viewport"
               content="width=device-width,
               minimal-ui,
@@ -15,17 +15,18 @@
 
     </head>
 
-<body data-ng-app="app" data-ng-controller="appController as app">
+<body data-ng-app="app" ng-strict-di data-ng-controller="appController as app">
 
     <work-spinner></work-spinner>
 
     <div class="container">
 
         <app-header></app-header>
-        
+
         <div ng-viewport class="main-content slide">
 
         </div>
+       
 
         <app-footer></app-footer>
     </div>

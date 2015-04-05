@@ -150,7 +150,7 @@ var app;
                 { path: '/', component: 'toDoRecent' },
                 { path: '/toDo/recent', component: 'toDoRecent' },
                 { path: '/toDo/list', component: 'toDoList' },
-                { path: '/toDo/detail/:toDoId', component: 'toDoDetail' },
+                { path: '/toDo/detail/:toDoId', component: 'toDoMasterDetail' },
                 { path: '/toDo/create', component: 'toDoForm' },
                 { path: '/toDo/edit/:toDoId', component: 'toDoForm' }
             ]);
@@ -172,10 +172,11 @@ var app;
     ]).config([
         "$componentLoaderProvider",
         "$httpProvider",
+        "$locationProvider",
         "apiEndpointProvider",
         config
     ]).controller("appController", ["$router", app.AppController]);
-    function config($componentLoaderProvider, $httpProvider, apiEndpointProvider) {
+    function config($componentLoaderProvider, $httpProvider, $locationProvider, apiEndpointProvider) {
         $componentLoaderProvider.setTemplateMapping(function (name) {
             return 'src/app/toDo/views/' + name + '.html';
         });
@@ -209,6 +210,15 @@ var app;
 //# sourceMappingURL=../security/security.module.js.map
 var app;
 (function (app) {
+    var ui;
+    (function (ui) {
+        angular.module("app.ui", []);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../ui/ui.module.js.map
+var app;
+(function (app) {
     var toDo;
     (function (toDo) {
         angular.module("app.toDo", [
@@ -219,71 +229,6 @@ var app;
 })(app || (app = {}));
 
 //# sourceMappingURL=../toDo/toDo.module.js.map
-var app;
-(function (app) {
-    var toDo;
-    (function (toDo) {
-        'use strict';
-        var Routes = (function () {
-            function Routes() {
-            }
-            Routes.configure = function ($routeProvider, toDoDetailControllerActivateFn, toDoRecentControllerActivateFn, toDoListControllerActivateFn, toDoFormControllerActivateFn) {
-                $routeProvider.when('/', {
-                    controller: 'toDoRecentController',
-                    controllerAs: 'toDoRecent',
-                    templateUrl: '/src/toDo/views/recent.html',
-                    resolve: toDoRecentControllerActivateFn,
-                    caseInsensitiveMatch: false
-                });
-                $routeProvider.when('/about', {
-                    templateUrl: '/src/toDo/views/about.html',
-                    caseInsensitiveMatch: false
-                });
-                $routeProvider.when('/toDo/edit/:toDoId', {
-                    controller: 'toDoFormController',
-                    controllerAs: 'toDoDetail',
-                    templateUrl: '/src/toDo/views/form.html',
-                    resolve: toDoDetailControllerActivateFn,
-                    caseInsensitiveMatch: false
-                });
-                $routeProvider.when('/toDo/create', {
-                    controller: 'toDoFormController',
-                    controllerAs: 'toDoForm',
-                    templateUrl: '/src/toDo/views/form.html',
-                    caseInsensitiveMatch: false
-                });
-                $routeProvider.when('/toDo/list', {
-                    controller: 'toDoListController',
-                    controllerAs: 'toDoList',
-                    templateUrl: '/src/toDo/views/list.html',
-                    resolve: toDoListControllerActivateFn,
-                    caseInsensitiveMatch: false
-                });
-                $routeProvider.when('/toDo/:toDoId', {
-                    controller: 'toDoDetailController',
-                    controllerAs: 'toDoDetail',
-                    templateUrl: '/src/toDo/views/detail.html',
-                    resolve: toDoDetailControllerActivateFn,
-                    caseInsensitiveMatch: false
-                });
-                $routeProvider.otherwise({ redirectTo: '/' });
-            };
-            return Routes;
-        })();
-        toDo.Routes = Routes;
-    })(toDo = app.toDo || (app.toDo = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../toDo/toDo.routes.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        angular.module("app.ui", []);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../ui/ui.module.js.map
 var app;
 (function (app) {
     var common;
@@ -315,6 +260,27 @@ var app;
 })(app || (app = {}));
 
 //# sourceMappingURL=../../common/directives/workSpinner.js.map
+var app;
+(function (app) {
+    var security;
+    (function (security) {
+        var LoginForm = (function () {
+            function LoginForm() {
+            }
+            LoginForm.instance = function () {
+                return new LoginForm();
+            };
+            return LoginForm;
+        })();
+        security.LoginForm = LoginForm;
+        angular.module("app.security").directive("loginForm", [LoginForm.instance]);
+    })(security = app.security || (app.security = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../security/directives/loginForm.js.map
+
+
+//# sourceMappingURL=../../security/directives/loginFormController.js.map
 var app;
 (function (app) {
     var common;
@@ -423,27 +389,6 @@ var app;
 (function (app) {
     var security;
     (function (security) {
-        var LoginForm = (function () {
-            function LoginForm() {
-            }
-            LoginForm.instance = function () {
-                return new LoginForm();
-            };
-            return LoginForm;
-        })();
-        security.LoginForm = LoginForm;
-        angular.module("app.security").directive("loginForm", [LoginForm.instance]);
-    })(security = app.security || (app.security = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../security/directives/loginForm.js.map
-
-
-//# sourceMappingURL=../../security/directives/loginFormController.js.map
-var app;
-(function (app) {
-    var security;
-    (function (security) {
         "use strict";
         var AuthorizationInterceptor = (function () {
             function AuthorizationInterceptor(token) {
@@ -515,6 +460,95 @@ var app;
 })(app || (app = {}));
 
 //# sourceMappingURL=../../security/services/token.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        var AppHeader = (function () {
+            function AppHeader() {
+                this.templateUrl = "src/app/ui/appHeader/appHeader.html";
+                this.replace = true;
+                this.restrict = "E";
+                this.controller = "appHeaderController";
+                this.controllerAs = "appHeader";
+                this.scope = {
+                    title: "@"
+                };
+                this.link = function (scope, element, attributes) {
+                };
+            }
+            AppHeader.instance = function () {
+                return new AppHeader();
+            };
+            return AppHeader;
+        })();
+        ui.AppHeader = AppHeader;
+        angular.module("app.ui").directive("appHeader", [AppHeader.instance]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appHeader/appHeader.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        var AppHeaderController = (function () {
+            function AppHeaderController() {
+            }
+            return AppHeaderController;
+        })();
+        ui.AppHeaderController = AppHeaderController;
+        angular.module("app.ui").controller("appHeaderController", [AppHeaderController]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appHeader/appHeaderController.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        var AppFooter = (function () {
+            function AppFooter() {
+                this.templateUrl = "src/app/ui/appFooter/appFooter.html";
+                this.replace = true;
+                this.restrict = "E";
+                this.controller = "appFooterController";
+                this.controllerAs = "appFooter";
+                this.scope = {
+                    viewBag: "="
+                };
+                this.link = function (scope, element, attributes) {
+                };
+            }
+            AppFooter.instance = function () {
+                return new AppFooter();
+            };
+            return AppFooter;
+        })();
+        ui.AppFooter = AppFooter;
+        angular.module("app.ui").directive("appFooter", [AppFooter.instance]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appFooter/appFooter.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        var AppFooterController = (function () {
+            function AppFooterController() {
+            }
+            return AppFooterController;
+        })();
+        ui.AppFooterController = AppFooterController;
+        angular.module("app.ui").controller("appFooterController", [AppFooterController]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appFooter/appFooterController.js.map
+
+
+//# sourceMappingURL=../../ui/hamburgerButton/hamburgerButton.js.map
 var app;
 (function (app) {
     var toDo;
@@ -606,6 +640,30 @@ var app;
 })(app || (app = {}));
 
 //# sourceMappingURL=../../toDo/controllers/toDoListController.js.map
+var app;
+(function (app) {
+    var toDo;
+    (function (toDo) {
+        "use strict";
+        var ToDoMasterDetailController = (function () {
+            function ToDoMasterDetailController($router) {
+                $router.config([
+                    {
+                        path: '/toDo/detail/:toDoId',
+                        component: {
+                            master: 'toDoList',
+                            detail: 'toDoDetail'
+                        }
+                    }
+                ]);
+            }
+            return ToDoMasterDetailController;
+        })();
+        angular.module("app.toDo").controller("ToDoMasterDetailController", ["$router", ToDoMasterDetailController]);
+    })(toDo = app.toDo || (app.toDo = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../toDo/controllers/toDoMasterDetailController.js.map
 var app;
 (function (app) {
     var toDo;
@@ -754,92 +812,3 @@ var app;
 })(app || (app = {}));
 
 //# sourceMappingURL=../../toDo/directives/toDoItemsController.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        var AppHeader = (function () {
-            function AppHeader() {
-                this.templateUrl = "src/app/ui/appHeader/appHeader.html";
-                this.replace = true;
-                this.restrict = "E";
-                this.controller = "appHeaderController";
-                this.controllerAs = "appHeader";
-                this.scope = {
-                    title: "@"
-                };
-                this.link = function (scope, element, attributes) {
-                };
-            }
-            AppHeader.instance = function () {
-                return new AppHeader();
-            };
-            return AppHeader;
-        })();
-        ui.AppHeader = AppHeader;
-        angular.module("app.ui").directive("appHeader", [AppHeader.instance]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/appHeader/appHeader.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        var AppHeaderController = (function () {
-            function AppHeaderController() {
-            }
-            return AppHeaderController;
-        })();
-        ui.AppHeaderController = AppHeaderController;
-        angular.module("app.ui").controller("appHeaderController", [AppHeaderController]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/appHeader/appHeaderController.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        var AppFooter = (function () {
-            function AppFooter() {
-                this.templateUrl = "src/app/ui/appFooter/appFooter.html";
-                this.replace = true;
-                this.restrict = "E";
-                this.controller = "appFooterController";
-                this.controllerAs = "appFooter";
-                this.scope = {
-                    viewBag: "="
-                };
-                this.link = function (scope, element, attributes) {
-                };
-            }
-            AppFooter.instance = function () {
-                return new AppFooter();
-            };
-            return AppFooter;
-        })();
-        ui.AppFooter = AppFooter;
-        angular.module("app.ui").directive("appFooter", [AppFooter.instance]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/appFooter/appFooter.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        var AppFooterController = (function () {
-            function AppFooterController() {
-            }
-            return AppFooterController;
-        })();
-        ui.AppFooterController = AppFooterController;
-        angular.module("app.ui").controller("appFooterController", [AppFooterController]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/appFooter/appFooterController.js.map
-
-
-//# sourceMappingURL=../../ui/hamburgerButton/hamburgerButton.js.map

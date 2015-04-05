@@ -6,7 +6,7 @@ var app;
                 { path: '/', component: 'toDoRecent' },
                 { path: '/toDo/recent', component: 'toDoRecent' },
                 { path: '/toDo/list', component: 'toDoList' },
-                { path: '/toDo/detail/:toDoId', component: 'toDoDetail' },
+                { path: '/toDo/detail/:toDoId', component: 'toDoMasterDetail' },
                 { path: '/toDo/create', component: 'toDoForm' },
                 { path: '/toDo/edit/:toDoId', component: 'toDoForm' }
             ]);
