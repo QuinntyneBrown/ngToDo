@@ -2,7 +2,7 @@
 
     "use strict";
 
-    class CurrentUser extends SessionStorageProperty {
+    class CurrentUser extends common.SessionStorageProperty {
 
         constructor($rootScope: ng.IRootScopeService, storage: any) {
             super($rootScope, storage, "currentUser");

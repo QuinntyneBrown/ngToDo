@@ -15,18 +15,18 @@
 
     </head>
 
-<body data-ng-app="app" ng-strict-di data-ng-controller="appController as app">
-
+<body data-ng-app="app.toDo" ng-strict-di data-ng-controller="toDoAppController as app">
+    to
     <work-spinner></work-spinner>
 
     <div class="container">
 
-        <app-header is-logged-in="app.isLoggedIn()" ></app-header>
+        <app-header is-logged-in="app.isLoggedIn()"></app-header>
 
         <div ng-viewport class="main-content slide">
 
         </div>
-       
+
 
         <app-footer></app-footer>
     </div>

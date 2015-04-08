@@ -29,7 +29,7 @@ var app;
                 };
             }
             return toDoService;
-        })(app.DataService);
+        })(app.common.DataService);
         angular.module("app.toDo").service("toDoService", ["$http", "$cacheFactory", "$q", "apiEndpoint", toDoService]);
     })(toDo = app.toDo || (app.toDo = {}));
 })(app || (app = {}));

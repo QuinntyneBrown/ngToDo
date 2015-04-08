@@ -8,15 +8,15 @@ var app;
 (function (app) {
     var common;
     (function (common) {
-        var Storage = (function (_super) {
-            __extends(Storage, _super);
-            function Storage() {
+        var CommonStorage = (function (_super) {
+            __extends(CommonStorage, _super);
+            function CommonStorage() {
                 _super.call(this, "commonLocalStorage");
             }
-            return Storage;
-        })(app.Storage);
-        common.Storage = Storage;
-        angular.module("app.common").service("storage", [Storage]);
+            return CommonStorage;
+        })(common.Storage);
+        common.CommonStorage = CommonStorage;
+        angular.module("app.common").service("storage", [CommonStorage]);
     })(common = app.common || (app.common = {}));
 })(app || (app = {}));
 

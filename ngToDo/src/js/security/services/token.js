@@ -15,7 +15,7 @@ var app;
                 _super.call(this, $rootScope, storage, "token");
             }
             return Token;
-        })(app.SessionStorageProperty);
+        })(app.common.SessionStorageProperty);
         angular.module("app.security").service("token", ["$rootScope", "storage", Token]);
     })(security = app.security || (app.security = {}));
 })(app || (app = {}));

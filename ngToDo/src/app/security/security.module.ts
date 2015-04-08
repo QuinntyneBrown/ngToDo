@@ -16,7 +16,6 @@
             });
 
         routesProvider.configure([
-            { path:"/", component:"login" },
             { path: '/login', component: 'login' }
         ]);
     }

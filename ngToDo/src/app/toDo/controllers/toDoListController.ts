@@ -2,10 +2,15 @@
 
     "use strict";
 
-    class ToDoListController extends  AuthenticatedController {
+    class ToDoListController extends security.AuthenticatedController {
 
-        constructor(private $q: ng.IQService, private toDoService: IToDoService, public token: ISessionStorageProperty) {
-            super(token);
+        constructor(
+            public $location: ng.ILocationService,
+            private $q: ng.IQService,
+            private toDoService: IToDoService,
+            public token: common.ISessionStorageProperty) {
+            super($location, token);
+
         }
 
         public activate = () => {
@@ -32,5 +37,5 @@
     }
 
     angular.module("app.toDo")
-        .controller("ToDoListController", ["$q", "toDoService","token", ToDoListController]);
+        .controller("ToDoListController", ["$location", "$q", "toDoService", "token",  ToDoListController]);
 } 

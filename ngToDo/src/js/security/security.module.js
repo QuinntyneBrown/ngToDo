@@ -12,7 +12,6 @@ var app;
                 components: ["login"]
             });
             routesProvider.configure([
-                { path: "/", component: "login" },
                 { path: '/login', component: 'login' }
             ]);
         }

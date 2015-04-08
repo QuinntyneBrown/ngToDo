@@ -11,12 +11,13 @@ var app;
         "use strict";
         var ToDoFormController = (function (_super) {
             __extends(ToDoFormController, _super);
-            function ToDoFormController($q, toDoService, $routeParams, token) {
+            function ToDoFormController($location, $q, $routeParams, toDoService, token) {
                 var _this = this;
-                _super.call(this, token);
+                _super.call(this, $location, token);
+                this.$location = $location;
                 this.$q = $q;
-                this.toDoService = toDoService;
                 this.$routeParams = $routeParams;
+                this.toDoService = toDoService;
                 this.token = token;
                 this.activate = function () {
                     var deferred = _this.$q.defer();
@@ -35,8 +36,8 @@ var app;
                 };
             }
             return ToDoFormController;
-        })(app.AuthenticatedController);
-        angular.module("app.toDo").controller("ToDoFormController", ["$q", "toDoService", "$routeParams", "token", ToDoFormController]);
+        })(app.security.AuthenticatedController);
+        angular.module("app.toDo").controller("ToDoFormController", ["$location", "$q", "$routeParams", "toDoService", "token", ToDoFormController]);
     })(toDo = app.toDo || (app.toDo = {}));
 })(app || (app = {}));
 

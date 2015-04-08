@@ -4,11 +4,11 @@
 
     class AuthorizationInterceptor {
 
-        constructor(private token: ISessionStorageProperty) {
+        constructor(private token: common.ISessionStorageProperty) {
             
         }
 
-        public static instance = (token: ISessionStorageProperty) => {
+        public static instance = (token: common.ISessionStorageProperty) => {
             return new AuthorizationInterceptor(token);
         }
 

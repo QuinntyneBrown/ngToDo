@@ -1,11 +1,12 @@
 ﻿module app.common {
-
-    export class Storage extends app.Storage implements IStorage {
+    
+    export class CommonStorage extends Storage implements IStorage {
         constructor() {
 
             super("commonLocalStorage");
         }
     }
 
-    angular.module("app.common").service("storage", [Storage]);
+    angular.module("app.common").service("storage", [CommonStorage]);
+
 } 

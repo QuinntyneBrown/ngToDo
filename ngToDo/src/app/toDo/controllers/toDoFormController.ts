@@ -1,11 +1,17 @@
-﻿module app.toDo {
+﻿
+module app.toDo {
 
     "use strict";
 
-    class ToDoFormController extends AuthenticatedController {
+    class ToDoFormController extends security.AuthenticatedController {
 
-        constructor(private $q: ng.IQService, private toDoService: IToDoService, private $routeParams, public token: ISessionStorageProperty ) {
-            super(token);
+        constructor(
+            public $location:ng.ILocationService,
+            private $q: ng.IQService,            
+            private $routeParams,
+            private toDoService: IToDoService,
+            public token: common.ISessionStorageProperty) {
+            super($location,token);
 
         }
 
@@ -37,5 +43,5 @@
     }
 
     angular.module("app.toDo")
-        .controller("ToDoFormController", ["$q", "toDoService","$routeParams", "token", ToDoFormController]);
+        .controller("ToDoFormController", ["$location","$q","$routeParams", "toDoService","token", ToDoFormController]);
 } 

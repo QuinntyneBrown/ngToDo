@@ -5,10 +5,10 @@
         constructor(
             public $http: ng.IHttpService,
             public $q: ng.IQService,
-            public currentUser: ISessionStorageProperty,
+            public currentUser: common.ISessionStorageProperty,
             public formEncode: common.IFormEncode,
             public oauthEndpoint: common.IApiEndpointConfig,
-            public token: ISessionStorageProperty) {
+            public token: common.ISessionStorageProperty) {
             
         }
 

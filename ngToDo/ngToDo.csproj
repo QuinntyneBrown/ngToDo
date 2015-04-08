@@ -231,11 +231,11 @@
     <Content Include="scripts\angular-sanitize.min.js.map" />
     <Content Include="scripts\angular.min.js.map" />
     <Content Include="scripts\jquery-1.9.0.min.map" />
-    <Content Include="src\app\app.css">
-      <DependentUpon>app.less</DependentUpon>
+    <Content Include="src\app\common\common.css">
+      <DependentUpon>common.less</DependentUpon>
     </Content>
-    <Content Include="src\app\app.min.css">
-      <DependentUpon>app.css</DependentUpon>
+    <Content Include="src\app\common\common.min.css">
+      <DependentUpon>common.css</DependentUpon>
     </Content>
     <Content Include="src\app\common\directives\workSpinner.css">
       <DependentUpon>workSpinner.less</DependentUpon>
@@ -252,6 +252,12 @@
     </Content>
     <Content Include="src\app\toDo\directives\toDoItems.html">
       <DependentUpon>toDoItems.ts</DependentUpon>
+    </Content>
+    <Content Include="src\app\toDo\toDo.css">
+      <DependentUpon>toDo.less</DependentUpon>
+    </Content>
+    <Content Include="src\app\toDo\toDo.min.css">
+      <DependentUpon>toDo.css</DependentUpon>
     </Content>
     <Content Include="src\app\toDo\views\toDoAbout.html" />
     <Content Include="src\app\toDo\views\toDoDetail.html" />
@@ -282,23 +288,26 @@
       <DependentUpon>workSpinner.ts</DependentUpon>
     </Content>
     <Content Include="scripts\jquery-2.1.3.min.map" />
-    <Content Include="src\app\app.less">
-      <DependentUpon>app.module.ts</DependentUpon>
-    </Content>
     <Content Include="src\app\ui\appFooter\appFooter.css.map">
       <DependentUpon>appFooter.css</DependentUpon>
     </Content>
     <Content Include="src\app\ui\appHeader\appHeader.css.map">
       <DependentUpon>appHeader.css</DependentUpon>
     </Content>
-    <Content Include="src\app\app.css.map">
-      <DependentUpon>app.css</DependentUpon>
-    </Content>
     <Content Include="src\app\common\directives\workSpinner.css.map">
       <DependentUpon>workSpinner.css</DependentUpon>
     </Content>
     <Content Include="src\app\security\directives\loginForm.less">
       <DependentUpon>loginForm.ts</DependentUpon>
+    </Content>
+    <Content Include="src\app\common\common.less">
+      <DependentUpon>common.module.ts</DependentUpon>
+    </Content>
+    <Content Include="src\app\common\common.css.map">
+      <DependentUpon>common.css</DependentUpon>
+    </Content>
+    <Content Include="src\app\toDo\toDo.css.map">
+      <DependentUpon>toDo.css</DependentUpon>
     </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -378,27 +387,21 @@
     <TypeScriptCompile Include="scripts\typings\angularjs\angular.d.ts" />
     <TypeScriptCompile Include="scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="scripts\typings\moment\moment.d.ts" />
-    <TypeScriptCompile Include="src\app\app.base.ts">
-      <DependentUpon>app.module.ts</DependentUpon>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\app\app.controller.ts">
-      <DependentUpon>app.module.ts</DependentUpon>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\app\app.d.ts">
-      <DependentUpon>app.module.ts</DependentUpon>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\app\app.module.ts" />
     <TypeScriptCompile Include="src\app\common\common.d.ts">
       <DependentUpon>common.module.ts</DependentUpon>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\app\common\common.module.ts" />
     <TypeScriptCompile Include="src\app\common\services\apiEndpointProvider.ts" />
+    <TypeScriptCompile Include="src\app\common\services\storage.ts" />
+    <TypeScriptCompile Include="src\app\dataService.ts" />
     <TypeScriptCompile Include="src\app\common\services\formEncode.ts" />
     <TypeScriptCompile Include="src\app\common\services\requestCounter.ts" />
     <TypeScriptCompile Include="src\app\common\directives\workSpinner.ts" />
     <TypeScriptCompile Include="src\app\common\services\routesProvider.ts" />
-    <TypeScriptCompile Include="src\app\common\services\storage.ts" />
+    <TypeScriptCompile Include="src\app\SessionStorageProperty.ts" />
+    <TypeScriptCompile Include="src\app\storage.ts" />
     <TypeScriptCompile Include="src\app\common\services\featureComponentsMappingsProvider.ts" />
+    <TypeScriptCompile Include="src\app\authenticatedController.ts" />
     <TypeScriptCompile Include="src\app\security\controllers\loginController.ts" />
     <TypeScriptCompile Include="src\app\security\directives\loginForm.ts" />
     <TypeScriptCompile Include="src\app\security\directives\loginFormController.ts">
@@ -413,6 +416,8 @@
     <TypeScriptCompile Include="src\app\security\services\oauthEndpointProvider.ts" />
     <TypeScriptCompile Include="src\app\security\services\securityService.ts" />
     <TypeScriptCompile Include="src\app\security\services\token.ts" />
+    <TypeScriptCompile Include="src\app\toDo\controllers\toDoAboutController.ts" />
+    <TypeScriptCompile Include="src\app\toDo\controllers\toDoAppController.ts" />
     <TypeScriptCompile Include="src\app\toDo\controllers\toDoDetailController.ts" />
     <TypeScriptCompile Include="src\app\toDo\controllers\toDoFormController.ts" />
     <TypeScriptCompile Include="src\app\toDo\controllers\toDoMasterDetailController.ts" />

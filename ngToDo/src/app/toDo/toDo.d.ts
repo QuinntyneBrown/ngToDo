@@ -9,7 +9,7 @@
         createdDateTime: Date;
     }
 
-    export interface IToDoService extends IDataService {
+    export interface IToDoService extends common.IDataService {
         getRecent(): ng.IPromise<any>;
     }
 

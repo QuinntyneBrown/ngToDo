@@ -1,14 +1,20 @@
-﻿module app.toDo {
+﻿
+module app.toDo {
 
     "use strict";
 
-    class ToDoMasterDetailController extends AuthenticatedController {
+    class ToDoMasterDetailController extends security.AuthenticatedController {
 
-        constructor(public token: ISessionStorageProperty) {
-            super(token);        
+        constructor(
+            public $location: ng.ILocationService,
+            private $q: ng.IQService,
+            private toDoService: IToDoService,
+            public token: common.ISessionStorageProperty) {
+            super($location, token);
+
         }
 
     }
 
-    angular.module("app.toDo").controller("ToDoMasterDetailController", ["token",ToDoMasterDetailController]);
+    angular.module("app.toDo").controller("ToDoMasterDetailController", ["$location", "$q", "toDoService", "token",ToDoMasterDetailController]);
 } 

@@ -11,9 +11,10 @@ var app;
         "use strict";
         var ToDoListController = (function (_super) {
             __extends(ToDoListController, _super);
-            function ToDoListController($q, toDoService, token) {
+            function ToDoListController($location, $q, toDoService, token) {
                 var _this = this;
-                _super.call(this, token);
+                _super.call(this, $location, token);
+                this.$location = $location;
                 this.$q = $q;
                 this.toDoService = toDoService;
                 this.token = token;
@@ -29,8 +30,8 @@ var app;
                 };
             }
             return ToDoListController;
-        })(app.AuthenticatedController);
-        angular.module("app.toDo").controller("ToDoListController", ["$q", "toDoService", "token", ToDoListController]);
+        })(app.security.AuthenticatedController);
+        angular.module("app.toDo").controller("ToDoListController", ["$location", "$q", "toDoService", "token", ToDoListController]);
     })(toDo = app.toDo || (app.toDo = {}));
 })(app || (app = {}));
 

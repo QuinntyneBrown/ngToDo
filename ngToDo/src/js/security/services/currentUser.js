@@ -15,7 +15,7 @@ var app;
                 _super.call(this, $rootScope, storage, "currentUser");
             }
             return CurrentUser;
-        })(app.SessionStorageProperty);
+        })(app.common.SessionStorageProperty);
         angular.module("app.security").service("currentUser", ["$rootScope", "storage", CurrentUser]);
     })(security = app.security || (app.security = {}));
 })(app || (app = {}));

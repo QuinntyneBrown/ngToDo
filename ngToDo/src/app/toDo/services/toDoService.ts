@@ -2,7 +2,7 @@
 
     "use strict";
 
-    class toDoService extends DataService implements IToDoService
+    class toDoService extends common.DataService implements IToDoService
     {
         constructor(
             public $http: ng.IHttpService,

@@ -2,7 +2,7 @@
     
     class LoginFormController implements ILoginController {
 
-        constructor(private $location:ng.ILocationService, private securityService: ISecurityService, private token: ISessionStorageProperty) {
+        constructor(private $location:ng.ILocationService, private securityService: ISecurityService, private token: common.ISessionStorageProperty) {
             
         }
 

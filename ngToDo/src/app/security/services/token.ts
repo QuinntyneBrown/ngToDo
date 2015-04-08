@@ -2,7 +2,7 @@
 
     "use strict";
 
-    class Token extends SessionStorageProperty {
+    class Token extends common.SessionStorageProperty {
 
         constructor($rootScope: ng.IRootScopeService, storage: any) {
             super($rootScope, storage, "token");
