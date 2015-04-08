@@ -19,10 +19,6 @@
         public restrict: string = "E";
 
         public replace: boolean = true;
-
-        public link = (scope: ng.IScope, element: ng.IAugmentedJQuery, attributes: ng.IAttributes) => {
-            
-        }
         
     }
 

@@ -10,7 +10,8 @@ var app;
                 this.controller = "appHeaderController";
                 this.controllerAs = "appHeader";
                 this.scope = {
-                    title: "@"
+                    title: "@",
+                    isLoggedIn: "&"
                 };
                 this.link = function (scope, element, attributes) {
                 };

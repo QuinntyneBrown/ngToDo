@@ -1,9 +1,6 @@
 namespace ngToDo.Migrations
 {
-    using System;
-    using System.Data.Entity;
     using System.Data.Entity.Migrations;
-    using System.Linq;
 
     internal sealed class Configuration : DbMigrationsConfiguration<ngToDo.Server.Data.EF.ToDoContext>
     {
@@ -15,7 +12,8 @@ namespace ngToDo.Migrations
 
         protected override void Seed(ngToDo.Server.Data.EF.ToDoContext context)
         {
-
+            UserConfiguration.Seed(context);
+            ToDoConfiguration.Seed(context);
         }
     }
 }

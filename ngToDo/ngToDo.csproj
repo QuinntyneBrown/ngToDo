@@ -321,6 +321,7 @@
     <Content Include="src\app\ui\appHeader\appHeader.min.css">
       <DependentUpon>appHeader.css</DependentUpon>
     </Content>
+    <Content Include="src\app\ui\backdrop\backdrop.html" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -328,6 +329,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Migrations\ToDoConfiguration.cs" />
+    <Compile Include="Migrations\UserConfiguration.cs" />
     <Compile Include="Server\Api\IdentityController.cs" />
     <Compile Include="Server\Config\AppConfiguration.cs" />
     <Compile Include="Server\Config\CryptoConfiguration.cs" />
@@ -393,6 +396,7 @@
     <TypeScriptCompile Include="src\app\common\services\formEncode.ts" />
     <TypeScriptCompile Include="src\app\common\services\requestCounter.ts" />
     <TypeScriptCompile Include="src\app\common\directives\workSpinner.ts" />
+    <TypeScriptCompile Include="src\app\common\services\routesProvider.ts" />
     <TypeScriptCompile Include="src\app\common\services\storage.ts" />
     <TypeScriptCompile Include="src\app\common\services\featureComponentsMappingsProvider.ts" />
     <TypeScriptCompile Include="src\app\security\controllers\loginController.ts" />
@@ -400,10 +404,13 @@
     <TypeScriptCompile Include="src\app\security\directives\loginFormController.ts">
       <DependentUpon>loginForm.ts</DependentUpon>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="src\app\security\security.d.ts" />
+    <TypeScriptCompile Include="src\app\security\security.d.ts">
+      <DependentUpon>security.module.ts</DependentUpon>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="src\app\security\security.module.ts" />
     <TypeScriptCompile Include="src\app\security\services\authorizationInterceptor.ts" />
     <TypeScriptCompile Include="src\app\security\services\currentUser.ts" />
+    <TypeScriptCompile Include="src\app\security\services\oauthEndpointProvider.ts" />
     <TypeScriptCompile Include="src\app\security\services\securityService.ts" />
     <TypeScriptCompile Include="src\app\security\services\token.ts" />
     <TypeScriptCompile Include="src\app\toDo\controllers\toDoDetailController.ts" />
@@ -429,6 +436,9 @@
     <TypeScriptCompile Include="src\app\ui\appHeader\appHeader.ts" />
     <TypeScriptCompile Include="src\app\ui\appHeader\appHeaderController.ts" />
     <TypeScriptCompile Include="src\app\ui\hamburgerButton\hamburgerButton.ts" />
+    <TypeScriptCompile Include="src\app\ui\backdrop\backdrop.ts" />
+    <TypeScriptCompile Include="src\app\ui\modal\modalService.ts" />
+    <TypeScriptCompile Include="src\app\ui\ui.d.ts" />
     <TypeScriptCompile Include="src\app\ui\ui.module.ts" />
   </ItemGroup>
   <ItemGroup>
@@ -460,14 +470,15 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="src\app\ui\modal\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptSourceMap>True</TypeScriptSourceMap>
+  </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />

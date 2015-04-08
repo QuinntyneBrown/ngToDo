@@ -18,7 +18,8 @@
   line-height: 50px;
   vertical-align: middle;
 }
-.app-header ul li a {
+.app-header ul li a,
+.app-header a {
   color: #dddddd;
   text-decoration: none;
   display: inline-block;

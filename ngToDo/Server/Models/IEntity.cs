@@ -9,7 +9,7 @@ namespace ngToDo.Server.Models
     public interface IEntity
     {
         int Id { get; set; }
-        DateTime CreatedDateTime { get; set; }
+        DateTime? CreatedDateTime { get; set; }
         bool IsDeleted { get; set; }
     }
 }

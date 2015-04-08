@@ -16,7 +16,12 @@ namespace ngToDo.Server.Data.MSExcel
 
         protected override User BuildFromRow(dynamic row)
         {
-            return new User() { Username = row.Cells[2].Value };
+            return new User()
+            {
+                Username = row.Cells[2].Value,
+                Password = row.Cells[3].Value,
+                IsDeleted = (bool)row.Cells[7].Value
+            };
         }
 
         protected override string WorksheetName

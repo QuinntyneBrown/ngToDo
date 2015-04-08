@@ -6,6 +6,7 @@ using ngToDo.Server.Models;
 
 namespace ngToDo.Server.Api.v1
 {
+    [Authorize]
     public class ToDoController : ApiController
     {
         public ToDoController(IRepository<ToDo> repository)

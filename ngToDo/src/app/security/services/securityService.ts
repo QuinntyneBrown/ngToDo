@@ -1,17 +1,18 @@
 ﻿module app.security {
-
-    "use strict";
-
-    class SecurityService implements ISecurityService {
-
+    
+    export class SecurityService implements ISecurityService {
+        
         constructor(
             public $http: ng.IHttpService,
             public $q: ng.IQService,
-            public formEncode:any) {
-
+            public currentUser: ISessionStorageProperty,
+            public formEncode: common.IFormEncode,
+            public oauthEndpoint: common.IApiEndpointConfig,
+            public token: ISessionStorageProperty) {
+            
         }
 
-        public login = (username:string, password:string) => {
+        public login = (username: string, password: string) => {
             var deferred = this.$q.defer();
 
             var configuration = {
@@ -26,16 +27,22 @@
                 grant_type: "password"
             });
 
-            this.$http.post("/login", data, configuration)
-                .then((results:any) => {
-                return results.data.access_token;
-            }).catch((error) => {
-
+            this.$http.post(this.oauthEndpoint.baseUrl, data, configuration).then((response) => {
+                this.processToken(username, response);
+                deferred.resolve(true);
+            }).catch((Error) => {
+                deferred.reject();
             });
+
             return deferred.promise;
         }
 
+        private processToken = (username: string, response: any) => {
+            var currentUser = { username: username };
+            this.currentUser.set({ data: currentUser });
+            this.token.set({ data: response.data.access_token });
+        }
     }
 
-    angular.module("app.security").service("securityService", ["$http","$q",SecurityService]);
+    angular.module("app.security").service("securityService", ["$http","$q","currentUser","formEncode","oauthEndpoint","token", SecurityService]);
 } 

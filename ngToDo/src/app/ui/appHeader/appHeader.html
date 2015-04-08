@@ -1,23 +1,28 @@
 ﻿<div class="app-header">
     <div>
-        
-        <h1>
-            ngToDo
-        </h1>
-    
-        <ul>
-            <li>
-                <a data-ng-href="#/">Home</a>
-            </li>
-            <li>
-                <a data-ng-href="#/toDo/create">Create</a>
-            </li>
-            <li>
-                <a data-ng-href="#/toDo/recent">Recent</a>
-            </li>
-            <li>
-                <a data-ng-href="#/toDo/list">All</a>
-            </li>
-        </ul>
+        <div class="left">
+            <h1>
+                ngToDo
+            </h1>
+
+            <ul data-ng-if="isLoggedIn()">
+                <li>
+                    <a data-ng-href="#/">Home</a>
+                </li>
+                <li>
+                    <a data-ng-href="#/toDo/create">Create</a>
+                </li>
+                <li>
+                    <a data-ng-href="#/toDo/recent">Recent</a>
+                </li>
+                <li>
+                    <a data-ng-href="#/toDo/list">All</a>
+                </li>
+            </ul>
+        </div>
+        <div data-ng-if="isLoggedIn()" class="right">
+            <a href="#/login">Log out</a>
+        </div>
+        <div class="clear"></div>
     </div>
 </div>

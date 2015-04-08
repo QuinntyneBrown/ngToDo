@@ -104,10 +104,10 @@
 
         constructor(private $rootScope: ng.IRootScopeService, private storage: any, private name: string) {
 
-            $rootScope.$on("$locationChangeStart", this.onRouteChangeStart);
+            $rootScope.$on("$locationChangeStart", this.onLocationChangeStart);
         }
 
-        public onRouteChangeStart = (event: ng.IAngularEvent, newState: string) => {
+        public onLocationChangeStart = (event: ng.IAngularEvent, newState: string) => {
             if (newState.indexOf("/login") > 0) {
                 this.data = null;
                 this.set({ data: null });

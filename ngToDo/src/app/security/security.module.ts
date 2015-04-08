@@ -3,13 +3,21 @@
     angular.module("app.security", [
         "app.common",
         "app.ui"
-    ]).config(["featureComponentsMappingsProvider", config]);
+    ]).config(["featureComponentsMappingsProvider", "routesProvider",config]);
 
-    function config(featureComponentsMappingsProvider: common.IFeatureComponentsMappingsProvider) {
+    function config(
+        featureComponentsMappingsProvider: common.IFeatureComponentsMappingsProvider,
+        routesProvider: common.IRoutesProvider) {
+
         featureComponentsMappingsProvider.mappings.push(
             {
                 feature: "security",
                 components: ["login"]
             });
+
+        routesProvider.configure([
+            { path:"/", component:"login" },
+            { path: '/login', component: 'login' }
+        ]);
     }
 }

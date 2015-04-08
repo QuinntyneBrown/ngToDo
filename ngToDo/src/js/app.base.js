@@ -79,7 +79,7 @@ var app;
             this.$rootScope = $rootScope;
             this.storage = storage;
             this.name = name;
-            this.onRouteChangeStart = function (event, newState) {
+            this.onLocationChangeStart = function (event, newState) {
                 if (newState.indexOf("/login") > 0) {
                     _this.data = null;
                     _this.set({ data: null });
@@ -100,7 +100,7 @@ var app;
                 _this.data = params.data;
                 _this.storage.put({ name: _this.key, value: params.data });
             };
-            $rootScope.$on("$locationChangeStart", this.onRouteChangeStart);
+            $rootScope.$on("$locationChangeStart", this.onLocationChangeStart);
         }
         return SessionStorageProperty;
     })();

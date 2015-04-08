@@ -10,8 +10,7 @@ var app;
                 this.token = token;
                 this.tryToLogin = function () {
                     _this.securityService.login(_this.username, _this.password).then(function (results) {
-                        _this.token.set({ data: results.access_token });
-                        _this.$location.path("/");
+                        _this.$location.path("/toDo/recent");
                     });
                 };
             }

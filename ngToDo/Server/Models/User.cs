@@ -24,7 +24,7 @@ namespace ngToDo.Server.Models
         
         public string Password { get; set; }
 
-        public DateTime CreatedDateTime { get; set; }
+        public DateTime? CreatedDateTime { get; set; }
 
         public bool IsDeleted { get; set; }
     }

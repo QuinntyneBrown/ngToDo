@@ -1,7 +1,7 @@
 ﻿declare module app.security {
     
     export interface ISecurityService {        
-        login(username:string, password:string): ng.IPromise<any>;
+        login(username: string, password: string): ng.IPromise<any>;
     }
 
     export interface ILoginController {        
@@ -10,4 +10,6 @@
         rememberMe: boolean;
         tryToLogin():void;
     }
+
+
 } 

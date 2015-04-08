@@ -13,7 +13,14 @@ var app;
         "apiEndpointProvider",
         "featureComponentsMappingsProvider",
         config
-    ]).controller("appController", ["$location", "$rootScope", "$router", "token", app.AppController]);
+    ]).run(["$location", "$rootScope", "token", run]).controller("appController", ["$location", "$rootScope", "$router", "routes", "token", app.AppController]);
+    function run($location, $rootScope, token) {
+        $rootScope.$on("$locationChangeStart", function (event, newState, oldState) {
+            if (!token.get() && newState.indexOf('/login') < 0) {
+                $location.path("/login");
+            }
+        });
+    }
     function config($componentLoaderProvider, $httpProvider, $locationProvider, apiEndpointProvider, featureComponentsMappingsProvider) {
         var mappings = featureComponentsMappingsProvider.mappings;
         $componentLoaderProvider.setTemplateMapping(function (name) {

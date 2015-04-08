@@ -21,7 +21,8 @@
         public controllerAs: string = "appHeader";
 
         public scope:any = {
-            title:"@"
+            title: "@",
+            isLoggedIn: "&"
         };
 
         public link = (scope: ng.IScope, element: ng.IAugmentedJQuery, attributes: ng.IAttributes) => {

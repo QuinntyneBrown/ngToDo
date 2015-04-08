@@ -10,8 +10,6 @@ var app;
                 this.controller = "loginFormController";
                 this.restrict = "E";
                 this.replace = true;
-                this.link = function (scope, element, attributes) {
-                };
             }
             LoginForm.instance = function (securityService) {
                 return new LoginForm(securityService);

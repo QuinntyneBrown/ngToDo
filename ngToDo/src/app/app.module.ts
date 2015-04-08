@@ -17,8 +17,18 @@
             "apiEndpointProvider",         
             "featureComponentsMappingsProvider",
             config])
-        .controller("appController", ["$location","$rootScope","$router", "token",AppController]);
+        .run(["$location","$rootScope","token",run])
+        .controller("appController", ["$location","$rootScope","$router","routes", "token",AppController]);
 
+    function run($location: ng.ILocationService,$rootScope: ng.IRootScopeService, token: ISessionStorageProperty) {
+
+        $rootScope.$on("$locationChangeStart",(event: ng.IAngularEvent, newState: string, oldState: string) => {
+            if (!token.get() && newState.indexOf('/login') < 0) {
+
+                $location.path("/login");
+            }
+        });
+    }
     function config($componentLoaderProvider:any,
         $httpProvider: ng.IHttpProvider,
         $locationProvider: ng.ILocationProvider,

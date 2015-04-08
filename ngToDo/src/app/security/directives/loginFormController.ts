@@ -16,9 +16,8 @@
 
             this.securityService.login(this.username, this.password).then((results:any) => {
 
-                this.token.set({ data: results.access_token });
+                this.$location.path("/toDo/recent");
 
-                this.$location.path("/");
             });
         }
     }

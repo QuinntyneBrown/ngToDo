@@ -51,5 +51,6 @@ namespace ngToDo.Server.Data.MSExcel
         private static volatile _Workbook current = null;
 
         private static volatile Application xlApp = null;
+        
     }
 }
