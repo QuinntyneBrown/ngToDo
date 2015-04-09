@@ -8,40 +8,66 @@ module app.toDo {
         constructor(
             public $location:ng.ILocationService,
             private $q: ng.IQService,            
-            private $routeParams,
-            private toDoService: IToDoService,
+            private $routeParams: ng.route.IRouteParamsService,
+            private appBarService: ui.IAppBarService,
+            private toDo: IToDo,
             public token: common.ISessionStorageProperty) {
             super($location,token);
 
         }
 
+        public setAppBarButtons = () => {
+            this.appBarService.setButtons([
+                {
+                    type: "Done",
+                    text: "Done",
+                    onClick: this.toDo.complete,
+                    isValid: this.toDo.isValid
+                },
+                {
+                    type: "Save",
+                    text: "Save",
+                    onClick: this.toDo.save,
+                    isValid: this.toDo.isValid
+
+                }
+            ]);
+        }
         public activate = () => {
 
             var deferred = this.$q.defer();
 
-            if (this.$routeParams.toDoId) {
+            if (this.$routeParams["toDoId"]) {
 
-                this.toDoService.getById(this.$routeParams.toDoId).then((results) => {
+                this.toDo.getById(this.$routeParams["toDoId"]).then((results) => {
 
                     this.toDo = results;
+
+                    this.setAppBarButtons();
 
                     deferred.resolve(true);
 
                 }).catch((Error) => {
 
+                    
+
                     deferred.resolve(false);
 
                 });
             } else {
-                deferred.resolve(true);
+                this.toDo.instance(null).then((results) => {
+                    this.toDo = results;
+                    this.setAppBarButtons();
+                    deferred.resolve(true);
+                });
+
             }
 
             return deferred.promise;
         }
 
-        public toDo: IToDo;
     }
 
     angular.module("app.toDo")
-        .controller("ToDoFormController", ["$location","$q","$routeParams", "toDoService","token", ToDoFormController]);
+        .controller("toDoFormController", ["$location","$q","$routeParams", "appBarService","toDo","token", ToDoFormController]);
 } 

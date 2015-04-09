@@ -231,6 +231,12 @@
     <Content Include="scripts\angular-sanitize.min.js.map" />
     <Content Include="scripts\angular.min.js.map" />
     <Content Include="scripts\jquery-1.9.0.min.map" />
+    <Content Include="src\app\common\common.animations.css">
+      <DependentUpon>common.animations.less</DependentUpon>
+    </Content>
+    <Content Include="src\app\common\common.animations.min.css">
+      <DependentUpon>common.animations.css</DependentUpon>
+    </Content>
     <Content Include="src\app\common\common.css">
       <DependentUpon>common.less</DependentUpon>
     </Content>
@@ -263,18 +269,31 @@
     <Content Include="src\app\toDo\views\toDoDetail.html" />
     <Content Include="src\app\toDo\views\toDoMasterDetail.html" />
     <Content Include="src\app\toDo\views\toDoRecent.html" />
-    <Content Include="src\app\ui\appFooter\appFooter.css">
-      <DependentUpon>appFooter.less</DependentUpon>
+    <Content Include="src\app\ui\appBarButton\appBarButton.css">
+      <DependentUpon>appBarButton.less</DependentUpon>
     </Content>
-    <Content Include="src\app\ui\appFooter\appFooter.html" />
-    <Content Include="src\app\ui\appFooter\appFooter.min.css">
+    <Content Include="src\app\ui\appBarButton\appBarButton.html" />
+    <Content Include="src\app\ui\appBarButton\appBarButton.min.css">
+      <DependentUpon>appBarButton.css</DependentUpon>
+    </Content>
+    <Content Include="src\app\ui\appBar\appBar.css">
+      <DependentUpon>appBar.less</DependentUpon>
+    </Content>
+    <Content Include="src\app\ui\appBar\appBar.min.css">
+      <DependentUpon>appBar.css</DependentUpon>
+    </Content>
+    <Content Include="src\app\ui\appBar\appFooter.css">
+      <DependentUpon>appBar.less</DependentUpon>
+    </Content>
+    <Content Include="src\app\ui\appBar\appBar.html" />
+    <Content Include="src\app\ui\appBar\appFooter.min.css">
       <DependentUpon>appFooter.css</DependentUpon>
     </Content>
     <Content Include="src\app\ui\appHeader\appHeader.css">
       <DependentUpon>appHeader.less</DependentUpon>
     </Content>
     <Content Include="src\app\ui\appHeader\appHeader.less" />
-    <Content Include="src\app\ui\appFooter\appFooter.less" />
+    <Content Include="src\app\ui\appBar\appBar.less" />
     <Content Include="src\app\toDo\toDo.less">
       <DependentUpon>toDo.module.ts</DependentUpon>
     </Content>
@@ -288,7 +307,7 @@
       <DependentUpon>workSpinner.ts</DependentUpon>
     </Content>
     <Content Include="scripts\jquery-2.1.3.min.map" />
-    <Content Include="src\app\ui\appFooter\appFooter.css.map">
+    <Content Include="src\app\ui\appBar\appFooter.css.map">
       <DependentUpon>appFooter.css</DependentUpon>
     </Content>
     <Content Include="src\app\ui\appHeader\appHeader.css.map">
@@ -308,6 +327,19 @@
     </Content>
     <Content Include="src\app\toDo\toDo.css.map">
       <DependentUpon>toDo.css</DependentUpon>
+    </Content>
+    <Content Include="src\app\common\common.animations.less">
+      <DependentUpon>common.module.ts</DependentUpon>
+    </Content>
+    <Content Include="src\app\common\common.animations.css.map">
+      <DependentUpon>common.animations.css</DependentUpon>
+    </Content>
+    <Content Include="src\app\ui\appBar\appBar.css.map">
+      <DependentUpon>appBar.css</DependentUpon>
+    </Content>
+    <Content Include="src\app\ui\appBarButton\appBarButton.less" />
+    <Content Include="src\app\ui\appBarButton\appBarButton.css.map">
+      <DependentUpon>appBarButton.css</DependentUpon>
     </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -392,13 +424,16 @@
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\app\common\common.module.ts" />
     <TypeScriptCompile Include="src\app\common\services\apiEndpointProvider.ts" />
+    <TypeScriptCompile Include="src\app\common\services\historyService.ts" />
+    <TypeScriptCompile Include="src\app\common\services\notificationService.ts" />
     <TypeScriptCompile Include="src\app\common\services\storage.ts" />
     <TypeScriptCompile Include="src\app\dataService.ts" />
     <TypeScriptCompile Include="src\app\common\services\formEncode.ts" />
     <TypeScriptCompile Include="src\app\common\services\requestCounter.ts" />
     <TypeScriptCompile Include="src\app\common\directives\workSpinner.ts" />
     <TypeScriptCompile Include="src\app\common\services\routesProvider.ts" />
-    <TypeScriptCompile Include="src\app\SessionStorageProperty.ts" />
+    <TypeScriptCompile Include="src\app\entity.ts" />
+    <TypeScriptCompile Include="src\app\sessionStorageProperty.ts" />
     <TypeScriptCompile Include="src\app\storage.ts" />
     <TypeScriptCompile Include="src\app\common\services\featureComponentsMappingsProvider.ts" />
     <TypeScriptCompile Include="src\app\authenticatedController.ts" />
@@ -430,14 +465,18 @@
     <TypeScriptCompile Include="src\app\toDo\directives\toDoItemsController.ts">
       <DependentUpon>toDoItems.ts</DependentUpon>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="src\app\toDo\services\toDo.ts" />
     <TypeScriptCompile Include="src\app\toDo\toDo.module.ts" />
     <TypeScriptCompile Include="src\app\toDo\controllers\toDoListController.ts" />
     <TypeScriptCompile Include="src\app\toDo\services\toDoService.ts" />
     <TypeScriptCompile Include="src\app\toDo\toDo.d.ts">
       <DependentUpon>toDo.module.ts</DependentUpon>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="src\app\ui\appFooter\appFooter.ts" />
-    <TypeScriptCompile Include="src\app\ui\appFooter\appFooterController.ts" />
+    <TypeScriptCompile Include="src\app\ui\appBarButton\appBarButtonConstructorFn.ts" />
+    <TypeScriptCompile Include="src\app\ui\appBarButton\appBarButton.ts" />
+    <TypeScriptCompile Include="src\app\ui\appBar\appBar.ts" />
+    <TypeScriptCompile Include="src\app\ui\appBar\appBarController.ts" />
+    <TypeScriptCompile Include="src\app\ui\appBar\appBarService.ts" />
     <TypeScriptCompile Include="src\app\ui\appHeader\appHeader.ts" />
     <TypeScriptCompile Include="src\app\ui\appHeader\appHeaderController.ts" />
     <TypeScriptCompile Include="src\app\ui\hamburgerButton\hamburgerButton.ts" />

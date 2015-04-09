@@ -8,5 +8,5 @@
          
     }
 
-    angular.module("app.security").controller("LoginController", [LoginController]);
+    angular.module("app.security").controller("loginController", [LoginController]);
 } 

@@ -15,7 +15,7 @@ var app;
                     scope.$watch(function () {
                         return _this.requestCounter.getRequestCount();
                     }, function (requestCount) {
-                        scope.requestCount = requestCount;
+                        scope["requestCount"] = requestCount;
                     });
                 };
             }

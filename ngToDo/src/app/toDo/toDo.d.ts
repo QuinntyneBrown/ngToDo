@@ -1,12 +1,14 @@
 ﻿declare module app.toDo {
     
-    export interface IToDo {
+    export interface IToDo extends common.IEntity<IToDo> {
         id: number;
         name: string;
         description: string;
         status: number;
         completedDateTime: Date;
         createdDateTime: Date;
+        complete():void;
+        getRecent(): ng.IPromise<any>;
     }
 
     export interface IToDoService extends common.IDataService {

@@ -1,6 +1,8 @@
 ﻿<div class="to-do-form">
     
-    <h1>Create To Do</h1>
+    <h1 data-ng-if="!toDoForm.toDo.id">Create To Do</h1>
+    
+    <h1 data-ng-if="toDoForm.toDo.id">Edit To Do</h1>
 
     <form novalidate>
         
@@ -14,7 +16,5 @@
             <input type="text" class="form-control" data-ng-model="toDoForm.toDo.description" />
         </div>
         
-        <button type="submit" class="btn btn-primary" data-ng-click="toDoForm.create()">create</button>
-
     </form>
 </div>

@@ -7,20 +7,20 @@ var __extends = this.__extends || function (d, b) {
 var app;
 (function (app) {
     var toDo;
-    (function (toDo) {
+    (function (_toDo) {
         "use strict";
         var ToDoRecentController = (function (_super) {
             __extends(ToDoRecentController, _super);
-            function ToDoRecentController($location, $q, toDoService, token) {
+            function ToDoRecentController($location, $q, toDo, token) {
                 var _this = this;
                 _super.call(this, $location, token);
                 this.$location = $location;
                 this.$q = $q;
-                this.toDoService = toDoService;
+                this.toDo = toDo;
                 this.token = token;
                 this.activate = function () {
                     var deferred = _this.$q.defer();
-                    _this.toDoService.getRecent().then(function (results) {
+                    _this.toDo.getRecent().then(function (results) {
                         _this.toDos = results;
                         deferred.resolve(true);
                     }).catch(function (Error) {
@@ -31,7 +31,7 @@ var app;
             }
             return ToDoRecentController;
         })(app.security.AuthenticatedController);
-        angular.module("app.toDo").controller("ToDoRecentController", ["$location", "$q", "toDoService", "token", ToDoRecentController]);
+        angular.module("app.toDo").controller("toDoRecentController", ["$location", "$q", "toDo", "token", ToDoRecentController]);
     })(toDo = app.toDo || (app.toDo = {}));
 })(app || (app = {}));
 

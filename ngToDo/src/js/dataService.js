@@ -9,18 +9,18 @@ var app;
                 this.$cacheFactory = $cacheFactory;
                 this.$q = $q;
                 this.baseUri = baseUri;
-                this.add = function (options) {
+                this.add = function (entity) {
                     var deferred = _this.$q.defer();
-                    _this.$http({ method: "POST", url: _this.baseUri + "add", data: options.entity }).then(function (results) {
+                    _this.$http({ method: "POST", url: _this.baseUri + "add", data: entity }).then(function (results) {
                         deferred.resolve(results);
                     }).catch(function (error) {
                         deferred.reject(error);
                     });
                     return deferred.promise;
                 };
-                this.update = function (options) {
+                this.update = function (entity) {
                     var deferred = _this.$q.defer();
-                    _this.$http({ method: "POST", url: _this.baseUri + "add", data: options.entity }).then(function (results) {
+                    _this.$http({ method: "PUT", url: _this.baseUri + "update", data: JSON.stringify(entity) }).then(function (results) {
                         deferred.resolve(results);
                     }).catch(function (error) {
                         deferred.reject(error);

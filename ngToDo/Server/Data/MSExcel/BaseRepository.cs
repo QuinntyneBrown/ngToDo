@@ -77,6 +77,11 @@ namespace ngToDo.Server.Data.MSExcel
             ExcelWorkbookProvider.Dispose();
         }
 
+        public void SaveChanges()
+        {
+            ExcelWorkbookProvider.Dispose();
+        }
+
         protected int GetRowIndex(_Worksheet worksheet, T entity)
         {
             for (var rowIndex = 2; rowIndex < MaxExcelRows; rowIndex++)

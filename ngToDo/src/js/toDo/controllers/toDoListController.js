@@ -31,7 +31,7 @@ var app;
             }
             return ToDoListController;
         })(app.security.AuthenticatedController);
-        angular.module("app.toDo").controller("ToDoListController", ["$location", "$q", "toDoService", "token", ToDoListController]);
+        angular.module("app.toDo").controller("toDoListController", ["$location", "$q", "toDoService", "token", ToDoListController]);
     })(toDo = app.toDo || (app.toDo = {}));
 })(app || (app = {}));
 

@@ -17,7 +17,7 @@
         public getRecent = () => {
             var deferred = this.$q.defer();
             this.$http({ method: "GET", url: this.baseUri + "getRecent" }).then((results) => {
-                deferred.resolve(results.data);
+                deferred.resolve(results);
             }).catch((error) => {
                 deferred.reject(error);
             });

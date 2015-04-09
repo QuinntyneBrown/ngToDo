@@ -1,0 +1,26 @@
+﻿<div class="app-bar">
+    <div>
+        <div class="left" style="width:33%">
+
+            <app-bar-button button="appBar.appBarService.backButton" data-ng-if="appBar.appBarService.getPreviousUrl()"></app-bar-button>
+
+            <span data-ng-if="!appBar.appBarService.getPreviousUrl()">&nbsp;</span>
+
+        </div>
+
+        <div class="left" style="width:33%">
+            <app-bar-button data-ng-if="appBar.appBarService.getButtons()"
+                            data-ng-repeat="button in appBar.appBarService.getButtons()" button="button"></app-bar-button>
+
+            <span data-ng-if="!appBar.appBarService.getButtons()">&nbsp;</span>
+        </div>
+
+        <div class="left" style="width:33%">
+            <app-bar-button button="appBar.appBarService.notificationButton"></app-bar-button>
+
+        </div>
+
+        <div class="clear"></div>
+    </div>
+
+</div>

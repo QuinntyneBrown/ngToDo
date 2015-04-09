@@ -1,9 +1,37 @@
 ﻿module app.common {
 
-    export class SessionStorageProperty implements ISessionStorageProperty {
+    export class StorageProperty {
 
-        constructor(private $rootScope: ng.IRootScopeService, private storage: any, private name: string) {
+        constructor(public storage: any, public name: string) {
 
+        }
+
+        public get = () => {
+            if (this.data) {
+                return this.data;
+            }
+
+            try {
+                this.data = this.storage.getByName({ name: this.name }).value;
+            } catch (error) {
+
+            }
+
+            return this.data;
+        }
+
+        public set = (params: any) => {
+            this.data = params.data;
+            this.storage.put({ name: this.name, value: params.data });
+        }
+
+        public data: any;
+    }
+
+    export class SessionStorageProperty extends StorageProperty implements ISessionStorageProperty {
+
+        constructor(private $rootScope: ng.IRootScopeService, public storage: any, public name: string) {
+            super(storage, name);
             $rootScope.$on("$locationChangeStart", this.onLocationChangeStart);
         }
 
@@ -14,27 +42,5 @@
             }
         }
 
-        public get = () => {
-            if (this.data) {
-                return this.data;
-            }
-
-            try {
-                this.data = this.storage.getByName({ name: this.key }).value;
-            } catch (error) {
-
-            }
-
-            return this.data;
-        }
-
-        public set = (params: any) => {
-            this.data = params.data;
-            this.storage.put({ name: this.key, value: params.data });
-        }
-
-        private data: any;
-
-        private key: string;
     }
 } 

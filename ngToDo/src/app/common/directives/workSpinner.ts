@@ -20,11 +20,11 @@
 
         public template = "<div ng-show='requestCount' class='work-spinner'><i class='fa fa-spinner fa-spin fade'></i></div>";
 
-        public link = (scope: IWorkSpinnerScope) => {
+        public link = (scope: ng.IScope) => {
             scope.$watch(() => {
                 return this.requestCounter.getRequestCount();
             },(requestCount) => {
-                    scope.requestCount = requestCount;
+                    scope["requestCount"] = requestCount;
             });
         };
 

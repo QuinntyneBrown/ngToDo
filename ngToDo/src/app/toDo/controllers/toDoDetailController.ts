@@ -32,6 +32,6 @@
     }
 
     angular.module("app.toDo")
-        .controller("ToDoDetailController", ["$q", "toDoService", "$routeParams", ToDoDetailController]);
+        .controller("toDoDetailController", ["$q", "toDoService", "$routeParams", ToDoDetailController]);
 
 } 

@@ -59,7 +59,7 @@ namespace ngToDo.Server.Api.v1
             using (repository)
             {
                 repository.Add(entity);
-
+                repository.SaveChanges();
                 return Ok();
             }
         }
@@ -70,7 +70,7 @@ namespace ngToDo.Server.Api.v1
             using (repository)
             {
                 repository.Update(entity);
-
+                repository.SaveChanges();
                 return Ok();
             }
         }

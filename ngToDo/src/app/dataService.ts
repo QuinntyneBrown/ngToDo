@@ -10,11 +10,11 @@
 
         }
 
-        public add = (options) => {
+        public add = (entity) => {
 
             var deferred = this.$q.defer();
 
-            this.$http({ method: "POST", url: this.baseUri + "add", data: options.entity }).then((results) => {
+            this.$http({ method: "POST", url: this.baseUri + "add", data: entity }).then((results) => {
                 deferred.resolve(results);
             }).catch((error) => {
                 deferred.reject(error);
@@ -23,11 +23,11 @@
             return deferred.promise;
         }
 
-        public update = (options) => {
+        public update = (entity) => {
 
             var deferred = this.$q.defer();
 
-            this.$http({ method: "POST", url: this.baseUri + "add", data: options.entity }).then((results) => {
+            this.$http({ method: "PUT", url: this.baseUri + "update", data: JSON.stringify(entity) }).then((results) => {
                 deferred.resolve(results);
             }).catch((error) => {
                 deferred.reject(error);

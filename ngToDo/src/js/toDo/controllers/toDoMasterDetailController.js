@@ -20,7 +20,7 @@ var app;
             }
             return ToDoMasterDetailController;
         })(app.security.AuthenticatedController);
-        angular.module("app.toDo").controller("ToDoMasterDetailController", ["$location", "$q", "toDoService", "token", ToDoMasterDetailController]);
+        angular.module("app.toDo").controller("toDoMasterDetailController", ["$location", "$q", "toDoService", "token", ToDoMasterDetailController]);
     })(toDo = app.toDo || (app.toDo = {}));
 })(app || (app = {}));
 

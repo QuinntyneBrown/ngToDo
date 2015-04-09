@@ -37,5 +37,5 @@
     }
 
     angular.module("app.toDo")
-        .controller("ToDoListController", ["$location", "$q", "toDoService", "token",  ToDoListController]);
+        .controller("toDoListController", ["$location", "$q", "toDoService", "token",  ToDoListController]);
 } 

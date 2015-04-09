@@ -2,8 +2,10 @@
 {
     public enum Status
     {
-        NEW,
-        STARTED,
-        COMPLETED
+        New = 1,
+        ToDo = 2,
+        ToDoNever = 3,
+        Started = 4,
+        Completed = 5
     }
 }

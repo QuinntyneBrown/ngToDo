@@ -16,5 +16,5 @@ module app.toDo {
 
     }
 
-    angular.module("app.toDo").controller("ToDoMasterDetailController", ["$location", "$q", "toDoService", "token",ToDoMasterDetailController]);
+    angular.module("app.toDo").controller("toDoMasterDetailController", ["$location", "$q", "toDoService", "token",ToDoMasterDetailController]);
 } 

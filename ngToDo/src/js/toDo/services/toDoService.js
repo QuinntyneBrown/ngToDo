@@ -21,7 +21,7 @@ var app;
                 this.getRecent = function () {
                     var deferred = _this.$q.defer();
                     _this.$http({ method: "GET", url: _this.baseUri + "getRecent" }).then(function (results) {
-                        deferred.resolve(results.data);
+                        deferred.resolve(results);
                     }).catch(function (error) {
                         deferred.reject(error);
                     });

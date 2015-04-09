@@ -6,7 +6,7 @@ namespace ngToDo.Server.Models
     {
         public ToDo()
         {
-            this.Status = Status.NEW;
+            this.Status = Status.New;
         }
 
         public int Id { get; set; }

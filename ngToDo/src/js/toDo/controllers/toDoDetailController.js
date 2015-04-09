@@ -22,7 +22,7 @@ var app;
             }
             return ToDoDetailController;
         })();
-        angular.module("app.toDo").controller("ToDoDetailController", ["$q", "toDoService", "$routeParams", ToDoDetailController]);
+        angular.module("app.toDo").controller("toDoDetailController", ["$q", "toDoService", "$routeParams", ToDoDetailController]);
     })(toDo = app.toDo || (app.toDo = {}));
 })(app || (app = {}));
 

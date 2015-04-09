@@ -16,23 +16,20 @@
     </head>
 
 <body data-ng-app="app.toDo" ng-strict-di data-ng-controller="toDoAppController as app">
-    to
+    
     <work-spinner></work-spinner>
+    
+    <app-header is-logged-in="app.isLoggedIn()"></app-header>
 
-    <div class="container">
+    <div ng-viewport class="main-content slide">
 
-        <app-header is-logged-in="app.isLoggedIn()"></app-header>
-
-        <div ng-viewport class="main-content slide">
-
-        </div>
-
-
-        <app-footer></app-footer>
     </div>
+    
+    <app-bar></app-bar>
 
     <script src="scripts/angular-beta/angular.js"></script>
     <script src="scripts/angular-beta/router.es5.js"></script>
+    <script src="scripts/angular-animate.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

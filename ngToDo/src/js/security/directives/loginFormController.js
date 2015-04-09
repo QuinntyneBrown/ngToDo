@@ -8,6 +8,8 @@ var app;
                 this.$location = $location;
                 this.securityService = securityService;
                 this.token = token;
+                this.username = "quinntynebrown@gmail.com";
+                this.password = "P@ssw0rd";
                 this.tryToLogin = function () {
                     _this.securityService.login(_this.username, _this.password).then(function (results) {
                         _this.$location.path("/toDo/recent");

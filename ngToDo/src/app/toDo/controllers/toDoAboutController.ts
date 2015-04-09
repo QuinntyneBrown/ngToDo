@@ -8,11 +8,10 @@
             public $location: ng.ILocationService,
             public token: common.ISessionStorageProperty) {
             super($location, token);
-
         }
 
     }
 
     angular.module("app.toDo")
-        .controller("ToDoAboutController", ["$location", "token", ToDoAboutController]);
+        .controller("toDoAboutController", ["$location", "token", ToDoAboutController]);
 } 

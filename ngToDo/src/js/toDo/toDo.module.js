@@ -4,6 +4,7 @@ var app;
     (function (toDo) {
         angular.module("app.toDo", [
             "ngNewRouter",
+            "ngAnimate",
             "app.common",
             "app.security",
             "app.ui"
@@ -38,6 +39,10 @@ var app;
                         }
                     }
                 }
+                throw new Error("Unmapped Component " + name);
+            });
+            $componentLoaderProvider.setCtrlNameMapping(function (name) {
+                return name[0].toLowerCase() + name.substr(1) + 'Controller';
             });
             $httpProvider.interceptors.push("authorizationInterceptor");
             $httpProvider.interceptors.push("requestCounter");

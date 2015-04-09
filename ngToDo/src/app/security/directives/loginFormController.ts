@@ -6,9 +6,9 @@
             
         }
 
-        public username: string;
+        public username: string = "quinntynebrown@gmail.com";
 
-        public password: string;
+        public password: string = "P@ssw0rd";
 
         public rememberMe: boolean;
 

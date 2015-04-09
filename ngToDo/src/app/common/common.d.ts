@@ -1,5 +1,15 @@
 ﻿declare module app.common {
     
+    export interface IEntity<T> {
+        id: number;
+        instance(data: any): ng.IPromise<any>;
+        getById(id: any): ng.IPromise<any>;
+        getAll(): ng.IPromise<any>;
+        save(): ng.IPromise<any>;
+        remove(): ng.IPromise<any>;
+        isValid(): boolean;
+        getValidationErrors():string[];
+    }
     export interface IApiEndpointConfig {
         baseUrl: string;
     }
@@ -8,12 +18,16 @@
         configure(baseUrl: string): void;
     }
 
-    export interface IRequestCounter {
-        getRequestCount():number;
+    export interface IHistoryService {
+
     }
 
-    export interface IWorkSpinnerScope extends ng.IScope {
-        requestCount: number;
+    export interface INotificationService {
+
+    }
+
+    export interface IRequestCounter {
+        getRequestCount():number;
     }
 
     export interface IFeatureComponentsMapping {
@@ -47,9 +61,9 @@
 
         remove(id: any): ng.IPromise<any>;
 
-        add(options: any): ng.IPromise<any>;
+        add(entity: any): ng.IPromise<any>;
 
-        update(options: any): ng.IPromise<any>;
+        update(entity: any): ng.IPromise<any>;
     }
 
     export interface IViewDataPrimer {
