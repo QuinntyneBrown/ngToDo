@@ -3,10 +3,12 @@ var app;
     var common;
     (function (common) {
         var Entity = (function () {
-            function Entity($q, dataService) {
+            function Entity($location, $q, dataService, baseUri) {
                 var _this = this;
+                this.$location = $location;
                 this.$q = $q;
                 this.dataService = dataService;
+                this.baseUri = baseUri;
                 this.getById = function (id) {
                     var deferred = _this.$q.defer();
                     _this.dataService.getById(id).then(function (results) {
@@ -22,24 +24,37 @@ var app;
                     var deferred = _this.$q.defer();
                     _this.dataService.getAll().then(function (results) {
                         var entities = [];
+                        var promises = [];
                         for (var i = 0; i < results.data.length; i++) {
-                            entities.push(_this.instance(results.data[i]));
+                            promises.push(_this.instance(results.data[i]));
                         }
-                        deferred.resolve(entities);
+                        _this.$q.all(promises).then(function (allResults) {
+                            for (var x = 0; x < allResults.length; x++) {
+                                entities.push(allResults[x]);
+                            }
+                            deferred.resolve(entities);
+                        });
                     });
                     return deferred.promise;
                 };
                 this.save = function () {
                     var deferred = _this.$q.defer();
-                    if (_this.id) {
-                        _this.dataService.update(_this).then(function () {
-                            deferred.resolve();
-                        });
+                    if (_this.isValid()) {
+                        if (_this.id) {
+                            _this.dataService.update(_this).then(function () {
+                                _this.notifySaved();
+                                deferred.resolve();
+                            });
+                        }
+                        else {
+                            _this.dataService.add(_this).then(function () {
+                                _this.notifySaved();
+                                deferred.resolve();
+                            });
+                        }
                     }
                     else {
-                        _this.dataService.add(_this).then(function () {
-                            deferred.resolve();
-                        });
+                        deferred.reject();
                     }
                     return deferred.promise;
                 };
@@ -48,6 +63,7 @@ var app;
                     if (_this.id) {
                         _this.dataService.remove(_this.id).then(function () {
                             _this.isDeleted = true;
+                            _this.notifyDeleted();
                             deferred.resolve();
                         });
                     }
@@ -62,6 +78,12 @@ var app;
                     }
                     return false;
                 };
+                this.notifySaved = function () {
+                    _this.notifyChanged("saved");
+                };
+                this.notifyDeleted = function () {
+                    _this.notifyChanged("deleted");
+                };
                 this.instance = function (data) {
                     throw new Error("Not Implemented");
                 };
@@ -71,6 +93,14 @@ var app;
                 this.id = 0;
                 this.isDeleted = false;
             }
+            Entity.prototype.notifyChanged = function (changeType) {
+                this.notify("entityChanged", { target: this, changeType: changeType });
+            };
+            Entity.prototype.notify = function (customeEventName, detailArg) {
+                var event = document.createEvent('CustomEvent');
+                event.initCustomEvent(customeEventName, false, false, detailArg);
+                document.dispatchEvent(event);
+            };
             return Entity;
         })();
         common.Entity = Entity;

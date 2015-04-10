@@ -10,7 +10,7 @@ var app;
                 this.restrict = "E";
                 this.replace = true;
                 this.scope = {};
-                this.template = "<div ng-show='requestCount' class='work-spinner'><i class='fa fa-spinner fa-spin fade'></i></div>";
+                this.template = "<div data-ng-show='requestCount' class='work-spinner'><i class='fa fa-spinner fa-spin fade'></i></div>";
                 this.link = function (scope) {
                     scope.$watch(function () {
                         return _this.requestCounter.getRequestCount();

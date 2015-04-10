@@ -6,6 +6,7 @@ var app;
             function ToDoAppController($location, $rootScope, $router, routes, token) {
                 var _this = this;
                 this.$location = $location;
+                this.$router = $router;
                 this.token = token;
                 this.isLoggedIn = function () {
                     return _this.token.get();

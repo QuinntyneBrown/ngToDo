@@ -2,7 +2,7 @@
 
     export class ToDoAppController {
 
-        constructor(private $location: ng.ILocationService, $rootScope: ng.IRootScopeService, $router: any, routes: common.IRouteConfig[], public token: common.ISessionStorageProperty) {
+        constructor(private $location: ng.ILocationService, $rootScope: ng.IRootScopeService, public $router: any, routes: common.IRouteConfig[], public token: common.ISessionStorageProperty) {
 
             $router.config(routes);
 

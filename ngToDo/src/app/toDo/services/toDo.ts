@@ -2,8 +2,10 @@
     
     class ToDo extends common.Entity<ToDo> implements IToDo {
 
-        constructor(public $q: ng.IQService, private toDoService: IToDoService) {
-            super($q, toDoService);
+        constructor(public $location: ng.ILocationService,
+            public $q: ng.IQService,
+            private toDoService: IToDoService) {
+            super($location,$q, toDoService,'/toDo');
             this.status = 1;
         }
 
@@ -13,9 +15,9 @@
             var toDo;
 
             if (data === null) {
-                toDo = new ToDo(this.$q, this.toDoService);
+                toDo = new ToDo(this.$location,this.$q, this.toDoService);
             } else {
-                toDo = new ToDo(this.$q, this.toDoService);
+                toDo = new ToDo(this.$location,this.$q, this.toDoService);
                 toDo.id = data.id || 0;
                 toDo.name = data.name;
                 toDo.description = data.description;
@@ -43,18 +45,19 @@
             
             var validationErrors: string[] = [];
 
-            if (this.name.length < 0)
+            if (!this.name || this.name.length < 0)
                 validationErrors.push("Name can not be empty");
 
-            if (this.description.length < 0)
+            if (!this.description || this.description.length < 0)
                 validationErrors.push("Description can not be empty");
 
             return validationErrors;
         }
 
         public complete = () => {
-
-            return this.setStatus(5);
+            if (this.isValid()) {
+                return this.setStatus(5);
+            }
         }
 
         public toDo = () => {
@@ -109,5 +112,5 @@
 
     }
 
-    angular.module("app.toDo").service("toDo", ["$q","toDoService",ToDo]);
+    angular.module("app.toDo").service("toDo", ["$location","$q","toDoService",ToDo]);
 } 

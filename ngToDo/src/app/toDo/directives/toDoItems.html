@@ -1,3 +1,3 @@
 ﻿<div class="to-do-items">
-    <to-do-item data-ng-repeat="toDo in toDoItems" to-do-item="toDo"></to-do-item>
+    <to-do-item data-ng-repeat="toDo in toDoItems" to-do-item="toDo" data-ng-if="!toDo.isDeleted"></to-do-item>
 </div>

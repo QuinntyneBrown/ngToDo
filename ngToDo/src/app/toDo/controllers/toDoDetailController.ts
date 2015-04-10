@@ -2,36 +2,51 @@
     
     "use strict";
 
-    class ToDoDetailController implements IToDoDetailController {
+    class ToDoDetailController extends security.AuthenticatedController {
         
-        constructor(private $q: ng.IQService, private toDoService: IToDoService, private $routeParams) {
+        constructor(
+            public $location: ng.ILocationService,
+            private $q: ng.IQService,
+            private $routeParams: ng.route.IRouteParamsService,
+            private toDo: IToDo,
+            public token: common.ISessionStorageProperty) {
+            super($location, token);
 
-            
         }
 
         public activate = () => {
 
             var deferred = this.$q.defer();
 
-            this.toDoService.getById(this.$routeParams.toDoId).then((results) => {
+            if (this.$routeParams["toDoId"]) {
 
-                this.toDo = results;
+                this.toDo.getById(this.$routeParams["toDoId"]).then((results) => {
 
-                deferred.resolve(true);
+                    this.toDo = results;
 
-            }).catch((Error) => {
+                    deferred.resolve(true);
 
-                deferred.resolve(false);
+                }).catch((Error) => {
 
-            });
+
+
+                    deferred.resolve(false);
+
+                });
+            } else {
+                this.toDo.instance(null).then((results) => {
+                    this.toDo = results;
+                    deferred.resolve(true);
+                });
+
+            }
 
             return deferred.promise;
         }
 
-        public toDo: IToDo;
     }
 
     angular.module("app.toDo")
-        .controller("toDoDetailController", ["$q", "toDoService", "$routeParams", ToDoDetailController]);
+        .controller("toDoDetailController", ["$location", "$q", "$routeParams", "toDo", "token", ToDoDetailController]);
 
 } 

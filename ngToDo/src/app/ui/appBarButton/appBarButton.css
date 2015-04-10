@@ -5,4 +5,7 @@
   padding-right: 7.5px;
   padding-left: 7.5px;
 }
+.app-bar-button.disabled a {
+  color: #484848;
+}
 /*# sourceMappingURL=appBarButton.css.map */

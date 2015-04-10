@@ -237,6 +237,10 @@
     <Content Include="fonts\FontAwesome.otf" />
     <Content Include="app.less" />
     <None Include="scripts\jquery-1.9.0.intellisense.js" />
+    <Content Include="scripts\breeze.angular.js" />
+    <Content Include="scripts\breeze.base.debug.js" />
+    <Content Include="scripts\breeze.base.min.js" />
+    <Content Include="scripts\breeze.bridge.angular.js" />
     <Content Include="scripts\breeze.debug.js" />
     <Content Include="scripts\breeze.min.js" />
     <Content Include="scripts\jquery-1.9.0.js" />
@@ -394,7 +398,7 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Server\Api\BreezeDataServiceController.cs" />
+    <Compile Include="Server\Api\v1\BreezeDataServiceController.cs" />
     <Compile Include="Server\StartUp\BreezeWebApiConfig.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -402,7 +406,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\ToDoConfiguration.cs" />
     <Compile Include="Migrations\UserConfiguration.cs" />
-    <Compile Include="Server\Api\IdentityController.cs" />
+    <Compile Include="Server\Api\v1\IdentityController.cs" />
     <Compile Include="Server\Config\AppConfiguration.cs" />
     <Compile Include="Server\Config\CryptoConfiguration.cs" />
     <Compile Include="Server\Config\SecurityConfiguration.cs" />
@@ -430,7 +434,7 @@
     <Compile Include="Server\StartUp\OwinStartup.cs" />
     <Compile Include="Server\StartUp\UnityConfig.cs" />
     <Compile Include="Server\StartUp\WebApiStartUp.cs" />
-    <Compile Include="Server\Api\ToDoController.cs" />
+    <Compile Include="Server\Api\v1\ToDoController.cs" />
     <Compile Include="Server\Config\ExcelConfiguration.cs" />
     <Compile Include="Server\Data\MSExcel\ExcelWorkbookProvider.cs" />
     <Compile Include="Server\Data\IRepository.cs" />
@@ -447,8 +451,10 @@
     <TypeScriptCompile Include="scripts\typings\angularjs\angular-route.d.ts" />
     <TypeScriptCompile Include="scripts\typings\angularjs\angular-sanitize.d.ts" />
     <TypeScriptCompile Include="scripts\typings\angularjs\angular.d.ts" />
+    <TypeScriptCompile Include="scripts\typings\breeze\breeze.d.ts" />
     <TypeScriptCompile Include="scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="scripts\typings\moment\moment.d.ts" />
+    <TypeScriptCompile Include="scripts\typings\q\Q.d.ts" />
     <TypeScriptCompile Include="src\app\common\common.d.ts">
       <DependentUpon>common.module.ts</DependentUpon>
     </TypeScriptCompile>
@@ -496,6 +502,7 @@
       <DependentUpon>toDoItems.ts</DependentUpon>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\app\toDo\services\toDo.ts" />
+    <TypeScriptCompile Include="src\app\toDo\services\toDoBreezeService.ts" />
     <TypeScriptCompile Include="src\app\toDo\toDo.module.ts" />
     <TypeScriptCompile Include="src\app\toDo\controllers\toDoListController.ts" />
     <TypeScriptCompile Include="src\app\toDo\services\toDoService.ts" />

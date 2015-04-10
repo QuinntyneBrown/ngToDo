@@ -7,17 +7,18 @@
         constructor(
             public $location: ng.ILocationService,
             private $q: ng.IQService,
-            private toDoService: IToDoService,
+            private toDo: IToDo,
             public token: common.ISessionStorageProperty) {
             super($location, token);
 
         }
 
+
         public activate = () => {
 
             var deferred = this.$q.defer();
 
-            this.toDoService.getAll().then((results) => {
+            this.toDo.getAll().then((results) => {
 
                 this.toDos = results;
 
@@ -37,5 +38,5 @@
     }
 
     angular.module("app.toDo")
-        .controller("toDoListController", ["$location", "$q", "toDoService", "token",  ToDoListController]);
+        .controller("toDoListController", ["$location", "$q", "toDo", "token", ToDoListController]);
 } 

@@ -73,7 +73,7 @@
             var deferred = this.$q.defer();
 
             this.$http({ method: "GET", url: this.baseUri + "getAll" }).then((results) => {
-                deferred.resolve(results.data);
+                deferred.resolve(results);
             }).catch((error) => {
                 deferred.reject(error);
             });

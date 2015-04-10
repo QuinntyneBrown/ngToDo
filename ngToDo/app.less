@@ -32,6 +32,12 @@ html, body, body > .container {
 .clear {
     clear:both;
 }
+
+.actions a {
+              text-decoration:none;
+              cursor:pointer;
+              color:rgb(34,34,34);
+}
 .work-spinner {
     position:fixed;
     top:0px;
@@ -52,7 +58,7 @@ html, body, body > .container {
     background-color: rgba(0,0,0,.2);
 
     z-index:9999;
-    transition: all 1s linear;
+    transition: all 300ms linear;
 }
 
 
@@ -99,6 +105,10 @@ body {
     cursor:pointer;
     padding-right:7.5px;
     padding-left:7.5px;
+}
+
+.app-bar-button.disabled a {
+    color:rgb(72, 72, 72);
 }
 .app-header {
     background-color: rgb(34,34,34);

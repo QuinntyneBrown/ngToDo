@@ -10,9 +10,10 @@ var app;
     (function (_toDo) {
         var ToDo = (function (_super) {
             __extends(ToDo, _super);
-            function ToDo($q, toDoService) {
+            function ToDo($location, $q, toDoService) {
                 var _this = this;
-                _super.call(this, $q, toDoService);
+                _super.call(this, $location, $q, toDoService, '/toDo');
+                this.$location = $location;
                 this.$q = $q;
                 this.toDoService = toDoService;
                 this.instance = function (data) {
@@ -20,10 +21,10 @@ var app;
                     var deferred = _this.$q.defer();
                     var toDo;
                     if (data === null) {
-                        toDo = new ToDo(_this.$q, _this.toDoService);
+                        toDo = new ToDo(_this.$location, _this.$q, _this.toDoService);
                     }
                     else {
-                        toDo = new ToDo(_this.$q, _this.toDoService);
+                        toDo = new ToDo(_this.$location, _this.$q, _this.toDoService);
                         toDo.id = data.id || 0;
                         toDo.name = data.name;
                         toDo.description = data.description;
@@ -34,14 +35,16 @@ var app;
                 };
                 this.getValidationErrors = function () {
                     var validationErrors = [];
-                    if (_this.name.length < 0)
+                    if (!_this.name || _this.name.length < 0)
                         validationErrors.push("Name can not be empty");
-                    if (_this.description.length < 0)
+                    if (!_this.description || _this.description.length < 0)
                         validationErrors.push("Description can not be empty");
                     return validationErrors;
                 };
                 this.complete = function () {
-                    return _this.setStatus(5);
+                    if (_this.isValid()) {
+                        return _this.setStatus(5);
+                    }
                 };
                 this.toDo = function () {
                     return _this.setStatus(2);
@@ -81,7 +84,7 @@ var app;
             }
             return ToDo;
         })(app.common.Entity);
-        angular.module("app.toDo").service("toDo", ["$q", "toDoService", ToDo]);
+        angular.module("app.toDo").service("toDo", ["$location", "$q", "toDoService", ToDo]);
     })(toDo = app.toDo || (app.toDo = {}));
 })(app || (app = {}));
 

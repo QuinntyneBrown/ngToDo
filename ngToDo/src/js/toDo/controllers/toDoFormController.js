@@ -56,6 +56,11 @@ var app;
                     }
                     return deferred.promise;
                 };
+                document.addEventListener("entityChanged", function (event) {
+                    if (event.detail.changeType == "saved") {
+                        $location.path("/toDo/list");
+                    }
+                });
             }
             return ToDoFormController;
         })(app.security.AuthenticatedController);

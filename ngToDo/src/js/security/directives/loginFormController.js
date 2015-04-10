@@ -12,7 +12,7 @@ var app;
                 this.password = "P@ssw0rd";
                 this.tryToLogin = function () {
                     _this.securityService.login(_this.username, _this.password).then(function (results) {
-                        _this.$location.path("/toDo/recent");
+                        _this.$location.path("/toDo/list");
                     });
                 };
             }

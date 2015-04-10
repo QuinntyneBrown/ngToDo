@@ -1,3 +1,3 @@
-﻿<div class="app-bar-button" data-ng-click="button.onClick()">
+﻿<div class="app-bar-button" data-ng-click="button.onClick()" data-ng-class="{ 'disabled': !button.isValid() }">    
     <a>{{ button.text }}</a>
 </div>

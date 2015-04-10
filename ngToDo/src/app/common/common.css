@@ -28,4 +28,9 @@ body > .container {
 .clear {
   clear: both;
 }
+.actions a {
+  text-decoration: none;
+  cursor: pointer;
+  color: #222222;
+}
 /*# sourceMappingURL=common.css.map */

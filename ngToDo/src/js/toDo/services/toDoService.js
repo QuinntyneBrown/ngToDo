@@ -9,9 +9,9 @@ var app;
     var toDo;
     (function (toDo) {
         "use strict";
-        var toDoService = (function (_super) {
-            __extends(toDoService, _super);
-            function toDoService($http, $cacheFactory, $q, apiEndpoint) {
+        var ToDoService = (function (_super) {
+            __extends(ToDoService, _super);
+            function ToDoService($http, $cacheFactory, $q, apiEndpoint) {
                 var _this = this;
                 _super.call(this, $http, $cacheFactory, $q, apiEndpoint.baseUrl + "todo/");
                 this.$http = $http;
@@ -28,9 +28,10 @@ var app;
                     return deferred.promise;
                 };
             }
-            return toDoService;
+            return ToDoService;
         })(app.common.DataService);
-        angular.module("app.toDo").service("toDoService", ["$http", "$cacheFactory", "$q", "apiEndpoint", toDoService]);
+        toDo.ToDoService = ToDoService;
+        angular.module("app.toDo").service("toDoService", ["$http", "$cacheFactory", "$q", "apiEndpoint", ToDoService]);
     })(toDo = app.toDo || (app.toDo = {}));
 })(app || (app = {}));
 

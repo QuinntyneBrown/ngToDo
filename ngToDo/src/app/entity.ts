@@ -2,7 +2,7 @@
 
     export class Entity<T> implements IEntity<T> {
 
-        constructor(public $q: ng.IQService, private dataService: common.IDataService) {
+        constructor(public $location, public $q: ng.IQService, private dataService: common.IDataService, public baseUri: string) {
             this.id = 0;
             this.isDeleted = false;
         }
@@ -36,28 +36,41 @@
             this.dataService.getAll().then((results) => {
                 var entities = [];
 
+                var promises = [];
+
                 for (var i = 0; i < results.data.length; i++) {
-                    entities.push(this.instance(results.data[i]));    
+                    promises.push(this.instance(results.data[i]));
                 }
-                
-                deferred.resolve(entities);
+
+                this.$q.all(promises).then((allResults) => {
+                    for (var x = 0; x < allResults.length; x++) {
+                        entities.push(allResults[x]);
+                    }
+                    deferred.resolve(entities);
+                });
             });
 
             return deferred.promise;
         }
 
         public save = () => {
-
+            
             var deferred = this.$q.defer();
 
-            if (this.id) {
-                this.dataService.update(this).then(() => {
-                    deferred.resolve();
-                });
+            if (this.isValid()) {
+                if (this.id) {
+                    this.dataService.update(this).then(() => {
+                        this.notifySaved();
+                        deferred.resolve();
+                    });
+                } else {
+                    this.dataService.add(this).then(() => {
+                        this.notifySaved();
+                        deferred.resolve();
+                    });
+                }
             } else {
-                this.dataService.add(this).then(() => {
-                    deferred.resolve();
-                });
+                deferred.reject();
             }
 
             return deferred.promise;
@@ -69,6 +82,7 @@
             if (this.id) {
                 this.dataService.remove(this.id).then(() => {
                     this.isDeleted = true;
+                    this.notifyDeleted();
                     deferred.resolve();
                 });
             } else {
@@ -83,6 +97,24 @@
                 return true;
             }
             return false;
+        }
+
+        public notifySaved = () => {
+            this.notifyChanged("saved");
+        }
+
+        public notifyDeleted = () => {
+            this.notifyChanged("deleted");
+        }
+
+        public notifyChanged(changeType:string) {
+            this.notify("entityChanged",{ target: this, changeType: changeType });
+        }
+
+        public notify(customeEventName: string, detailArg:any) {
+            var event = document.createEvent('CustomEvent');
+            event.initCustomEvent(customeEventName, false, false, detailArg);
+            document.dispatchEvent(event);
         }
 
         public instance = (data: any): ng.IPromise<any> => {

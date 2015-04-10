@@ -14,6 +14,11 @@ module app.toDo {
             public token: common.ISessionStorageProperty) {
             super($location,token);
 
+            document.addEventListener("entityChanged",(event: CustomEvent ) => {
+                if (event.detail.changeType == "saved") {
+                    $location.path("/toDo/list");
+                }
+            });
         }
 
         public setAppBarButtons = () => {

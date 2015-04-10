@@ -17,6 +17,8 @@
              config
          ]);
 
+     
+
      function config($componentLoaderProvider: any,
          $httpProvider: ng.IHttpProvider,
          $locationProvider: ng.ILocationProvider,
@@ -28,14 +30,15 @@
          featureComponentsMappingsProvider.mappings.push(
              {
                  feature: "toDo",
-                 components: ["toDoRecent", "toDoForm", "toDoList", "toDoDetail", "toDoAbout"]
+                 components: ["toDoRecent", "toDoForm", "toDoList", "toDoDetail", "toDoAbout","toDoMasterDetail"]
              });
 
          routesProvider.configure([
              { path: '/', component: 'toDoAbout' },
+             { path: '/toDo/about', component: 'toDoAbout' },
              { path: '/toDo/recent', component: 'toDoRecent' },
              { path: '/toDo/list', component: 'toDoList' },
-             { path: '/toDo/detail/:toDoId', component: 'toDoMasterDetail' },
+             { path: '/toDo/detail/:toDoId', component: 'toDoDetail' },
              { path: '/toDo/create', component: 'toDoForm' },
              { path: '/toDo/edit/:toDoId', component: 'toDoForm' }
          ]);
