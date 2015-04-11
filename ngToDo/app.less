@@ -81,6 +81,112 @@ html, body, body > .container {
 .login-form {
 
 }
+ng-viewport {
+  display: block;
+}
+.ng-enter {
+  opacity: 0;
+}
+.ng-enter.ng-enter-active {
+  opacity: 1;
+}
+.ng-animate,
+.ng-enter {
+  -webkit-transition: 0.5s linear all;
+  -moz-transition: 0.5s linear all;
+  -o-transition: 0.5s linear all;
+  transition: 0.5s linear all;
+}
+
+.ng-leave {
+  opacity: 0;
+}
+.ng-leave.ng-leave-active {
+  opacity: 0;
+}
+* {
+    margin: 0;
+    padding: 0;
+    font-family:'Segoe UI',Arial
+}
+
+ul li {
+    margin-left:15px;
+}
+
+html, body, body > .container {
+    width:100%;
+    height:100%;
+}
+
+.main-content {
+    max-width:1024px;
+    margin:0 auto;
+    padding-top:50px;
+    padding-bottom:70px;
+}
+
+.left {
+    position:relative;
+    float:left;
+}
+
+.right {
+    position:relative;
+    float:right;
+}
+
+.clear {
+    clear:both;
+}
+
+.actions a {
+              text-decoration:none;
+              cursor:pointer;
+              color:rgb(34,34,34);
+}
+
+.component {
+    margin-left:10px;
+}
+.work-spinner {
+    position:fixed;
+    top:0px;
+    left:0px;
+    width:100%;
+    height:100%;
+
+    display: -ms-flex;
+	display: -webkit-flex;
+	display: flex;
+
+	-ms-flex-align: center;
+	-webkit-align-items: center;
+	-webkit-box-align: center;
+	align-items: center;
+    text-align:center;
+
+    background-color: rgba(0,0,0,.2);
+
+    z-index:9999;
+    transition: all 300ms linear;
+}
+
+
+
+.work-spinner img {
+    margin:0 auto;
+}
+
+
+.work-spinner i {
+    margin:0 auto;
+    font-size:10em;
+    color:black;
+}
+.login-form {
+
+}
 .about > div {
            margin-top:30px;
        }
@@ -153,3 +259,6 @@ body {
                   max-width:1024px;
                   margin:0 auto;
               }
+.hamburger-button {
+
+}

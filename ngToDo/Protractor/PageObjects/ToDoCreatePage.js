@@ -8,6 +8,6 @@ var ToDoCreatePage = function () {
 
 };
 
-ToDoCreatePage.url = config.baseUrl + "#/todo/create";
+ToDoCreatePage.url = config.baseUrl + "#/toDo/create";
 
 module.exports = ToDoCreatePage;

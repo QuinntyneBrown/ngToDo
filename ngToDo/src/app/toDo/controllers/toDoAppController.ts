@@ -1,15 +1,17 @@
 ﻿module app.toDo {
 
-    export class ToDoAppController {
+    "use strict";
+
+    class ToDoAppController {
 
         constructor(
             private $interval:ng.IIntervalService,
             private $location: ng.ILocationService,
-            $rootScope: ng.IRootScopeService,
+            private $rootScope: ng.IRootScopeService,
             public $router: any,
             public currentUser:common.ISessionStorageProperty,
-            routes: common.IRouteConfig[],
-            securityService: security.ISecurityService,
+            private routes: common.IRouteConfig[],
+            private securityService: security.ISecurityService,
             public token: common.ISessionStorageProperty) {
 
             $router.config(routes);
@@ -23,7 +25,7 @@
                     //}
 
 
-                    //$location.path("/login");
+                    $location.path("/login");
                 }
             }, 6000);
         }

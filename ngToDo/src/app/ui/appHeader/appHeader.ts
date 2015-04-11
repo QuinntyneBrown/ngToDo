@@ -26,9 +26,6 @@
             getUsername:"&"
         };
 
-        public link = (scope: ng.IScope, element: ng.IAugmentedJQuery, attributes: ng.IAttributes) => {
-
-        }
     }
 
     angular.module("app.ui").directive("appHeader", [AppHeader.instance]);

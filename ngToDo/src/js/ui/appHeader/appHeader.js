@@ -14,8 +14,6 @@ var app;
                     isLoggedIn: "&",
                     getUsername: "&"
                 };
-                this.link = function (scope, element, attributes) {
-                };
             }
             AppHeader.instance = function () {
                 return new AppHeader();

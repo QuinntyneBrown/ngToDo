@@ -2,7 +2,8 @@
 
     export class AuthenticatedController {
 
-        constructor(public $location: ng.ILocationService, public token: common.ISessionStorageProperty) {
+        constructor(public $location: ng.ILocationService,
+            public token: common.ISessionStorageProperty) {
 
         }
 

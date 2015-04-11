@@ -8,6 +8,6 @@ var ToDoListPage = function () {
 
 };
 
-ToDoListPage.url = config.baseUrl + "#/todo/list";
+ToDoListPage.url = config.baseUrl + "#/toDo/list";
 
 module.exports = ToDoListPage;

@@ -8,6 +8,6 @@ var ToDoDetailPage = function () {
 
 };
 
-ToDoDetailPage.url = config.baseUrl + "#/todo/detail/1";
+ToDoDetailPage.url = config.baseUrl + "#/toDo/detail/1";
 
 module.exports = ToDoDetailPage;

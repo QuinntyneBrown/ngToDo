@@ -203,7 +203,6 @@
     <Content Include="gulpfile.js" />
     <Content Include="Icon.png" />
     <Content Include="Protractor\PageObjects\ToDoDetailPage.js" />
-    <Content Include="Protractor\PageObjects\ToDoRecentPage.js" />
     <Content Include="Protractor\protractor.config.js" />
     <Content Include="scripts\angular-animate.js" />
     <Content Include="scripts\angular-animate.min.js" />
@@ -382,6 +381,7 @@
     <Content Include="src\app\ui\appBarButton\appBarButton.css.map">
       <DependentUpon>appBarButton.css</DependentUpon>
     </Content>
+    <Content Include="src\app\ui\hamburgerButton\hamburgerButton.less" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -393,9 +393,9 @@
     <Content Include="index.html" />
     <Content Include="Protractor\PageObjects\ToDoCreatePage.js" />
     <Content Include="Protractor\PageObjects\ToDoListPage.js" />
-    <Content Include="Protractor\specs\addToDoSpecs.js" />
+    <Content Include="Protractor\specs\saveToDoSpecs.js" />
     <Content Include="Protractor\specs\completeToDoSpecs.js" />
-    <Content Include="Protractor\specs\startToDoSpecs.js" />
+    <Content Include="Protractor\specs\createToDoSpecs.js" />
     <Content Include="Protractor\specs\toDoListSpects.js" />
     <Content Include="src\app\toDo\views\toDoForm.html" />
     <Content Include="src\app\toDo\views\toDoList.html" />
@@ -404,6 +404,7 @@
       <DependentUpon>appHeader.css</DependentUpon>
     </Content>
     <Content Include="src\app\ui\backdrop\backdrop.html" />
+    <Content Include="src\app\ui\hamburgerButton\hamburgerButton.html" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

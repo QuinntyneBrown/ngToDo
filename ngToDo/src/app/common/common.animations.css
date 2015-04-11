@@ -8,15 +8,14 @@
   opacity: 1;
 }
 .ng-animate,
-.ng-enter,
-.ng-leave {
+.ng-enter {
   -webkit-transition: 0.5s linear all;
   -moz-transition: 0.5s linear all;
   -o-transition: 0.5s linear all;
   transition: 0.5s linear all;
 }
 .ng-leave {
-  opacity: 1;
+  opacity: 0;
 }
 .ng-leave.ng-leave-active {
   opacity: 0;
