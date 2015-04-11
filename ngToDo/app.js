@@ -418,37 +418,6 @@ var app;
     var common;
     (function (common) {
         "use strict";
-        var WorkSpinner = (function () {
-            function WorkSpinner(requestCounter) {
-                var _this = this;
-                this.requestCounter = requestCounter;
-                this.restrict = "E";
-                this.replace = true;
-                this.scope = {};
-                this.template = "<div data-ng-show='requestCount' class='work-spinner'><i class='fa fa-spinner fa-spin fade'></i></div>";
-                this.link = function (scope) {
-                    scope.$watch(function () {
-                        return _this.requestCounter.getRequestCount();
-                    }, function (requestCount) {
-                        scope["requestCount"] = requestCount;
-                    });
-                };
-            }
-            WorkSpinner.instance = function (requestCounter) {
-                return new WorkSpinner(requestCounter);
-            };
-            return WorkSpinner;
-        })();
-        angular.module("app.common").directive("workSpinner", ["requestCounter", WorkSpinner.instance]);
-    })(common = app.common || (app.common = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../common/directives/workSpinner.js.map
-var app;
-(function (app) {
-    var common;
-    (function (common) {
-        "use strict";
         var ApiEndpointProvider = (function () {
             function ApiEndpointProvider() {
                 this.config = {
@@ -629,6 +598,20 @@ var app;
 })(app || (app = {}));
 
 //# sourceMappingURL=../../common/services/storage.js.map
+var app;
+(function (app) {
+    var security;
+    (function (security) {
+        var LoginController = (function () {
+            function LoginController() {
+            }
+            return LoginController;
+        })();
+        angular.module("app.security").controller("loginController", [LoginController]);
+    })(security = app.security || (app.security = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../security/controllers/loginController.js.map
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -913,139 +896,6 @@ var app;
 (function (app) {
     var security;
     (function (security) {
-        var LoginForm = (function () {
-            function LoginForm(securityService) {
-                this.securityService = securityService;
-                this.templateUrl = "/src/app/security/directives/loginForm.html";
-                this.controllerAs = "loginForm";
-                this.controller = "loginFormController";
-                this.restrict = "E";
-                this.replace = true;
-            }
-            LoginForm.instance = function (securityService) {
-                return new LoginForm(securityService);
-            };
-            return LoginForm;
-        })();
-        security.LoginForm = LoginForm;
-        angular.module("app.security").directive("loginForm", ["securityService", LoginForm.instance]);
-    })(security = app.security || (app.security = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../security/directives/loginForm.js.map
-var app;
-(function (app) {
-    var security;
-    (function (security) {
-        var LoginFormController = (function () {
-            function LoginFormController($location, loginRedirect, securityService, token) {
-                var _this = this;
-                this.$location = $location;
-                this.loginRedirect = loginRedirect;
-                this.securityService = securityService;
-                this.token = token;
-                this.username = "quinntynebrown@gmail.com";
-                this.password = "P@ssw0rd";
-                this.tryToLogin = function () {
-                    _this.securityService.login(_this.username, _this.password).then(function (results) {
-                        _this.loginRedirect.redirectPreLogin();
-                    });
-                };
-            }
-            return LoginFormController;
-        })();
-        angular.module("app.security").controller("loginFormController", ["$location", "loginRedirect", "securityService", LoginFormController]);
-    })(security = app.security || (app.security = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../security/directives/loginFormController.js.map
-var app;
-(function (app) {
-    var toDo;
-    (function (toDo) {
-        var ToDoItem = (function () {
-            function ToDoItem() {
-                this.controller = "toDoItemController";
-                this.controllerAs = "toDo";
-                this.restrict = "E";
-                this.replace = true;
-                this.templateUrl = "/src/app/toDo/directives/toDoItem.html";
-                this.scope = {
-                    toDoItem: "="
-                };
-                this.link = function (scope, element, attributes) {
-                };
-            }
-            ToDoItem.instance = function () {
-                return new ToDoItem();
-            };
-            return ToDoItem;
-        })();
-        angular.module("app.toDo").directive("toDoItem", [ToDoItem.instance]);
-    })(toDo = app.toDo || (app.toDo = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../toDo/directives/toDoItem.js.map
-var app;
-(function (app) {
-    var toDo;
-    (function (_toDo) {
-        var ToDoItemController = (function () {
-            function ToDoItemController(toDo) {
-                this.toDo = toDo;
-            }
-            return ToDoItemController;
-        })();
-        angular.module("app.toDo").controller("toDoItemController", [ToDoItemController]);
-    })(toDo = app.toDo || (app.toDo = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../toDo/directives/toDoItemController.js.map
-var app;
-(function (app) {
-    var toDo;
-    (function (toDo) {
-        var ToDoItems = (function () {
-            function ToDoItems() {
-                this.controller = "toDoItemsController";
-                this.controllerAs = "toDoItems";
-                this.replace = true;
-                this.restrict = "E";
-                this.templateUrl = "/src/app/toDo/directives/toDoItems.html";
-                this.scope = {
-                    toDoItems: "="
-                };
-                this.link = function (scope, element, attributes) {
-                };
-            }
-            ToDoItems.instance = function () {
-                return new ToDoItems();
-            };
-            return ToDoItems;
-        })();
-        angular.module("app.toDo").directive("toDoItems", [ToDoItems.instance]);
-    })(toDo = app.toDo || (app.toDo = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../toDo/directives/toDoItems.js.map
-var app;
-(function (app) {
-    var toDo;
-    (function (toDo) {
-        var ToDoItemsController = (function () {
-            function ToDoItemsController() {
-            }
-            return ToDoItemsController;
-        })();
-        angular.module("app.toDo").controller("toDoItemsController", [ToDoItemsController]);
-    })(toDo = app.toDo || (app.toDo = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../toDo/directives/toDoItemsController.js.map
-var app;
-(function (app) {
-    var security;
-    (function (security) {
         "use strict";
         var AuthorizationInterceptor = (function () {
             function AuthorizationInterceptor(token) {
@@ -1303,128 +1153,6 @@ var app;
 (function (app) {
     var ui;
     (function (ui) {
-        "use strict";
-        var AppBarButton = (function () {
-            function AppBarButton() {
-                this.restrict = "E";
-                this.replace = true;
-                this.templateUrl = "/src/app/ui/appBarButton/appBarButton.html";
-                this.scope = {
-                    button: "="
-                };
-            }
-            AppBarButton.instance = function () {
-                return new AppBarButton();
-            };
-            return AppBarButton;
-        })();
-        ui.AppBarButton = AppBarButton;
-        angular.module("app.ui").directive("appBarButton", [AppBarButton.instance]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/appBarButton/appBarButton.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        function AppBarButtonConstructorFn(text, onClick, type) {
-            return {
-                type: type,
-                text: text,
-                onClick: onClick
-            };
-        }
-        ui.AppBarButtonConstructorFn = AppBarButtonConstructorFn;
-        angular.module("app.ui").value("appBarButtonConstructorFn", AppBarButtonConstructorFn);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/appBarButton/appBarButtonConstructorFn.js.map
-var app;
-(function (app) {
-    var security;
-    (function (security) {
-        var LoginController = (function () {
-            function LoginController() {
-            }
-            return LoginController;
-        })();
-        angular.module("app.security").controller("loginController", [LoginController]);
-    })(security = app.security || (app.security = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../security/controllers/loginController.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        var AppHeader = (function () {
-            function AppHeader() {
-                this.templateUrl = "src/app/ui/appHeader/appHeader.html";
-                this.replace = true;
-                this.restrict = "E";
-                this.controller = "appHeaderController";
-                this.controllerAs = "appHeader";
-                this.scope = {
-                    title: "@",
-                    isLoggedIn: "&",
-                    getUsername: "&"
-                };
-                this.link = function (scope, element, attributes) {
-                };
-            }
-            AppHeader.instance = function () {
-                return new AppHeader();
-            };
-            return AppHeader;
-        })();
-        ui.AppHeader = AppHeader;
-        angular.module("app.ui").directive("appHeader", [AppHeader.instance]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/appHeader/appHeader.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        var AppHeaderController = (function () {
-            function AppHeaderController() {
-            }
-            return AppHeaderController;
-        })();
-        ui.AppHeaderController = AppHeaderController;
-        angular.module("app.ui").controller("appHeaderController", [AppHeaderController]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/appHeader/appHeaderController.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        "use strict";
-        var ModalService = (function () {
-            function ModalService($q) {
-                var _this = this;
-                this.$q = $q;
-                this.showModal = function (options) {
-                    var deferred = _this.$q.defer();
-                    return deferred.promise;
-                };
-            }
-            return ModalService;
-        })();
-        angular.module("app.ui").service("modalService", [ModalService]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/modal/modalService.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
         var AppBar = (function () {
             function AppBar() {
                 this.templateUrl = "src/app/ui/appBar/appBar.html";
@@ -1498,35 +1226,6 @@ var app;
 })(app || (app = {}));
 
 //# sourceMappingURL=../../ui/appBar/appBarService.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        var Backdrop = (function () {
-            function Backdrop($timeout) {
-                var _this = this;
-                this.$timeout = $timeout;
-                this.replace = true;
-                this.restrict = "E";
-                this.link = function (scope, element, attributes) {
-                    scope.backdropClass = attributes.backdropClass || '';
-                    scope.animate = false;
-                    _this.$timeout(function () {
-                        scope.animate = true;
-                    });
-                };
-            }
-            Backdrop.instance = function ($timeout) {
-                return new Backdrop($timeout);
-            };
-            return Backdrop;
-        })();
-        ui.Backdrop = Backdrop;
-        angular.module("app.ui").directive("modalBackdrop", [Backdrop.instance]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/backdrop/backdrop.js.map
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1720,9 +1419,310 @@ var app;
 })(app || (app = {}));
 
 //# sourceMappingURL=../../toDo/services/toDoService.js.map
+var app;
+(function (app) {
+    var security;
+    (function (security) {
+        var LoginForm = (function () {
+            function LoginForm(securityService) {
+                this.securityService = securityService;
+                this.templateUrl = "/src/app/security/directives/loginForm.html";
+                this.controllerAs = "loginForm";
+                this.controller = "loginFormController";
+                this.restrict = "E";
+                this.replace = true;
+            }
+            LoginForm.instance = function (securityService) {
+                return new LoginForm(securityService);
+            };
+            return LoginForm;
+        })();
+        security.LoginForm = LoginForm;
+        angular.module("app.security").directive("loginForm", ["securityService", LoginForm.instance]);
+    })(security = app.security || (app.security = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../security/directives/loginForm.js.map
+var app;
+(function (app) {
+    var security;
+    (function (security) {
+        var LoginFormController = (function () {
+            function LoginFormController($location, loginRedirect, securityService, token) {
+                var _this = this;
+                this.$location = $location;
+                this.loginRedirect = loginRedirect;
+                this.securityService = securityService;
+                this.token = token;
+                this.username = "quinntynebrown@gmail.com";
+                this.password = "P@ssw0rd";
+                this.tryToLogin = function () {
+                    _this.securityService.login(_this.username, _this.password).then(function (results) {
+                        _this.loginRedirect.redirectPreLogin();
+                    });
+                };
+            }
+            return LoginFormController;
+        })();
+        angular.module("app.security").controller("loginFormController", ["$location", "loginRedirect", "securityService", LoginFormController]);
+    })(security = app.security || (app.security = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../security/directives/loginFormController.js.map
+var app;
+(function (app) {
+    var toDo;
+    (function (toDo) {
+        var ToDoItem = (function () {
+            function ToDoItem() {
+                this.controller = "toDoItemController";
+                this.controllerAs = "toDo";
+                this.restrict = "E";
+                this.replace = true;
+                this.templateUrl = "/src/app/toDo/directives/toDoItem.html";
+                this.scope = {
+                    toDoItem: "="
+                };
+                this.link = function (scope, element, attributes) {
+                };
+            }
+            ToDoItem.instance = function () {
+                return new ToDoItem();
+            };
+            return ToDoItem;
+        })();
+        angular.module("app.toDo").directive("toDoItem", [ToDoItem.instance]);
+    })(toDo = app.toDo || (app.toDo = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../toDo/directives/toDoItem.js.map
+var app;
+(function (app) {
+    var toDo;
+    (function (_toDo) {
+        var ToDoItemController = (function () {
+            function ToDoItemController(toDo) {
+                this.toDo = toDo;
+            }
+            return ToDoItemController;
+        })();
+        angular.module("app.toDo").controller("toDoItemController", [ToDoItemController]);
+    })(toDo = app.toDo || (app.toDo = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../toDo/directives/toDoItemController.js.map
+var app;
+(function (app) {
+    var toDo;
+    (function (toDo) {
+        var ToDoItems = (function () {
+            function ToDoItems() {
+                this.controller = "toDoItemsController";
+                this.controllerAs = "toDoItems";
+                this.replace = true;
+                this.restrict = "E";
+                this.templateUrl = "/src/app/toDo/directives/toDoItems.html";
+                this.scope = {
+                    toDoItems: "="
+                };
+                this.link = function (scope, element, attributes) {
+                };
+            }
+            ToDoItems.instance = function () {
+                return new ToDoItems();
+            };
+            return ToDoItems;
+        })();
+        angular.module("app.toDo").directive("toDoItems", [ToDoItems.instance]);
+    })(toDo = app.toDo || (app.toDo = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../toDo/directives/toDoItems.js.map
+var app;
+(function (app) {
+    var toDo;
+    (function (toDo) {
+        var ToDoItemsController = (function () {
+            function ToDoItemsController() {
+            }
+            return ToDoItemsController;
+        })();
+        angular.module("app.toDo").controller("toDoItemsController", [ToDoItemsController]);
+    })(toDo = app.toDo || (app.toDo = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../toDo/directives/toDoItemsController.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        var AppHeader = (function () {
+            function AppHeader() {
+                this.templateUrl = "src/app/ui/appHeader/appHeader.html";
+                this.replace = true;
+                this.restrict = "E";
+                this.controller = "appHeaderController";
+                this.controllerAs = "appHeader";
+                this.scope = {
+                    title: "@",
+                    isLoggedIn: "&",
+                    getUsername: "&"
+                };
+                this.link = function (scope, element, attributes) {
+                };
+            }
+            AppHeader.instance = function () {
+                return new AppHeader();
+            };
+            return AppHeader;
+        })();
+        ui.AppHeader = AppHeader;
+        angular.module("app.ui").directive("appHeader", [AppHeader.instance]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appHeader/appHeader.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        var AppHeaderController = (function () {
+            function AppHeaderController() {
+            }
+            return AppHeaderController;
+        })();
+        ui.AppHeaderController = AppHeaderController;
+        angular.module("app.ui").controller("appHeaderController", [AppHeaderController]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appHeader/appHeaderController.js.map
+var app;
+(function (app) {
+    var common;
+    (function (common) {
+        "use strict";
+        var WorkSpinner = (function () {
+            function WorkSpinner(requestCounter) {
+                var _this = this;
+                this.requestCounter = requestCounter;
+                this.restrict = "E";
+                this.replace = true;
+                this.scope = {};
+                this.template = "<div data-ng-show='requestCount' class='work-spinner'><i class='fa fa-spinner fa-spin fade'></i></div>";
+                this.link = function (scope) {
+                    scope.$watch(function () {
+                        return _this.requestCounter.getRequestCount();
+                    }, function (requestCount) {
+                        scope["requestCount"] = requestCount;
+                    });
+                };
+            }
+            WorkSpinner.instance = function (requestCounter) {
+                return new WorkSpinner(requestCounter);
+            };
+            return WorkSpinner;
+        })();
+        angular.module("app.common").directive("workSpinner", ["requestCounter", WorkSpinner.instance]);
+    })(common = app.common || (app.common = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../common/directives/workSpinner.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        "use strict";
+        var AppBarButton = (function () {
+            function AppBarButton() {
+                this.restrict = "E";
+                this.replace = true;
+                this.templateUrl = "/src/app/ui/appBarButton/appBarButton.html";
+                this.scope = {
+                    button: "="
+                };
+            }
+            AppBarButton.instance = function () {
+                return new AppBarButton();
+            };
+            return AppBarButton;
+        })();
+        ui.AppBarButton = AppBarButton;
+        angular.module("app.ui").directive("appBarButton", [AppBarButton.instance]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appBarButton/appBarButton.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        function AppBarButtonConstructorFn(text, onClick, type) {
+            return {
+                type: type,
+                text: text,
+                onClick: onClick
+            };
+        }
+        ui.AppBarButtonConstructorFn = AppBarButtonConstructorFn;
+        angular.module("app.ui").value("appBarButtonConstructorFn", AppBarButtonConstructorFn);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appBarButton/appBarButtonConstructorFn.js.map
 
 
 //# sourceMappingURL=../../ui/hamburgerButton/hamburgerButton.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        "use strict";
+        var ModalService = (function () {
+            function ModalService($q) {
+                var _this = this;
+                this.$q = $q;
+                this.showModal = function (options) {
+                    var deferred = _this.$q.defer();
+                    return deferred.promise;
+                };
+            }
+            return ModalService;
+        })();
+        angular.module("app.ui").service("modalService", [ModalService]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/modal/modalService.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        var Backdrop = (function () {
+            function Backdrop($timeout) {
+                var _this = this;
+                this.$timeout = $timeout;
+                this.replace = true;
+                this.restrict = "E";
+                this.link = function (scope, element, attributes) {
+                    scope.backdropClass = attributes.backdropClass || '';
+                    scope.animate = false;
+                    _this.$timeout(function () {
+                        scope.animate = true;
+                    });
+                };
+            }
+            Backdrop.instance = function ($timeout) {
+                return new Backdrop($timeout);
+            };
+            return Backdrop;
+        })();
+        ui.Backdrop = Backdrop;
+        angular.module("app.ui").directive("modalBackdrop", [Backdrop.instance]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/backdrop/backdrop.js.map
 var app;
 (function (app) {
     var ui;
