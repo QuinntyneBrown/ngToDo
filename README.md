@@ -1,2 +1,2 @@
 # ngToDo
-Proof of Concept - Angular 1.4 x ngNewRouter x Microsoft Excel Backend or Entity Framework (SQL)
+Angular 1.4 RC, ngNewRouter, TypeScript, Web API 2, OAuth2
