@@ -22,11 +22,6 @@ var app;
                 $router.config(routes);
                 $interval(function () {
                     if (securityService.tokenExpired()) {
-                        //if(this.currentRouteRequiresAuthentication()) {
-                        //  this.loginRedirect.lastPath = this.$location.path();
-                        //  this.$location.path('/login');
-                        //}
-                        $location.path("/login");
                     }
                 }, 6000);
             }

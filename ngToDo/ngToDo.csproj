@@ -208,6 +208,9 @@
     <Content Include="scripts\angular-animate.js" />
     <Content Include="scripts\angular-animate.min.js" />
     <Content Include="scripts\angular-mocks.js" />
+    <Content Include="scripts\angular-rc\angular-animate.js" />
+    <Content Include="scripts\angular-rc\angular.js" />
+    <Content Include="scripts\angular-rc\router.es5.js" />
     <Content Include="scripts\angular-route.js" />
     <Content Include="scripts\angular-route.min.js" />
     <Content Include="scripts\angular-sanitize.js" />

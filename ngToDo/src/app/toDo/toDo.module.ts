@@ -13,6 +13,7 @@
              "$locationProvider",
              "apiEndpointProvider",
             "featureComponentsMappingsProvider",
+            "loginRedirectProvider",
             "routesProvider",
              config
          ]);
@@ -24,8 +25,10 @@
          $locationProvider: ng.ILocationProvider,
          apiEndpointProvider: common.IApiEndpointProvider,
          featureComponentsMappingsProvider: common.IFeatureComponentsMappingsProvider,
+         loginRedirectProvider:any,
          routesProvider: common.IRoutesProvider) {
 
+         loginRedirectProvider.setDefaultUrl("/toDo/list");
 
          featureComponentsMappingsProvider.mappings.push(
              {
@@ -34,7 +37,7 @@
              });
 
          routesProvider.configure([
-             { path: '/', component: 'toDoAbout' },
+             { path: '/', redirectTo: '/login' },
              { path: '/toDo/about', component: 'toDoAbout' },
              { path: '/toDo/recent', component: 'toDoRecent' },
              { path: '/toDo/list', component: 'toDoList' },

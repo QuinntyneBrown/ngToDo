@@ -37,7 +37,8 @@
 
     export interface IRouteConfig {
         path: string;
-        component: string;
+        component?: string;
+        redirectTo?:string;
     }
 
     export interface IFeatureComponentsMappingsProvider extends ng.IServiceProvider {

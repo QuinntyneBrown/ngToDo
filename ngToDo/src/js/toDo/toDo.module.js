@@ -14,16 +14,18 @@ var app;
             "$locationProvider",
             "apiEndpointProvider",
             "featureComponentsMappingsProvider",
+            "loginRedirectProvider",
             "routesProvider",
             config
         ]);
-        function config($componentLoaderProvider, $httpProvider, $locationProvider, apiEndpointProvider, featureComponentsMappingsProvider, routesProvider) {
+        function config($componentLoaderProvider, $httpProvider, $locationProvider, apiEndpointProvider, featureComponentsMappingsProvider, loginRedirectProvider, routesProvider) {
+            loginRedirectProvider.setDefaultUrl("/toDo/list");
             featureComponentsMappingsProvider.mappings.push({
                 feature: "toDo",
                 components: ["toDoRecent", "toDoForm", "toDoList", "toDoDetail", "toDoAbout", "toDoMasterDetail"]
             });
             routesProvider.configure([
-                { path: '/', component: 'toDoAbout' },
+                { path: '/', redirectTo: '/login' },
                 { path: '/toDo/about', component: 'toDoAbout' },
                 { path: '/toDo/recent', component: 'toDoRecent' },
                 { path: '/toDo/list', component: 'toDoList' },
