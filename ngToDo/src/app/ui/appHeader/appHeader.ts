@@ -22,7 +22,8 @@
 
         public scope:any = {
             title: "@",
-            isLoggedIn: "&"
+            isLoggedIn: "&",
+            getUsername:"&"
         };
 
         public link = (scope: ng.IScope, element: ng.IAugmentedJQuery, attributes: ng.IAttributes) => {

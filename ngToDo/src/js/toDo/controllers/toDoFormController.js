@@ -31,7 +31,11 @@ var app;
                         {
                             type: "Save",
                             text: "Save",
-                            onClick: _this.toDo.save,
+                            onClick: function () {
+                                _this.toDo.save().then(function (results) {
+                                    _this.$location.path("/toDo/edit/" + results.id);
+                                });
+                            },
                             isValid: _this.toDo.isValid
                         }
                     ]);
@@ -56,11 +60,6 @@ var app;
                     }
                     return deferred.promise;
                 };
-                document.addEventListener("entityChanged", function (event) {
-                    if (event.detail.changeType == "saved") {
-                        $location.path("/toDo/list");
-                    }
-                });
             }
             return ToDoFormController;
         })(app.security.AuthenticatedController);

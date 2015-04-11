@@ -19,7 +19,7 @@
     
     <work-spinner data-ng-if="app.$router.navigating"></work-spinner>
     
-    <app-header is-logged-in="app.isLoggedIn()"></app-header>
+    <app-header is-logged-in="app.isLoggedIn()" get-username="app.getUsername()"></app-header>
 
     <div ng-viewport class="main-content slide">
 
@@ -35,6 +35,6 @@
     <script src="scripts/breeze.min.js"></script>
     <script src="scripts/breeze.angular.js"></script>
 
-    <script src="app.js"></script>
+    <script src="app.min.js"></script>
 </body>
 </html>

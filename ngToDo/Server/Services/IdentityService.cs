@@ -46,7 +46,9 @@ namespace ngToDo.Server.Services
         public ICollection<System.Security.Claims.Claim> GetClaimsForUser(string username)
         {
             var claims = new List<System.Security.Claims.Claim>();
-
+            
+            claims.Add(new System.Security.Claims.Claim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name", username));
+            
             return claims;
         }
 

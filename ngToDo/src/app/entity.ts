@@ -56,22 +56,27 @@
         public save = () => {
             
             var deferred = this.$q.defer();
-
+            var _entity = this;
+            var promises = [];
             if (this.isValid()) {
                 if (this.id) {
-                    this.dataService.update(this).then(() => {
-                        this.notifySaved();
-                        deferred.resolve();
-                    });
+                    promises.push(this.dataService.update(this));
                 } else {
-                    this.dataService.add(this).then(() => {
-                        this.notifySaved();
-                        deferred.resolve();
-                    });
+                    promises.push(this.dataService.add(this));
                 }
             } else {
                 deferred.reject();
             }
+
+            this.$q.all(promises).then((results) => {
+                this.instance(results[0].data).then((results) => {
+                    _entity = results;
+                    _entity.notifySaved();
+                    deferred.resolve(_entity);
+                });
+            }).catch(() => {
+                deferred.reject();
+            });
 
             return deferred.promise;
         }

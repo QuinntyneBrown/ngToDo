@@ -17,7 +17,7 @@ namespace ngToDo.Server.OAuth2
             var identity = new ClaimsIdentity("ngtodo");
 
             var username = context.OwinContext.Get<string>("ngtodo:username");
-
+            
             foreach (var claim in this.identityService.GetClaimsForUser(username))
             {
                 identity.AddClaim(claim);

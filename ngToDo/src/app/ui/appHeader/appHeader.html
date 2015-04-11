@@ -12,13 +12,10 @@
                 <li>
                     <a data-ng-href="#/toDo/create">Create To Do</a>
                 </li>
-                <li>
-                    <a data-ng-href="#/toDo/about">About</a>
-                </li>
             </ul>
         </div>
         <div data-ng-if="isLoggedIn()" class="right">
-            <a href="#/login">Log out</a>
+            <a href="#/login">{{ getUsername() }}</a>
         </div>
         <div class="clear"></div>
     </div>

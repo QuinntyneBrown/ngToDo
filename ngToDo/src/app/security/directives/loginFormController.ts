@@ -2,7 +2,11 @@
     
     class LoginFormController implements ILoginController {
 
-        constructor(private $location:ng.ILocationService, private securityService: ISecurityService, private token: common.ISessionStorageProperty) {
+        constructor(
+            private $location: ng.ILocationService,
+            private loginRedirect: any,
+            private securityService: ISecurityService,
+            private token: common.ISessionStorageProperty) {
             
         }
 
@@ -13,14 +17,11 @@
         public rememberMe: boolean;
 
         public tryToLogin = () => {
-
             this.securityService.login(this.username, this.password).then((results:any) => {
-
-                this.$location.path("/toDo/list");
-
+                this.loginRedirect.redirectPreLogin();               
             });
         }
     }
 
-    angular.module("app.security").controller("loginFormController", ["$location","securityService",LoginFormController]);
+    angular.module("app.security").controller("loginFormController", ["$location","loginRedirect","securityService",LoginFormController]);
 } 

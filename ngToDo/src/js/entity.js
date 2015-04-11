@@ -39,23 +39,28 @@ var app;
                 };
                 this.save = function () {
                     var deferred = _this.$q.defer();
+                    var _entity = _this;
+                    var promises = [];
                     if (_this.isValid()) {
                         if (_this.id) {
-                            _this.dataService.update(_this).then(function () {
-                                _this.notifySaved();
-                                deferred.resolve();
-                            });
+                            promises.push(_this.dataService.update(_this));
                         }
                         else {
-                            _this.dataService.add(_this).then(function () {
-                                _this.notifySaved();
-                                deferred.resolve();
-                            });
+                            promises.push(_this.dataService.add(_this));
                         }
                     }
                     else {
                         deferred.reject();
                     }
+                    _this.$q.all(promises).then(function (results) {
+                        _this.instance(results[0].data).then(function (results) {
+                            _entity = results;
+                            _entity.notifySaved();
+                            deferred.resolve(_entity);
+                        });
+                    }).catch(function () {
+                        deferred.reject();
+                    });
                     return deferred.promise;
                 };
                 this.remove = function () {

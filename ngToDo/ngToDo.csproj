@@ -187,6 +187,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app.js" />
+    <Content Include="app.min.js">
+      <DependentUpon>app.js</DependentUpon>
+    </Content>
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -236,6 +239,9 @@
     <Content Include="fonts\fontawesome-webfont.eot" />
     <Content Include="fonts\FontAwesome.otf" />
     <Content Include="app.less" />
+    <Content Include="app.min.js.map">
+      <DependentUpon>app.min.js</DependentUpon>
+    </Content>
     <None Include="scripts\jquery-1.9.0.intellisense.js" />
     <Content Include="scripts\breeze.angular.js" />
     <Content Include="scripts\breeze.base.debug.js" />
@@ -469,6 +475,9 @@
     <TypeScriptCompile Include="src\app\common\directives\workSpinner.ts" />
     <TypeScriptCompile Include="src\app\common\services\routesProvider.ts" />
     <TypeScriptCompile Include="src\app\entity.ts" />
+    <TypeScriptCompile Include="src\app\security\services\loginRedirectProvider.ts" />
+    <TypeScriptCompile Include="src\app\security\services\tokenExpiryDate.ts" />
+    <TypeScriptCompile Include="src\app\security\services\user.ts" />
     <TypeScriptCompile Include="src\app\sessionStorageProperty.ts" />
     <TypeScriptCompile Include="src\app\storage.ts" />
     <TypeScriptCompile Include="src\app\common\services\featureComponentsMappingsProvider.ts" />
@@ -516,6 +525,8 @@
     <TypeScriptCompile Include="src\app\ui\appBar\appBarService.ts" />
     <TypeScriptCompile Include="src\app\ui\appHeader\appHeader.ts" />
     <TypeScriptCompile Include="src\app\ui\appHeader\appHeaderController.ts" />
+    <TypeScriptCompile Include="src\app\ui\dynamicElement\directives\dynamicElement.ts" />
+    <TypeScriptCompile Include="src\app\ui\dynamicElement\services\dynamicElement.ts" />
     <TypeScriptCompile Include="src\app\ui\hamburgerButton\hamburgerButton.ts" />
     <TypeScriptCompile Include="src\app\ui\backdrop\backdrop.ts" />
     <TypeScriptCompile Include="src\app\ui\modal\modalService.ts" />

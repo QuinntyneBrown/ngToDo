@@ -20,7 +20,7 @@ namespace ngToDo.Server.Api.v1
         {
             using (repository)
             {
-                HttpContext.Current.Response.Headers.Add("X-InlineCount", "What");
+                
                 return Ok(repository.GetAll().Where(x => !x.IsDeleted).ToList());    
             }            
         }
@@ -31,7 +31,7 @@ namespace ngToDo.Server.Api.v1
              
             using (repository)
             {
-                HttpContext.Current.Response.Headers.Add("X-InlineCount", "What");
+                
                 return Ok(repository.GetAll().Where(x=>!x.IsDeleted).OrderByDescending(x => x.CreatedDateTime).Take(5).ToList());
             }
         }
@@ -64,7 +64,7 @@ namespace ngToDo.Server.Api.v1
             {
                 repository.Add(entity);
                 repository.SaveChanges();
-                return Ok();
+                return Ok(repository.GetById(entity.Id));
             }
         }
 
@@ -75,7 +75,7 @@ namespace ngToDo.Server.Api.v1
             {
                 repository.Update(entity);
                 repository.SaveChanges();
-                return Ok();
+                return Ok(repository.GetById(entity.Id));
             }
         }
 

@@ -6,15 +6,17 @@
   border-bottom-color: #222222;
   width: 100%;
   color: #dddddd;
+  position: fixed;
+  top: 0px;
 }
 .app-header h1,
 .app-header ul,
 .app-header ul li {
   float: left;
   display: inline-block;
+  margin-left: 10px;
 }
 .app-header h1 {
-  min-width: 150px;
   line-height: 50px;
   vertical-align: middle;
 }
