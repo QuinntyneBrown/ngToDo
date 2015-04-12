@@ -29,7 +29,7 @@ module app.toDo {
                     text: "Save",
                     onClick: () => {
                         this.toDo.save().then((results) => {
-                            this.$location.path("/toDo/edit/" + results.id);
+                            this.$location.path("/toDo/list");
                         });
                     },
                     isValid: this.toDo.isValid

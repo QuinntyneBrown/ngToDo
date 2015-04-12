@@ -1,12 +1,5 @@
 ﻿<div class="to-do-list-item">
     
-    <h1>{{ toDoItem.name}}</h1>
-    
-    <p>{{ toDoItem.description }}</p>
+    <h1><span data-ng-click="toDoItem.remove()">x&nbsp;</span>{{ toDoItem.name}}</h1>
 
-    <div class="actions">
-        <a ng-href="#/toDo/detail/{{ toDoItem.id }}">Detail</a>&nbsp;&nbsp;|
-        <a ng-href="#/toDo/edit/{{ toDoItem.id }}">Edit</a>&nbsp;&nbsp;|
-        <a data-ng-click="toDoItem.remove(); location.reload();">Delete</a>
-    </div>
 </div>

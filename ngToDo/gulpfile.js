@@ -62,6 +62,12 @@ gulp.task('concat-compiled-ts', ['compile-ts'], function () {
       .pipe(gulp.dest('.'));
 });
 
+gulp.task('concat-less', function () {
+    return gulp.src(config.allLess)
+      .pipe(concat('app.less'))
+      .pipe(gulp.dest('.'));
+});
+
 /**
  * Remove all generated JavaScript files from TypeScript compiltion.
  */
@@ -76,8 +82,18 @@ gulp.task('clean-ts', function () {
         .pipe(clean());
 });
 
-gulp.task('watch', function () {
-    gulp.watch([config.allTypeScript], ['clean-ts', 'compile-ts', 'concat-compiled-ts']);
+gulp.task('clean-less', function () {
+    var lessGenFiles = [config.sourceApp + '**/*.css',    // path to all CSS files auto gen'd by editor
+                              config.sourceApp + '**/*.css.map' // path to all sourcemap files auto gen'd by editor
+    ];
+
+    // delete the files
+    return gulp.src(lessGenFiles, { read: false })
+        .pipe(clean());
 });
 
-gulp.task('default', ['clean-ts', 'compile-ts', 'concat-compiled-ts', 'watch']);
+gulp.task('watch', function () {
+    gulp.watch([config.allFiles], ['clean-ts', 'clean-less', 'compile-ts', 'concat-less', 'concat-compiled-ts']);
+});
+
+gulp.task('default', ['clean-ts', 'clean-less', 'compile-ts', 'concat-compiled-ts', 'concat-less', 'watch']);

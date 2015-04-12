@@ -33,7 +33,7 @@ var app;
                             text: "Save",
                             onClick: function () {
                                 _this.toDo.save().then(function (results) {
-                                    _this.$location.path("/toDo/edit/" + results.id);
+                                    _this.$location.path("/toDo/list");
                                 });
                             },
                             isValid: _this.toDo.isValid

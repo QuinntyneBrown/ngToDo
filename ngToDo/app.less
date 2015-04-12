@@ -1,86 +1,6 @@
-* {
-    margin: 0;
-    padding: 0;
-    font-family:'Segoe UI',Arial
-}
-
-ul li {
-    margin-left:15px;
-}
-
-html, body, body > .container {
-    width:100%;
-    height:100%;
-}
-
-.main-content {
-    max-width:1024px;
-    margin:0 auto;
-    padding-top:50px;
-    padding-bottom:70px;
-}
-
-.left {
-    position:relative;
-    float:left;
-}
-
-.right {
-    position:relative;
-    float:right;
-}
-
-.clear {
-    clear:both;
-}
-
-.actions a {
-              text-decoration:none;
-              cursor:pointer;
-              color:rgb(34,34,34);
-}
-
-.component {
-    margin-left:10px;
-}
-.work-spinner {
-    position:fixed;
-    top:0px;
-    left:0px;
-    width:100%;
-    height:100%;
-
-    display: -ms-flex;
-	display: -webkit-flex;
-	display: flex;
-
-	-ms-flex-align: center;
-	-webkit-align-items: center;
-	-webkit-box-align: center;
-	align-items: center;
-    text-align:center;
-
-    background-color: rgba(0,0,0,.2);
-
-    z-index:9999;
-    transition: all 300ms linear;
-}
-
-
-
-.work-spinner img {
-    margin:0 auto;
-}
-
-
-.work-spinner i {
-    margin:0 auto;
-    font-size:10em;
-    color:black;
-}
-.login-form {
-
-}
+.about > div {
+           margin-top:30px;
+       }
 ng-viewport {
   display: block;
 }
@@ -149,6 +69,12 @@ html, body, body > .container {
 .component {
     margin-left:10px;
 }
+body {
+}
+
+.to-do-items {
+
+}
 .work-spinner {
     position:fixed;
     top:0px;
@@ -187,13 +113,16 @@ html, body, body > .container {
 .login-form {
 
 }
-.about > div {
-           margin-top:30px;
-       }
-body {
+.app-bar-button {
+    display:inline-block;
+    margin-top:10px;
+    cursor:pointer;
+    padding-right:7.5px;
+    padding-left:7.5px;
 }
-.to-do-items {
 
+.app-bar-button.disabled a {
+    color:rgb(72, 72, 72);
 }
 .app-bar {
     background: none repeat scroll 0 0 #222222;
@@ -209,17 +138,6 @@ body {
     max-width:1024px;
     margin:0 auto;
     text-align:center;
-}
-.app-bar-button {
-    display:inline-block;
-    margin-top:10px;
-    cursor:pointer;
-    padding-right:7.5px;
-    padding-left:7.5px;
-}
-
-.app-bar-button.disabled a {
-    color:rgb(72, 72, 72);
 }
 .app-header {
     background-color: rgb(34,34,34);
@@ -259,6 +177,12 @@ body {
                   max-width:1024px;
                   margin:0 auto;
               }
+
+@media(max-width: 500px) {
+    .app-header ul {
+        display:none;
+    }
+}
 .hamburger-button {
 
 }

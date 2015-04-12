@@ -12,8 +12,6 @@ var app;
                 this.scope = {
                     toDoItem: "="
                 };
-                this.link = function (scope, element, attributes) {
-                };
             }
             ToDoItem.instance = function () {
                 return new ToDoItem();

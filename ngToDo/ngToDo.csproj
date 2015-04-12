@@ -240,7 +240,6 @@
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.eot" />
     <Content Include="fonts\FontAwesome.otf" />
-    <Content Include="app.less" />
     <Content Include="app.min.js.map">
       <DependentUpon>app.min.js</DependentUpon>
     </Content>
@@ -271,12 +270,6 @@
     <Content Include="scripts\angular-sanitize.min.js.map" />
     <Content Include="scripts\angular.min.js.map" />
     <Content Include="scripts\jquery-1.9.0.min.map" />
-    <Content Include="src\app\common\common.animations.css">
-      <DependentUpon>common.animations.less</DependentUpon>
-    </Content>
-    <Content Include="src\app\common\common.animations.min.css">
-      <DependentUpon>common.animations.css</DependentUpon>
-    </Content>
     <Content Include="src\app\common\common.css">
       <DependentUpon>common.less</DependentUpon>
     </Content>
@@ -285,9 +278,6 @@
     </Content>
     <Content Include="src\app\common\directives\workSpinner.css">
       <DependentUpon>workSpinner.less</DependentUpon>
-    </Content>
-    <Content Include="src\app\common\directives\workSpinner.min.css">
-      <DependentUpon>workSpinner.css</DependentUpon>
     </Content>
     <Content Include="src\app\security\directives\loginForm.html">
       <DependentUpon>loginForm.ts</DependentUpon>
@@ -353,9 +343,6 @@
     <Content Include="src\app\ui\appHeader\appHeader.css.map">
       <DependentUpon>appHeader.css</DependentUpon>
     </Content>
-    <Content Include="src\app\common\directives\workSpinner.css.map">
-      <DependentUpon>workSpinner.css</DependentUpon>
-    </Content>
     <Content Include="src\app\security\directives\loginForm.less">
       <DependentUpon>loginForm.ts</DependentUpon>
     </Content>
@@ -371,9 +358,6 @@
     <Content Include="src\app\common\common.animations.less">
       <DependentUpon>common.module.ts</DependentUpon>
     </Content>
-    <Content Include="src\app\common\common.animations.css.map">
-      <DependentUpon>common.animations.css</DependentUpon>
-    </Content>
     <Content Include="src\app\ui\appBar\appBar.css.map">
       <DependentUpon>appBar.css</DependentUpon>
     </Content>
@@ -382,6 +366,9 @@
       <DependentUpon>appBarButton.css</DependentUpon>
     </Content>
     <Content Include="src\app\ui\hamburgerButton\hamburgerButton.less" />
+    <Content Include="src\app\common\directives\workSpinner.css.map">
+      <DependentUpon>workSpinner.css</DependentUpon>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
