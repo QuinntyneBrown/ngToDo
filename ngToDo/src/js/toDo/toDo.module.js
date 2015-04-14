@@ -15,10 +15,11 @@ var app;
             "apiEndpointProvider",
             "featureComponentsMappingsProvider",
             "loginRedirectProvider",
+            "oauthEndpointProvider",
             "routesProvider",
             config
         ]);
-        function config($componentLoaderProvider, $httpProvider, $locationProvider, apiEndpointProvider, featureComponentsMappingsProvider, loginRedirectProvider, routesProvider) {
+        function config($componentLoaderProvider, $httpProvider, $locationProvider, apiEndpointProvider, featureComponentsMappingsProvider, loginRedirectProvider, oauthEndpointProvider, routesProvider) {
             loginRedirectProvider.setDefaultUrl("/toDo/list");
             featureComponentsMappingsProvider.mappings.push({
                 feature: "toDo",

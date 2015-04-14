@@ -12,8 +12,8 @@ var GulpConfig = (function () {
         this.allTypeScript = this.sourceApp + '/**/*.ts!(*.unit.ts)';
         this.allFiles = [this.allLess, this.allTypeScript];
 
-        this.typings = './Scripts/typings/';
-        this.libraryTypeScriptDefinitions = './Scripts/typings/**/*.ts';
+        this.typings = './scripts/typings/';
+        this.libraryTypeScriptDefinitions = './scripts/typings/**/*.ts';
         this.appTypeScriptReferences = this.typings + 'typeScriptApp.d.ts';
     }
     return GulpConfig;

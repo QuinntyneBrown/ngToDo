@@ -8,12 +8,13 @@
              "app.ui"
          ])
          .config([
-             "$componentLoaderProvider",
-             "$httpProvider",
-             "$locationProvider",
-             "apiEndpointProvider",
+            "$componentLoaderProvider",
+            "$httpProvider",
+            "$locationProvider",
+            "apiEndpointProvider",
             "featureComponentsMappingsProvider",
             "loginRedirectProvider",
+            "oauthEndpointProvider",
             "routesProvider",
              config
          ]);
@@ -25,7 +26,8 @@
          $locationProvider: ng.ILocationProvider,
          apiEndpointProvider: common.IApiEndpointProvider,
          featureComponentsMappingsProvider: common.IFeatureComponentsMappingsProvider,
-         loginRedirectProvider:any,
+         loginRedirectProvider: any,
+         oauthEndpointProvider: common.IApiEndpointProvider,
          routesProvider: common.IRoutesProvider) {
 
          loginRedirectProvider.setDefaultUrl("/toDo/list");

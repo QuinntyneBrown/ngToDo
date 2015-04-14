@@ -1,6 +1,3 @@
-.about > div {
-           margin-top:30px;
-       }
 ng-viewport {
   display: block;
 }
@@ -69,11 +66,112 @@ html, body, body > .container {
 .component {
     margin-left:10px;
 }
-body {
+.about > div {
+           margin-top:30px;
+       }
+.app-bar {
+    background: none repeat scroll 0 0 #222222;
+    bottom: 0;
+    height: 70px;
+    overflow-y: hidden;
+    position: fixed;
+    width: 100%;
+    color:rgb(221,221,221);
 }
 
-.to-do-items {
+.app-bar > div {
+    max-width:1024px;
+    margin:0 auto;
+    text-align:center;
+}
+.app-bar-button {
+    display:inline-block;
+    margin-top:10px;
+    cursor:pointer;
+    padding-right:7.5px;
+    padding-left:7.5px;
+}
 
+.app-bar-button.disabled a {
+    color:rgb(72, 72, 72);
+}
+.app-header {
+    background-color: rgb(34,34,34);
+    height: 50px;
+    border-bottom-style:solid;
+    border-bottom-width: 4px;
+    border-bottom-color: rgb(34,34,34);  
+    width:100%;    
+    color:rgb(221,221,221);
+    position: fixed;
+    top:0px;
+}
+
+
+.app-header h1, .app-header ul, .app-header ul li {
+    float:left;
+    display:inline-block;
+    margin-left:10px;    
+}
+
+.app-header .username {
+    float:right;
+    display:inline-block;
+    margin-right:10px;    
+}
+
+.app-header h1 {    
+    line-height:50px;
+    vertical-align:middle;
+}
+
+
+.app-header ul li a, .app-header a {
+                color:rgb(221,221,221);
+                text-decoration:none;
+                display:inline-block;
+                line-height:50px;
+                vertical-align:middle;
+                margin-right:10px;
+}
+
+.app-header > div {
+                  max-width:1024px;
+                  margin:0 auto;
+              }
+
+.app-header .hamburger-button {
+    margin-top:13px;
+    display:none;
+    margin-right:10px;  
+}
+
+@media(max-width: 500px) {
+    .app-header ul, .app-header .username {
+        display:none;
+    }
+
+    .app-header .hamburger-button {
+        display:inline-block;
+    }
+
+}
+.hamburger-button {
+    width:20px;
+    height:24px;
+    background: linear-gradient(#ffffff,#dddddd);
+    border: #aaaaaa 1px solid;
+    border-radius: 2px;
+    padding: 2px 5px;
+    cursor:pointer;
+}
+
+.hamburger-button > div {
+    width: 20px;
+    height: 4px;
+    background: #333;
+    margin: 3px 0;
+    border-radius: 4px;
 }
 .work-spinner {
     position:fixed;
@@ -110,79 +208,12 @@ body {
     font-size:10em;
     color:black;
 }
+h1.completed {
+    text-decoration:line-through;
+}
+.to-do-items h1 {
+    font-weight:500;
+}
 .login-form {
-
-}
-.app-bar-button {
-    display:inline-block;
-    margin-top:10px;
-    cursor:pointer;
-    padding-right:7.5px;
-    padding-left:7.5px;
-}
-
-.app-bar-button.disabled a {
-    color:rgb(72, 72, 72);
-}
-.app-bar {
-    background: none repeat scroll 0 0 #222222;
-    bottom: 0;
-    height: 70px;
-    overflow-y: hidden;
-    position: fixed;
-    width: 100%;
-    color:rgb(221,221,221);
-}
-
-.app-bar > div {
-    max-width:1024px;
-    margin:0 auto;
-    text-align:center;
-}
-.app-header {
-    background-color: rgb(34,34,34);
-    height: 50px;
-    border-bottom-style:solid;
-    border-bottom-width: 4px;
-    border-bottom-color: rgb(34,34,34);  
-    width:100%;    
-    color:rgb(221,221,221);
-    position: fixed;
-    top:0px;
-}
-
-
-.app-header h1, .app-header ul, .app-header ul li {
-    float:left;
-    display:inline-block;
-    margin-left:10px;    
-}
-
-.app-header h1 {    
-    line-height:50px;
-    vertical-align:middle;
-}
-
-
-.app-header ul li a, .app-header a {
-                color:rgb(221,221,221);
-                text-decoration:none;
-                display:inline-block;
-                line-height:50px;
-                vertical-align:middle;
-                margin-right:10px;
-}
-
-.app-header > div {
-                  max-width:1024px;
-                  margin:0 auto;
-              }
-
-@media(max-width: 500px) {
-    .app-header ul {
-        display:none;
-    }
-}
-.hamburger-button {
 
 }

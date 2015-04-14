@@ -15,6 +15,8 @@ namespace ngToDo.Server.Models
 
         public string Description { get; set; }
 
+        public string Username { get; set; }
+
         public DateTime? CreatedDateTime { get; set; }
 
         public DateTime? CompletedDateTime { get; set; }
@@ -22,5 +24,6 @@ namespace ngToDo.Server.Models
         public Status Status { get; set; }
 
         public bool IsDeleted { get; set; }
+
     }
 }

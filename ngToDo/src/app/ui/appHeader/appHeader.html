@@ -14,9 +14,10 @@
                 </li>
             </ul>
         </div>
-        <div data-ng-if="isLoggedIn()" class="right">
+        <div data-ng-if="isLoggedIn()" class="right username">
             <a href="#/login">{{ getUsername() }}</a>
         </div>
+        <hamburger-button data-ng-if="isLoggedIn()" class="right"></hamburger-button>
         <div class="clear"></div>
     </div>
 </div>

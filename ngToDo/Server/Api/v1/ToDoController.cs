@@ -1,8 +1,6 @@
 ﻿using System.Linq;
-using System.Web;
 using System.Web.Http;
 using ngToDo.Server.Data;
-using ngToDo.Server.Data.MSExcel;
 using ngToDo.Server.Models;
 
 namespace ngToDo.Server.Api.v1
@@ -19,19 +17,16 @@ namespace ngToDo.Server.Api.v1
         public IHttpActionResult GetAll()
         {
             using (repository)
-            {
-                
+            {                
                 return Ok(repository.GetAll().Where(x => !x.IsDeleted).ToList());    
             }            
         }
 
         [HttpGet]
         public IHttpActionResult GetRecent()
-        {
-             
+        {            
             using (repository)
-            {
-                
+            {                
                 return Ok(repository.GetAll().Where(x=>!x.IsDeleted).OrderByDescending(x => x.CreatedDateTime).Take(5).ToList());
             }
         }
@@ -62,6 +57,7 @@ namespace ngToDo.Server.Api.v1
         {
             using (repository)
             {
+                entity.Username = User.Identity.Name;
                 repository.Add(entity);
                 repository.SaveChanges();
                 return Ok(repository.GetById(entity.Id));

@@ -365,9 +365,15 @@
     <Content Include="src\app\ui\appBarButton\appBarButton.css.map">
       <DependentUpon>appBarButton.css</DependentUpon>
     </Content>
+    <Content Include="src\app\ui\hamburgerButton\hamburgerButton.css">
+      <DependentUpon>hamburgerButton.less</DependentUpon>
+    </Content>
     <Content Include="src\app\ui\hamburgerButton\hamburgerButton.less" />
     <Content Include="src\app\common\directives\workSpinner.css.map">
       <DependentUpon>workSpinner.css</DependentUpon>
+    </Content>
+    <Content Include="src\app\ui\hamburgerButton\hamburgerButton.css.map">
+      <DependentUpon>hamburgerButton.css</DependentUpon>
     </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -392,10 +398,17 @@
     </Content>
     <Content Include="src\app\ui\backdrop\backdrop.html" />
     <Content Include="src\app\ui\hamburgerButton\hamburgerButton.html" />
+    <Content Include="src\app\ui\hamburgerButton\hamburgerButton.min.css">
+      <DependentUpon>hamburgerButton.css</DependentUpon>
+    </Content>
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Server\Api\v1\BreezeDataServiceController.cs" />
+    <Compile Include="Server\Data\EF\ToDoRepository.cs" />
+    <Compile Include="Server\Data\IToDoRepository.cs" />
+    <Compile Include="Server\Services\Contracts\IToDoService.cs" />
+    <Compile Include="Server\Services\ToDoService.cs" />
     <Compile Include="Server\StartUp\BreezeWebApiConfig.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -452,6 +465,7 @@
     <TypeScriptCompile Include="scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="scripts\typings\moment\moment.d.ts" />
     <TypeScriptCompile Include="scripts\typings\q\Q.d.ts" />
+    <TypeScriptCompile Include="scripts\typings\velocity-animate\velocity-animate.d.ts" />
     <TypeScriptCompile Include="src\app\common\common.d.ts">
       <DependentUpon>common.module.ts</DependentUpon>
     </TypeScriptCompile>
@@ -518,6 +532,12 @@
     <TypeScriptCompile Include="src\app\ui\appHeader\appHeaderController.ts" />
     <TypeScriptCompile Include="src\app\ui\dynamicElement\directives\dynamicElement.ts" />
     <TypeScriptCompile Include="src\app\ui\dynamicElement\services\dynamicElement.ts" />
+    <TypeScriptCompile Include="src\app\ui\functions\bind.ts" />
+    <TypeScriptCompile Include="src\app\ui\functions\clientRectEquals.ts" />
+    <TypeScriptCompile Include="src\app\ui\functions\fire.ts" />
+    <TypeScriptCompile Include="src\app\ui\functions\getBoundingRectForDetachedElement.ts" />
+    <TypeScriptCompile Include="src\app\ui\functions\getSurroundingWindowSpace.ts" />
+    <TypeScriptCompile Include="src\app\ui\functions\positionDetachedElement.ts" />
     <TypeScriptCompile Include="src\app\ui\hamburgerButton\hamburgerButton.ts" />
     <TypeScriptCompile Include="src\app\ui\backdrop\backdrop.ts" />
     <TypeScriptCompile Include="src\app\ui\modal\modalService.ts" />

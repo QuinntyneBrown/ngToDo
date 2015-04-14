@@ -48,8 +48,8 @@
             if (!this.name || this.name.length < 0)
                 validationErrors.push("Name can not be empty");
 
-            if (!this.description || this.description.length < 0)
-                validationErrors.push("Description can not be empty");
+            //if (!this.description || this.description.length < 0)
+            //    validationErrors.push("Description can not be empty");
 
             return validationErrors;
         }

@@ -1,5 +1,7 @@
 ﻿<div class="to-do-list-item">
     
-    <h1><span data-ng-click="toDoItem.remove()">x&nbsp;</span>{{ toDoItem.name}}</h1>
+    <h1 data-ng-class="{'completed': toDoItem.status===5 }">
+        <span data-ng-click="toDoItem.complete()">{{ toDoItem.name}}</span>
+    </h1>
 
 </div>

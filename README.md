@@ -1,2 +1,2 @@
 # ngToDo
-Angular 1.4 RC, ngNewRouter, TypeScript, Web API 2, OAuth2
+Angular 1.4 RC, ngNewRouter, TypeScript, Web API 2, OAuth2, JWTs

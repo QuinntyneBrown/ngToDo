@@ -16,6 +16,8 @@ namespace ngToDo.Server.StartUp
             config.Formatters.Remove(config.Formatters.XmlFormatter);
             config.Formatters.JsonFormatter.SerializerSettings = jSettings;
 
+
+
             config.EnableCors(new EnableCorsAttribute("*","*","*"));
 
             config.MapHttpAttributeRoutes();

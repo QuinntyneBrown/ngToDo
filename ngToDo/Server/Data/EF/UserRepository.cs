@@ -1,6 +1,4 @@
-﻿
-
-using System.Linq;
+﻿using System.Linq;
 using ngToDo.Server.Models;
 
 namespace ngToDo.Server.Data.EF
@@ -14,8 +12,8 @@ namespace ngToDo.Server.Data.EF
         }
 
         public User GetByName(string name)
-        {            
-            return GetAll().FirstOrDefault(x => x.Username == name);
+        {
+            return this.DbSet.FirstOrDefault(x => x.Username == name);            
         }
     }
 }

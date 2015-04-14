@@ -1,4 +1,6 @@
-﻿module app.common {
+﻿/// <reference path="../app/common/common.d.ts" />
+
+module app.common {
 
     export class Entity<T> implements IEntity<T> {
 

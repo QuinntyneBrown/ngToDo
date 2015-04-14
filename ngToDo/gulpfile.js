@@ -56,6 +56,7 @@ gulp.task('compile-ts', ['clean-ts'], function () {
                     .pipe(gulp.dest(config.tsOutputPath));
 });
 
+
 gulp.task('concat-compiled-ts', ['compile-ts'], function () {
     return gulp.src(config.allJavaScript)
       .pipe(concat('app.js'))

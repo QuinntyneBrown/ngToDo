@@ -17,6 +17,12 @@
     margin-left:10px;    
 }
 
+.app-header .username {
+    float:right;
+    display:inline-block;
+    margin-right:10px;    
+}
+
 .app-header h1 {    
     line-height:50px;
     vertical-align:middle;
@@ -37,8 +43,19 @@
                   margin:0 auto;
               }
 
+.app-header .hamburger-button {
+    margin-top:13px;
+    display:none;
+    margin-right:10px;  
+}
+
 @media(max-width: 500px) {
-    .app-header ul {
+    .app-header ul, .app-header .username {
         display:none;
     }
+
+    .app-header .hamburger-button {
+        display:inline-block;
+    }
+
 }

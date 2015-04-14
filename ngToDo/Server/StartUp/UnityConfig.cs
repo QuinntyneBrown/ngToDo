@@ -25,6 +25,7 @@ namespace ngToDo.Server.StartUp
             {
                 container.RegisterType<IRepository<ToDo>, ngToDo.Server.Data.MSExcel.ToDoRepository>();
                 container.RegisterType<IUserRepository, ngToDo.Server.Data.MSExcel.UserRepository>();
+                container.RegisterType<IToDoRepository, ngToDo.Server.Data.MSExcel.ToDoRepository>();
 
             }
 
@@ -32,6 +33,7 @@ namespace ngToDo.Server.StartUp
             {
                 container.RegisterType<IRepository<ToDo>, ngToDo.Server.Data.EF.EFRepository<ToDo>>();
                 container.RegisterType<IUserRepository, ngToDo.Server.Data.EF.UserRepository>();
+                container.RegisterType<IToDoRepository, ngToDo.Server.Data.EF.ToDoRepository>();
             }
                 
 

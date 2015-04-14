@@ -14,8 +14,6 @@ namespace ngToDo.Migrations
             if (context.ToDos.Count() < 1)
             {
 
-                context.ToDos.Add(new ToDo() {Name = "Build Enterprise Angular 1.4 App", CreatedDateTime = DateTime.Now});
-
                 context.SaveChanges();
             }
         }

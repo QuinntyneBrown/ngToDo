@@ -20,9 +20,10 @@
 
         public templateUrl: string = "/src/app/toDo/directives/toDoItem.html";
 
-        scope:any = {
+        public scope:any = {
             toDoItem:"="
         }
+
     }
 
     angular.module("app.toDo").directive("toDoItem", [ToDoItem.instance]);

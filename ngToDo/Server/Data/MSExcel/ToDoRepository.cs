@@ -1,9 +1,11 @@
 ﻿using Microsoft.Office.Interop.Excel;
 using ngToDo.Server.Models;
+using System;
+using System.Linq;
 
 namespace ngToDo.Server.Data.MSExcel
 {
-    public class ToDoRepository : BaseRepository<ToDo>
+    public class ToDoRepository : BaseRepository<ToDo>, IToDoRepository
     {
 
         protected override void UpdateRow(int rowIndex, _Worksheet worksheet, ToDo entity)
@@ -32,5 +34,10 @@ namespace ngToDo.Server.Data.MSExcel
         }
 
         protected override int OffSet { get { return 1; } }
+
+        public IQueryable<ToDo> GetAllByUsername(string name)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
