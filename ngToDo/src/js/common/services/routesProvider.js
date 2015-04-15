@@ -8,9 +8,9 @@ var app;
                 var _this = this;
                 this.routes = [];
                 this.configure = function (routes) {
-                    for (var i = 0; i < routes.length; i++) {
-                        _this.routes.push(routes[i]);
-                    }
+                    routes.forEach(function (route) {
+                        _this.routes.push(route);
+                    });
                 };
             }
             RoutesProvider.prototype.$get = function () {

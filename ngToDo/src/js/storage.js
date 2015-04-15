@@ -11,28 +11,28 @@ var app;
                 };
                 this.getByName = function (params) {
                     var items = JSON.parse(localStorage.getItem(_this.storageId) || '[]');
-                    for (var i = 0; i < items.length; i++) {
-                        if (params.name === items[i].name) {
-                            return items[i];
+                    var storageItem = null;
+                    items.forEach(function (item) {
+                        if (params.name === item.name) {
+                            storageItem = item;
                         }
-                        ;
-                    }
-                    ;
-                    return null;
+                    });
+                    return storageItem;
                 };
                 this.put = function (params) {
                     var items = JSON.parse(localStorage.getItem(_this.storageId) || '[]');
-                    for (var i = 0; i < items.length; i++) {
-                        if (params.name === items[i].name) {
-                            items[i].value = params.value;
+                    var itemExist = false;
+                    items.forEach(function (item) {
+                        if (params.name === item.name) {
+                            itemExist = true;
+                            item.value = params.value;
                             localStorage.setItem(_this.storageId, JSON.stringify(items));
-                            return;
                         }
-                        ;
+                    });
+                    if (!itemExist) {
+                        items.push(params);
+                        localStorage.setItem(_this.storageId, JSON.stringify(items));
                     }
-                    ;
-                    items.push(params);
-                    localStorage.setItem(_this.storageId, JSON.stringify(items));
                 };
             }
             return Storage;

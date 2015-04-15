@@ -1,5 +1,7 @@
 ﻿module app.security {
     
+    "use strict";
+
     export class SecurityService implements ISecurityService {
         
         constructor(
@@ -50,9 +52,7 @@
             this.tokenExpiryDate.set({ data: Date.now() + response.data.expires_in * 100 });
 
             this.getCurrentUser().then((results) => {
-
-                this.currentUser.set({ data: results });
-                
+                this.currentUser.set({ data: results });                
                 deferred.resolve();
             });
 

@@ -2,6 +2,7 @@ var app;
 (function (app) {
     var security;
     (function (security) {
+        "use strict";
         var LoginController = (function () {
             function LoginController() {
             }

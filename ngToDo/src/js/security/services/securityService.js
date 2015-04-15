@@ -2,6 +2,7 @@ var app;
 (function (app) {
     var security;
     (function (security) {
+        "use strict";
         var SecurityService = (function () {
             function SecurityService($http, $interval, $location, $q, currentUser, formEncode, oauthEndpoint, token, tokenExpiryDate) {
                 var _this = this;

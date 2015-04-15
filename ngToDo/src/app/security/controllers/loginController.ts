@@ -1,5 +1,7 @@
 ﻿module app.security {
-    
+
+    "use strict";
+
     class LoginController {
     
         constructor() {

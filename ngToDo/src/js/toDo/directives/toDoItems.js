@@ -2,6 +2,7 @@ var app;
 (function (app) {
     var toDo;
     (function (toDo) {
+        "use strict";
         var ToDoItems = (function () {
             function ToDoItems() {
                 this.controller = "toDoItemsController";
@@ -11,8 +12,6 @@ var app;
                 this.templateUrl = "/src/app/toDo/directives/toDoItems.html";
                 this.scope = {
                     toDoItems: "="
-                };
-                this.link = function (scope, element, attributes) {
                 };
             }
             ToDoItems.instance = function () {

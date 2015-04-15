@@ -7,11 +7,10 @@
         public routes: IRouteConfig[] = [];
 
         public configure = (routes: IRouteConfig[]) => {
-            for (var i = 0; i < routes.length; i++) {
-                this.routes.push(routes[i]);
-            }
+            routes.forEach((route) => {
+                this.routes.push(route);
+            });
         }
-
 
         $get(): IRouteConfig[] {
             return this.routes;

@@ -94,14 +94,14 @@
 
                 var promises = [];
 
-                for (var i = 0; i < results.data.length; i++) {
-                    promises.push(this.instance(results.data[i]));
-                }
+                results.data.forEach((dataItem) => {
+                    promises.push(this.instance(dataItem));
+                });
 
                 this.$q.all(promises).then((allResults) => {
-                    for (var x = 0; x < allResults.length; x++) {
-                        entities.push(allResults[x]);
-                    }                    
+                    allResults.forEach((allResult) => {
+                        promises.push(this.instance(allResult));
+                    });                               
                     deferred.resolve(entities);
                 });
 

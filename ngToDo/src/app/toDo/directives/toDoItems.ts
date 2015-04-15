@@ -1,5 +1,7 @@
 ﻿module app.toDo {
-    
+
+    "use strict";
+
     class ToDoItems {
 
         constructor() {
@@ -22,10 +24,6 @@
 
         public scope = {
             toDoItems: "="
-        }
-
-        public link = (scope: ng.IScope, element: ng.IAugmentedJQuery, attributes: ng.IAttributes) => {
-            
         }
          
     }

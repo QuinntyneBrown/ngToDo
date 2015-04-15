@@ -1,5 +1,4 @@
-﻿
-module app.toDo {
+﻿module app.toDo {
 
     "use strict";
 

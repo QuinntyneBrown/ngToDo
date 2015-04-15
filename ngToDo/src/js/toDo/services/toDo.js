@@ -68,13 +68,13 @@ var app;
                     _this.toDoService.getRecent().then(function (results) {
                         var entities = [];
                         var promises = [];
-                        for (var i = 0; i < results.data.length; i++) {
-                            promises.push(_this.instance(results.data[i]));
-                        }
+                        results.data.forEach(function (dataItem) {
+                            promises.push(_this.instance(dataItem));
+                        });
                         _this.$q.all(promises).then(function (allResults) {
-                            for (var x = 0; x < allResults.length; x++) {
-                                entities.push(allResults[x]);
-                            }
+                            allResults.forEach(function (allResult) {
+                                promises.push(_this.instance(allResult));
+                            });
                             deferred.resolve(entities);
                         });
                     });

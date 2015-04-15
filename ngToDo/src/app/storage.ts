@@ -13,29 +13,34 @@
         public getByName = (params: INameValuePair) => {
             var items = JSON.parse(localStorage.getItem(this.storageId) || '[]');
 
-            for (var i = 0; i < items.length; i++) {
-                if (params.name === items[i].name) {
-                    return items[i];
-                };
-            };
+            var storageItem = null;
 
-            return null;
+            items.forEach((item) => {
+                if (params.name === item.name) {
+                    storageItem = item;
+                }
+            });
+
+            return storageItem;
         }
 
         public put = (params: INameValuePair) => {
             var items = JSON.parse(localStorage.getItem(this.storageId) || '[]');
 
-            for (var i = 0; i < items.length; i++) {
-                if (params.name === items[i].name) {
-                    items[i].value = params.value;
-                    localStorage.setItem(this.storageId, JSON.stringify(items));
-                    return;
-                };
-            };
+            var itemExist = false;
 
-            items.push(params);
+            items.forEach((item) => {
+                if (params.name === item.name) {
+                    itemExist = true;
+                    item.value = params.value;
+                    localStorage.setItem(this.storageId, JSON.stringify(items));                    
+                }
+            });
 
-            localStorage.setItem(this.storageId, JSON.stringify(items));
+            if (!itemExist) {
+                items.push(params);
+                localStorage.setItem(this.storageId, JSON.stringify(items));
+            }
         }
 
     }
