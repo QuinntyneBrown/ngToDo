@@ -2,7 +2,7 @@
     
     "use strict";
 
-    class ToDoDetailController extends security.AuthenticatedController {
+    class ToDoDetailController extends security.AuthorizedController {
         
         constructor(
             public $location: ng.ILocationService,
@@ -21,24 +21,16 @@
             if (this.$routeParams["toDoId"]) {
 
                 this.toDo.getById(this.$routeParams["toDoId"]).then((results) => {
-
                     this.toDo = results;
-
                     deferred.resolve(true);
-
                 }).catch((Error) => {
-
-
-
                     deferred.resolve(false);
-
                 });
             } else {
                 this.toDo.instance(null).then((results) => {
                     this.toDo = results;
                     deferred.resolve(true);
                 });
-
             }
 
             return deferred.promise;

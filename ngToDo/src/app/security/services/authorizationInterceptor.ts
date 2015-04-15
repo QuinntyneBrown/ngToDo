@@ -14,9 +14,7 @@
 
         public request = (config) => {
             if (this.token.get()) {
-
                 config.headers.Authorization = "Bearer " + this.token.get();
-
             }
 
             return config;

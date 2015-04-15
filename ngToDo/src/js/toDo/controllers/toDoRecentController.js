@@ -30,7 +30,7 @@ var app;
                 };
             }
             return ToDoRecentController;
-        })(app.security.AuthenticatedController);
+        })(app.security.AuthorizedController);
         angular.module("app.toDo").controller("toDoRecentController", ["$location", "$q", "toDo", "token", ToDoRecentController]);
     })(toDo = app.toDo || (app.toDo = {}));
 })(app || (app = {}));

@@ -2,7 +2,7 @@
 
     "use strict";
 
-    class ToDoListController extends security.AuthenticatedController {
+    class ToDosController extends security.AuthorizedController {
 
         constructor(
             public $location: ng.ILocationService,
@@ -13,30 +13,22 @@
 
         }
 
-
         public activate = () => {
-
             var deferred = this.$q.defer();
 
             this.toDo.getAll().then((results) => {
-
                 this.toDos = results;
-
                 deferred.resolve(true);
-
             }).catch((Error) => {
-
                 deferred.resolve(false);
-
             });
 
             return deferred.promise;
-
         }
 
         public toDos: IToDo[];
     }
 
     angular.module("app.toDo")
-        .controller("toDoListController", ["$location", "$q", "toDo", "token", ToDoListController]);
+        .controller("toDosController", ["$location", "$q", "toDo", "token", ToDosController]);
 } 

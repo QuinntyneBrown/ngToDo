@@ -1,6 +1,8 @@
 ﻿module app.security {
- 
-    export class LoginForm {
+
+    "use strict";
+
+    class LoginForm {
 
         constructor(private securityService: ISecurityService) {
             

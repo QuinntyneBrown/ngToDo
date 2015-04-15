@@ -17,7 +17,7 @@ var app;
                 this.token = token;
             }
             return ToDoAboutController;
-        })(app.security.AuthenticatedController);
+        })(app.security.AuthorizedController);
         angular.module("app.toDo").controller("toDoAboutController", ["$location", "token", ToDoAboutController]);
     })(toDo = app.toDo || (app.toDo = {}));
 })(app || (app = {}));

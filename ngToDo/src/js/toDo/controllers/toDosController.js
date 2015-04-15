@@ -9,9 +9,9 @@ var app;
     var toDo;
     (function (_toDo) {
         "use strict";
-        var ToDoListController = (function (_super) {
-            __extends(ToDoListController, _super);
-            function ToDoListController($location, $q, toDo, token) {
+        var ToDosController = (function (_super) {
+            __extends(ToDosController, _super);
+            function ToDosController($location, $q, toDo, token) {
                 var _this = this;
                 _super.call(this, $location, token);
                 this.$location = $location;
@@ -29,10 +29,10 @@ var app;
                     return deferred.promise;
                 };
             }
-            return ToDoListController;
-        })(app.security.AuthenticatedController);
-        angular.module("app.toDo").controller("toDoListController", ["$location", "$q", "toDo", "token", ToDoListController]);
+            return ToDosController;
+        })(app.security.AuthorizedController);
+        angular.module("app.toDo").controller("toDosController", ["$location", "$q", "toDo", "token", ToDosController]);
     })(toDo = app.toDo || (app.toDo = {}));
 })(app || (app = {}));
 
-//# sourceMappingURL=../../toDo/controllers/toDoListController.js.map
+//# sourceMappingURL=../../toDo/controllers/toDosController.js.map

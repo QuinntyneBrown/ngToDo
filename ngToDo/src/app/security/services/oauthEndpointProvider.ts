@@ -2,7 +2,7 @@
 
     "use strict";
 
-    export class OAuthEndpointProvider implements ng.IServiceProvider, common.IApiEndpointProvider {
+    export class OAuthEndpointProvider implements common.IApiEndpointProvider {
         config: common.IApiEndpointConfig = {
             baseUrl: "/login"
         };

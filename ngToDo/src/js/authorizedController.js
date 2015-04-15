@@ -2,21 +2,21 @@ var app;
 (function (app) {
     var security;
     (function (security) {
-        var AuthenticatedController = (function () {
-            function AuthenticatedController($location, token) {
+        var AuthorizedController = (function () {
+            function AuthorizedController($location, token) {
                 this.$location = $location;
                 this.token = token;
             }
-            AuthenticatedController.prototype.canActivate = function () {
+            AuthorizedController.prototype.canActivate = function () {
                 if (this.token.get())
                     return true;
                 this.$location.path("/login");
                 return false;
             };
-            return AuthenticatedController;
+            return AuthorizedController;
         })();
-        security.AuthenticatedController = AuthenticatedController;
+        security.AuthorizedController = AuthorizedController;
     })(security = app.security || (app.security = {}));
 })(app || (app = {}));
 
-//# sourceMappingURL=authenticatedController.js.map
+//# sourceMappingURL=authorizedController.js.map

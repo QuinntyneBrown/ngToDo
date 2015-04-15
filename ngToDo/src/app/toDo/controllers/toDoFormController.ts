@@ -3,7 +3,7 @@ module app.toDo {
 
     "use strict";
 
-    class ToDoFormController extends security.AuthenticatedController {
+    class ToDoFormController extends security.AuthorizedController {
 
         constructor(
             public $location:ng.ILocationService,

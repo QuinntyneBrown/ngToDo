@@ -42,7 +42,7 @@ namespace ngToDo.Server.Api.v1
             {
                 return _contextProvider.SaveChanges(saveBundle);
             }
-            catch (Exception exp)
+            catch 
             {
                 throw;
             }

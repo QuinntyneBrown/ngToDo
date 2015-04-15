@@ -2,7 +2,7 @@
 
     "use strict";
 
-    class ToDoAboutController extends security.AuthenticatedController {
+    class ToDoAboutController extends security.AuthorizedController {
 
         constructor(
             public $location: ng.ILocationService,

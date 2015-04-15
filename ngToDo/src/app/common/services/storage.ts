@@ -1,8 +1,9 @@
 ﻿module app.common {
-    
-    export class CommonStorage extends Storage implements IStorage {
-        constructor() {
 
+    "use strict";
+
+    class CommonStorage extends Storage implements IStorage {
+        constructor() {
             super("commonLocalStorage");
         }
     }

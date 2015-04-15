@@ -201,7 +201,6 @@
     <Content Include="Global.asax" />
     <Content Include="gulpfile.config.js" />
     <Content Include="gulpfile.js" />
-    <Content Include="Icon.png" />
     <Content Include="Protractor\PageObjects\ToDoDetailPage.js" />
     <Content Include="Protractor\protractor.config.js" />
     <Content Include="scripts\angular-animate.js" />
@@ -297,7 +296,6 @@
     </Content>
     <Content Include="src\app\toDo\views\toDoAbout.html" />
     <Content Include="src\app\toDo\views\toDoDetail.html" />
-    <Content Include="src\app\toDo\views\toDoMasterDetail.html" />
     <Content Include="src\app\toDo\views\toDoRecent.html" />
     <Content Include="src\app\ui\appBarButton\appBarButton.css">
       <DependentUpon>appBarButton.less</DependentUpon>
@@ -391,7 +389,7 @@
     <Content Include="Protractor\specs\createToDoSpecs.js" />
     <Content Include="Protractor\specs\toDoListSpects.js" />
     <Content Include="src\app\toDo\views\toDoForm.html" />
-    <Content Include="src\app\toDo\views\toDoList.html" />
+    <Content Include="src\app\toDo\views\toDos.html" />
     <Content Include="src\app\ui\appHeader\appHeader.html" />
     <Content Include="src\app\ui\appHeader\appHeader.min.css">
       <DependentUpon>appHeader.css</DependentUpon>
@@ -407,8 +405,6 @@
     <Compile Include="Server\Api\v1\BreezeDataServiceController.cs" />
     <Compile Include="Server\Data\EF\ToDoRepository.cs" />
     <Compile Include="Server\Data\IToDoRepository.cs" />
-    <Compile Include="Server\Services\Contracts\IToDoService.cs" />
-    <Compile Include="Server\Services\ToDoService.cs" />
     <Compile Include="Server\StartUp\BreezeWebApiConfig.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -426,7 +422,6 @@
     <Compile Include="Server\Data\IUserRepository.cs" />
     <Compile Include="Server\Data\MSExcel\BaseRepository.cs" />
     <Compile Include="Server\Data\MSExcel\UserRepository.cs" />
-    <Compile Include="Server\Dtos\SignInDto.cs" />
     <Compile Include="Server\Dtos\TokenDto.cs" />
     <Compile Include="Server\Models\IEntity.cs" />
     <Compile Include="Server\Models\User.cs" />
@@ -486,7 +481,7 @@
     <TypeScriptCompile Include="src\app\sessionStorageProperty.ts" />
     <TypeScriptCompile Include="src\app\storage.ts" />
     <TypeScriptCompile Include="src\app\common\services\featureComponentsMappingsProvider.ts" />
-    <TypeScriptCompile Include="src\app\authenticatedController.ts" />
+    <TypeScriptCompile Include="src\app\authorizedController.ts" />
     <TypeScriptCompile Include="src\app\security\controllers\loginController.ts" />
     <TypeScriptCompile Include="src\app\security\directives\loginForm.ts" />
     <TypeScriptCompile Include="src\app\security\directives\loginFormController.ts">
@@ -505,7 +500,6 @@
     <TypeScriptCompile Include="src\app\toDo\controllers\toDoAppController.ts" />
     <TypeScriptCompile Include="src\app\toDo\controllers\toDoDetailController.ts" />
     <TypeScriptCompile Include="src\app\toDo\controllers\toDoFormController.ts" />
-    <TypeScriptCompile Include="src\app\toDo\controllers\toDoMasterDetailController.ts" />
     <TypeScriptCompile Include="src\app\toDo\controllers\toDoRecentController.ts" />
     <TypeScriptCompile Include="src\app\toDo\directives\toDoItem.ts" />
     <TypeScriptCompile Include="src\app\toDo\directives\toDoItemController.ts">
@@ -518,7 +512,7 @@
     <TypeScriptCompile Include="src\app\toDo\services\toDo.ts" />
     <TypeScriptCompile Include="src\app\toDo\services\toDoBreezeService.ts" />
     <TypeScriptCompile Include="src\app\toDo\toDo.module.ts" />
-    <TypeScriptCompile Include="src\app\toDo\controllers\toDoListController.ts" />
+    <TypeScriptCompile Include="src\app\toDo\controllers\toDosController.ts" />
     <TypeScriptCompile Include="src\app\toDo\services\toDoService.ts" />
     <TypeScriptCompile Include="src\app\toDo\toDo.d.ts">
       <DependentUpon>toDo.module.ts</DependentUpon>

@@ -35,14 +35,13 @@
          featureComponentsMappingsProvider.mappings.push(
              {
                  feature: "toDo",
-                 components: ["toDoRecent", "toDoForm", "toDoList", "toDoDetail", "toDoAbout","toDoMasterDetail"]
+                 components: ["toDoRecent", "toDoForm", "toDos", "toDoDetail", "toDoAbout"]
              });
 
          routesProvider.configure([
              { path: '/', redirectTo: '/login' },
              { path: '/toDo/about', component: 'toDoAbout' },
-             { path: '/toDo/recent', component: 'toDoRecent' },
-             { path: '/toDo/list', component: 'toDoList' },
+             { path: '/toDo/list', component: 'toDos' },
              { path: '/toDo/detail/:toDoId', component: 'toDoDetail' },
              { path: '/toDo/create', component: 'toDoForm' },
              { path: '/toDo/edit/:toDoId', component: 'toDoForm' }

@@ -39,7 +39,7 @@ var app;
                 };
             }
             return ToDoDetailController;
-        })(app.security.AuthenticatedController);
+        })(app.security.AuthorizedController);
         angular.module("app.toDo").controller("toDoDetailController", ["$location", "$q", "$routeParams", "toDo", "token", ToDoDetailController]);
     })(toDo = app.toDo || (app.toDo = {}));
 })(app || (app = {}));

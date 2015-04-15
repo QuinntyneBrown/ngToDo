@@ -15,13 +15,18 @@ namespace ngToDo.Migrations
         {
             if (context.Users.Count() < 1)
             {
-                string password = "P@ssw0rd";
-                if (SecurityConfiguration.Config.StorePasswordsInPlainText == false)
-                {
-                    password = new EncryptionService().TransformPassword(password);
-                }
+                var password = SecurityConfiguration.Config.StorePasswordsInPlainText
+                    ? new EncryptionService().TransformPassword("P@ssw0rd")
+                    : "P@ssw0rd";
 
-                context.Users.Add(new User() { Firstname = "Quinntyne", Lastname = "Brown", Username = "quinntynebrown@gmail.com", Password = password, IsDeleted = false });
+                context.Users.Add(new User()
+                {
+                    Firstname = "Quinntyne", 
+                    Lastname = "Brown", 
+                    Username = "quinntynebrown@gmail.com", 
+                    Password = password, 
+                    IsDeleted = false
+                });
 
                 context.SaveChanges();
             }

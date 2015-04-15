@@ -78,7 +78,6 @@ namespace ngToDo.Server.Data.EF
             this.DbContext.Dispose();
         }
 
-
         public void SaveChanges()
         {
             this.DbContext.SaveChanges();

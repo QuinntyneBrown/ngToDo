@@ -8,6 +8,7 @@ var app;
 (function (app) {
     var common;
     (function (common) {
+        "use strict";
         var CommonStorage = (function (_super) {
             __extends(CommonStorage, _super);
             function CommonStorage() {
@@ -15,7 +16,6 @@ var app;
             }
             return CommonStorage;
         })(common.Storage);
-        common.CommonStorage = CommonStorage;
         angular.module("app.common").service("storage", [CommonStorage]);
     })(common = app.common || (app.common = {}));
 })(app || (app = {}));
