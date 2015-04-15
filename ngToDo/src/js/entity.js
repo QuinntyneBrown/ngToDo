@@ -26,13 +26,13 @@ var app;
                     _this.dataService.getAll().then(function (results) {
                         var entities = [];
                         var promises = [];
-                        for (var i = 0; i < results.data.length; i++) {
-                            promises.push(_this.instance(results.data[i]));
-                        }
+                        results.data.forEach(function (result) {
+                            promises.push(_this.instance(result));
+                        });
                         _this.$q.all(promises).then(function (allResults) {
-                            for (var x = 0; x < allResults.length; x++) {
-                                entities.push(allResults[x]);
-                            }
+                            allResults.forEach(function (result) {
+                                entities.push(result);
+                            });
                             deferred.resolve(entities);
                         });
                     });

@@ -63,7 +63,7 @@
 
             var deferred = this.$q.defer();
 
-            this.$http({ method: "GET", url: "/api/identity/getCurrentUser" }).then((results) => {
+            this.$http({ method: "GET", url: "api/identity/getCurrentUser" }).then((results) => {
                 deferred.resolve(results.data);
             }).catch((error) => {
                 deferred.reject(error);

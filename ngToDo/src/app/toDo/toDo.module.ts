@@ -47,18 +47,18 @@
              { path: '/toDo/edit/:toDoId', component: 'toDoForm' }
          ]);
 
-         var mappings = featureComponentsMappingsProvider.mappings;
-
+         
          $componentLoaderProvider.setTemplateMapping((name) => {
-             for (var i = 0; i < mappings.length; i++) {
-                 for (var c = 0; c < mappings[i].components.length; c++) {
-                     if (name === mappings[i].components[c]) {
-                         return 'src/app/' + mappings[i].feature + '/views/' + name + '.html';
+             var viewLocation = null;
+             featureComponentsMappingsProvider.mappings.forEach((mapping) => {
+                 mapping.components.forEach((component) => {
+                     if (name === component) {
+                         viewLocation = 'src/app/' + mapping.feature + '/views/' + name + '.html';
                      }
-                 }
-             }
+                 });
+             });
 
-             throw new Error("Unmapped Component " + name);
+             return viewLocation;
          });
 
          $componentLoaderProvider.setCtrlNameMapping((name) => {

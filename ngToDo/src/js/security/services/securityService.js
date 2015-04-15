@@ -47,7 +47,7 @@ var app;
                 };
                 this.getCurrentUser = function () {
                     var deferred = _this.$q.defer();
-                    _this.$http({ method: "GET", url: "/api/identity/getCurrentUser" }).then(function (results) {
+                    _this.$http({ method: "GET", url: "api/identity/getCurrentUser" }).then(function (results) {
                         deferred.resolve(results.data);
                     }).catch(function (error) {
                         deferred.reject(error);

@@ -40,14 +40,12 @@ module app.common {
 
                 var promises = [];
 
-                for (var i = 0; i < results.data.length; i++) {
-                    promises.push(this.instance(results.data[i]));
-                }
+                results.data.forEach((result) => { promises.push(this.instance(result)); });
 
                 this.$q.all(promises).then((allResults) => {
-                    for (var x = 0; x < allResults.length; x++) {
-                        entities.push(allResults[x]);
-                    }
+
+                    allResults.forEach((result) => { entities.push(result); });
+
                     deferred.resolve(entities);
                 });
             });

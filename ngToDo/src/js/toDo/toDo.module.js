@@ -33,16 +33,16 @@ var app;
                 { path: '/toDo/create', component: 'toDoForm' },
                 { path: '/toDo/edit/:toDoId', component: 'toDoForm' }
             ]);
-            var mappings = featureComponentsMappingsProvider.mappings;
             $componentLoaderProvider.setTemplateMapping(function (name) {
-                for (var i = 0; i < mappings.length; i++) {
-                    for (var c = 0; c < mappings[i].components.length; c++) {
-                        if (name === mappings[i].components[c]) {
-                            return 'src/app/' + mappings[i].feature + '/views/' + name + '.html';
+                var viewLocation = null;
+                featureComponentsMappingsProvider.mappings.forEach(function (mapping) {
+                    mapping.components.forEach(function (component) {
+                        if (name === component) {
+                            viewLocation = 'src/app/' + mapping.feature + '/views/' + name + '.html';
                         }
-                    }
-                }
-                throw new Error("Unmapped Component " + name);
+                    });
+                });
+                return viewLocation;
             });
             $componentLoaderProvider.setCtrlNameMapping(function (name) {
                 return name[0].toLowerCase() + name.substr(1) + 'Controller';
