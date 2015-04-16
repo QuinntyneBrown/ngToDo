@@ -4,9 +4,10 @@
 
         constructor(public $location: ng.ILocationService,
             public $q: ng.IQService,
-            private toDoService: IToDoService) {
+            private toDoService: IToDoService,
+            private toDoStatuses: IToDoStatuses) {
             super($location,$q, toDoService,'/toDo');
-            this.status = 1;
+            this.toDoStatus = toDoStatuses.new;
         }
 
         public instance = (data: any = null) => {
@@ -15,13 +16,13 @@
             var toDo;
 
             if (data === null) {
-                toDo = new ToDo(this.$location,this.$q, this.toDoService);
+                toDo = new ToDo(this.$location,this.$q, this.toDoService, this.toDoStatuses);
             } else {
-                toDo = new ToDo(this.$location,this.$q, this.toDoService);
+                toDo = new ToDo(this.$location, this.$q, this.toDoService, this.toDoStatuses);
                 toDo.id = data.id || 0;
                 toDo.name = data.name;
                 toDo.description = data.description;
-                toDo.status = data.status || 1;
+                toDo.toDoStatus = data.toDoStatus || 0;
             }
 
             deferred.resolve(toDo);
@@ -35,7 +36,7 @@
 
         public description: string;
 
-        public status: number;
+        public toDoStatus: number;
 
         public completedDateTime: Date;
 
@@ -56,27 +57,27 @@
 
         public complete = () => {
             if (this.isValid()) {
-                return this.setStatus(5);
+                return this.setStatus(this.toDoStatuses.completed);
             }
         }
 
         public toDo = () => {
-            return this.setStatus(2);
+            return this.setStatus(this.toDoStatuses.toDo);
         }
 
         public toDoNever = () => {
-            return this.setStatus(3);
+            return this.setStatus(this.toDoStatuses.toDoNever);
         }
 
         public start = () => {
-            return this.setStatus(4);
+            return this.setStatus(this.toDoStatuses.started);
         }
 
-        public setStatus = (status: number) => {
+        public setStatus = (toDoStatus: number) => {
 
             var deferred = this.$q.defer();
 
-            this.status = status;
+            this.toDoStatus = toDoStatus;
 
             this.save().then((results) => {
                 deferred.resolve();
@@ -112,5 +113,5 @@
 
     }
 
-    angular.module("app.toDo").service("toDo", ["$location","$q","toDoService",ToDo]);
+    angular.module("app.toDo").service("toDo", ["$location", "$q", "toDoService","toDoStatuses",ToDo]);
 } 

@@ -8,6 +8,7 @@ var app;
 (function (app) {
     var common;
     (function (common) {
+        "use strict";
         var StorageProperty = (function () {
             function StorageProperty(storage, name) {
                 var _this = this;

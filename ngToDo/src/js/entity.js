@@ -1,4 +1,3 @@
-/// <reference path="../app/common/common.d.ts" />
 var app;
 (function (app) {
     var common;

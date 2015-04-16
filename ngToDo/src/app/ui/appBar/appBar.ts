@@ -1,5 +1,7 @@
 ﻿module app.ui {
-    
+
+    "use strict";
+
     export class AppBar {
 
         constructor() {

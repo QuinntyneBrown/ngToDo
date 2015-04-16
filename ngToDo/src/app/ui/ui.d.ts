@@ -5,14 +5,6 @@
         getButtons():IAppBarButton[];
     }
 
-    export interface IAppBarButtonConstructorFn {
-        (
-            text: string,
-            onClick: void,
-            type:string
-        ):IAppBarButton
-    }
-
     export interface IAppBarButton {
         text: string;
         type: string;

@@ -4,7 +4,7 @@
         id: number;
         name: string;
         description: string;
-        status: number;
+        toDoStatus: number;
         completedDateTime: Date;
         createdDateTime: Date;
         complete():void;

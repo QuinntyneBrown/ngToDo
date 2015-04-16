@@ -10,25 +10,26 @@ var app;
     (function (_toDo) {
         var ToDo = (function (_super) {
             __extends(ToDo, _super);
-            function ToDo($location, $q, toDoService) {
+            function ToDo($location, $q, toDoService, toDoStatuses) {
                 var _this = this;
                 _super.call(this, $location, $q, toDoService, '/toDo');
                 this.$location = $location;
                 this.$q = $q;
                 this.toDoService = toDoService;
+                this.toDoStatuses = toDoStatuses;
                 this.instance = function (data) {
                     if (data === void 0) { data = null; }
                     var deferred = _this.$q.defer();
                     var toDo;
                     if (data === null) {
-                        toDo = new ToDo(_this.$location, _this.$q, _this.toDoService);
+                        toDo = new ToDo(_this.$location, _this.$q, _this.toDoService, _this.toDoStatuses);
                     }
                     else {
-                        toDo = new ToDo(_this.$location, _this.$q, _this.toDoService);
+                        toDo = new ToDo(_this.$location, _this.$q, _this.toDoService, _this.toDoStatuses);
                         toDo.id = data.id || 0;
                         toDo.name = data.name;
                         toDo.description = data.description;
-                        toDo.status = data.status || 1;
+                        toDo.toDoStatus = data.toDoStatus || 0;
                     }
                     deferred.resolve(toDo);
                     return deferred.promise;
@@ -43,21 +44,21 @@ var app;
                 };
                 this.complete = function () {
                     if (_this.isValid()) {
-                        return _this.setStatus(5);
+                        return _this.setStatus(_this.toDoStatuses.completed);
                     }
                 };
                 this.toDo = function () {
-                    return _this.setStatus(2);
+                    return _this.setStatus(_this.toDoStatuses.toDo);
                 };
                 this.toDoNever = function () {
-                    return _this.setStatus(3);
+                    return _this.setStatus(_this.toDoStatuses.toDoNever);
                 };
                 this.start = function () {
-                    return _this.setStatus(4);
+                    return _this.setStatus(_this.toDoStatuses.started);
                 };
-                this.setStatus = function (status) {
+                this.setStatus = function (toDoStatus) {
                     var deferred = _this.$q.defer();
-                    _this.status = status;
+                    _this.toDoStatus = toDoStatus;
                     _this.save().then(function (results) {
                         deferred.resolve();
                     });
@@ -80,11 +81,11 @@ var app;
                     });
                     return deferred.promise;
                 };
-                this.status = 1;
+                this.toDoStatus = toDoStatuses.new;
             }
             return ToDo;
         })(app.common.Entity);
-        angular.module("app.toDo").service("toDo", ["$location", "$q", "toDoService", ToDo]);
+        angular.module("app.toDo").service("toDo", ["$location", "$q", "toDoService", "toDoStatuses", ToDo]);
     })(toDo = app.toDo || (app.toDo = {}));
 })(app || (app = {}));
 

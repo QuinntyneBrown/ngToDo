@@ -24,6 +24,7 @@
             toDoItem:"="
         }
 
+
     }
 
     angular.module("app.toDo").directive("toDoItem", [ToDoItem.instance]);

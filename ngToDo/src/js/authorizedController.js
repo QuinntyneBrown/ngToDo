@@ -2,6 +2,7 @@ var app;
 (function (app) {
     var security;
     (function (security) {
+        "use strict";
         var AuthorizedController = (function () {
             function AuthorizedController($location, token) {
                 this.$location = $location;

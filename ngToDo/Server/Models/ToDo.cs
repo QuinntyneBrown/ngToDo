@@ -6,7 +6,7 @@ namespace ngToDo.Server.Models
     {
         public ToDo()
         {
-            this.Status = Status.New;
+            this.ToDoStatus = ToDoStatus.New;
         }
 
         public int Id { get; set; }
@@ -21,7 +21,7 @@ namespace ngToDo.Server.Models
 
         public DateTime? CompletedDateTime { get; set; }
 
-        public Status Status { get; set; }
+        public ToDoStatus ToDoStatus { get; set; }
 
         public bool IsDeleted { get; set; }
 

@@ -4,7 +4,7 @@ var app;
     (function (ui) {
         "use strict";
         var AppBarService = (function () {
-            function AppBarService($rootScope, appBarButtonConstructorFn, historyService, notificationService) {
+            function AppBarService($rootScope, historyService, notificationService) {
                 var _this = this;
                 this.historyService = historyService;
                 this.notificationService = notificationService;
@@ -31,7 +31,7 @@ var app;
             return AppBarService;
         })();
         ui.AppBarService = AppBarService;
-        angular.module("app.ui").service("appBarService", ["$rootScope", "appBarButtonConstructorFn", "historyService", "notificationService", AppBarService]);
+        angular.module("app.ui").service("appBarService", ["$rootScope", "historyService", "notificationService", AppBarService]);
     })(ui = app.ui || (app.ui = {}));
 })(app || (app = {}));
 

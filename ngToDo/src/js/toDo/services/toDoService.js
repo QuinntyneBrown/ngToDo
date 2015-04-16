@@ -30,7 +30,6 @@ var app;
             }
             return ToDoService;
         })(app.common.DataService);
-        toDo.ToDoService = ToDoService;
         angular.module("app.toDo").service("toDoService", ["$http", "$cacheFactory", "$q", "apiEndpoint", ToDoService]);
     })(toDo = app.toDo || (app.toDo = {}));
 })(app || (app = {}));

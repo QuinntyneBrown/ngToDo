@@ -2,6 +2,7 @@ var app;
 (function (app) {
     var ui;
     (function (ui) {
+        "use strict";
         var AppBar = (function () {
             function AppBar() {
                 this.templateUrl = "src/app/ui/appBar/appBar.html";

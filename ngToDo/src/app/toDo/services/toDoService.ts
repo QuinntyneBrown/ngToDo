@@ -2,14 +2,13 @@
 
     "use strict";
 
-    export class ToDoService extends common.DataService implements IToDoService
+    class ToDoService extends common.DataService implements IToDoService
     {
         constructor(
             public $http: ng.IHttpService,
             public $cacheFactory: ng.ICacheFactoryService,
             public $q: ng.IQService,
             public apiEndpoint: common.IApiEndpointConfig) {
-
             super($http, $cacheFactory, $q, apiEndpoint.baseUrl + "todo/");
 
         }

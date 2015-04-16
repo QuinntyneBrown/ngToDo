@@ -1,6 +1,8 @@
 ﻿module app.ui {
 
-    export class AppBarController {
+    "use strict";
+
+    class AppBarController {
 
         constructor(public appBarService: IAppBarService) {
             

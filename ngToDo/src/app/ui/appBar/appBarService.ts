@@ -4,7 +4,7 @@
 
     export class AppBarService implements IAppBarService {
 
-        constructor($rootScope: ng.IRootScopeService, appBarButtonConstructorFn: IAppBarButtonConstructorFn, public historyService: common.IHistoryService, public notificationService: common.INotificationService) {
+        constructor($rootScope: ng.IRootScopeService, public historyService: common.IHistoryService, public notificationService: common.INotificationService) {
             $rootScope.$on("$locationChangeStart", this.resetButtons);
         }
 
@@ -39,5 +39,5 @@
         private buttons:IAppBarButton[] = [];
     }
 
-    angular.module("app.ui").service("appBarService", ["$rootScope", "appBarButtonConstructorFn","historyService","notificationService", AppBarService]);
+    angular.module("app.ui").service("appBarService", ["$rootScope","historyService","notificationService", AppBarService]);
 } 

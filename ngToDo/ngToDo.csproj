@@ -444,7 +444,7 @@
     <Compile Include="Server\Data\MSExcel\ExcelWorkbookProvider.cs" />
     <Compile Include="Server\Data\IRepository.cs" />
     <Compile Include="Server\Data\MSExcel\ToDoRepository.cs" />
-    <Compile Include="Server\Models\Status.cs" />
+    <Compile Include="Server\Models\ToDoStatus.cs" />
     <Compile Include="Server\Models\ToDo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -511,13 +511,13 @@
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\app\toDo\services\toDo.ts" />
     <TypeScriptCompile Include="src\app\toDo\services\toDoBreezeService.ts" />
+    <TypeScriptCompile Include="src\app\toDo\services\toDoStatuses.ts" />
     <TypeScriptCompile Include="src\app\toDo\toDo.module.ts" />
     <TypeScriptCompile Include="src\app\toDo\controllers\toDosController.ts" />
     <TypeScriptCompile Include="src\app\toDo\services\toDoService.ts" />
     <TypeScriptCompile Include="src\app\toDo\toDo.d.ts">
       <DependentUpon>toDo.module.ts</DependentUpon>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="src\app\ui\appBarButton\appBarButtonConstructorFn.ts" />
     <TypeScriptCompile Include="src\app\ui\appBarButton\appBarButton.ts" />
     <TypeScriptCompile Include="src\app\ui\appBar\appBar.ts" />
     <TypeScriptCompile Include="src\app\ui\appBar\appBarController.ts" />

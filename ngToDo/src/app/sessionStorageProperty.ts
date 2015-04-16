@@ -1,5 +1,7 @@
 ﻿module app.common {
 
+    "use strict";
+
     export class StorageProperty {
 
         constructor(public storage: any, public name: string) {

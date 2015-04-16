@@ -15,7 +15,7 @@ namespace ngToDo.Server.Data.MSExcel
             worksheet.Cells[rowIndex, 3] = entity.Description;
             worksheet.Cells[rowIndex, 4] = entity.CreatedDateTime;
             worksheet.Cells[rowIndex, 5] = entity.CompletedDateTime;
-            worksheet.Cells[rowIndex, 6] = entity.Status;
+            worksheet.Cells[rowIndex, 6] = entity.ToDoStatus;
             worksheet.Cells[rowIndex, 7] = entity.IsDeleted;
         }
 
