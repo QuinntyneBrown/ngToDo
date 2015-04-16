@@ -1,6 +1,8 @@
 ﻿module app.common {
     
-    export class HistoryService {
+    "use strict";
+
+    class HistoryService {
         constructor() {
             
         }

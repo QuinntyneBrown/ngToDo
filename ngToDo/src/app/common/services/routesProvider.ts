@@ -2,7 +2,7 @@
 
     "use strict";
 
-    export class RoutesProvider implements ng.IServiceProvider, IRoutesProvider {
+    class RoutesProvider implements ng.IServiceProvider, IRoutesProvider {
 
         public routes: IRouteConfig[] = [];
 

@@ -18,7 +18,6 @@ var app;
             };
             return RoutesProvider;
         })();
-        common.RoutesProvider = RoutesProvider;
         angular.module("app.common").provider("routes", RoutesProvider);
     })(common = app.common || (app.common = {}));
 })(app || (app = {}));

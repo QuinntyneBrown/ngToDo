@@ -1,6 +1,8 @@
 ﻿module app.common {
     
-    export class NotificationService {
+    "use strict";
+
+    class NotificationService {
         constructor() {
             
         }

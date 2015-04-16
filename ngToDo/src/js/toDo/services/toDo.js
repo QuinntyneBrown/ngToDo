@@ -8,6 +8,7 @@ var app;
 (function (app) {
     var toDo;
     (function (_toDo) {
+        "use strict";
         var ToDo = (function (_super) {
             __extends(ToDo, _super);
             function ToDo($location, $q, toDoService, toDoStatuses) {
@@ -69,12 +70,12 @@ var app;
                     _this.toDoService.getRecent().then(function (results) {
                         var entities = [];
                         var promises = [];
-                        results.data.forEach(function (dataItem) {
-                            promises.push(_this.instance(dataItem));
+                        results.data.forEach(function (result) {
+                            promises.push(_this.instance(result));
                         });
-                        _this.$q.all(promises).then(function (allResults) {
-                            allResults.forEach(function (allResult) {
-                                promises.push(_this.instance(allResult));
+                        _this.$q.all(promises).then(function (resultsArray) {
+                            resultsArray.forEach(function (results) {
+                                promises.push(_this.instance(results));
                             });
                             deferred.resolve(entities);
                         });

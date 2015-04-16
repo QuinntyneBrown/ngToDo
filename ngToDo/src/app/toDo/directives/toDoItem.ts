@@ -1,5 +1,7 @@
 ﻿module app.toDo {
     
+    "use strict";
+
     class ToDoItem {
 
         constructor() {
@@ -9,10 +11,6 @@
         public static instance = () => {
             return new ToDoItem();
         }
-
-        public controller: string = "toDoItemController";
-
-        public controllerAs: string = "toDo";
 
         public restrict: string = "E";
 

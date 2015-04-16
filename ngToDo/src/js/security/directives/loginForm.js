@@ -4,16 +4,15 @@ var app;
     (function (security) {
         "use strict";
         var LoginForm = (function () {
-            function LoginForm(securityService) {
-                this.securityService = securityService;
+            function LoginForm() {
                 this.templateUrl = "/src/app/security/directives/loginForm.html";
                 this.controllerAs = "loginForm";
                 this.controller = "loginFormController";
                 this.restrict = "E";
                 this.replace = true;
             }
-            LoginForm.instance = function (securityService) {
-                return new LoginForm(securityService);
+            LoginForm.instance = function () {
+                return new LoginForm();
             };
             return LoginForm;
         })();

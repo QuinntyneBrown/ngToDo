@@ -2,10 +2,9 @@ var app;
 (function (app) {
     var toDo;
     (function (toDo) {
+        "use strict";
         var ToDoItem = (function () {
             function ToDoItem() {
-                this.controller = "toDoItemController";
-                this.controllerAs = "toDo";
                 this.restrict = "E";
                 this.replace = true;
                 this.templateUrl = "/src/app/toDo/directives/toDoItem.html";

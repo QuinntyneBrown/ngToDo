@@ -2,14 +2,15 @@
 
     "use strict";
 
-    class ToDoRecentController extends security.AuthorizedController  {
+    class ToDoRecentController extends security.AuthenticatedController  {
 
         constructor(
             public $location: ng.ILocationService,
             private $q: ng.IQService,
+            public $timeout: ng.ITimeoutService,
             private toDo: IToDo,
             public token: common.ISessionStorageProperty) {
-            super($location, token);
+            super($location, $timeout, token);
 
         }
 
@@ -38,5 +39,5 @@
     }
 
     angular.module("app.toDo")
-        .controller("toDoRecentController", ["$location", "$q", "toDo", "token",ToDoRecentController]);
+        .controller("toDoRecentController", ["$location", "$timeout", "$q", "toDo", "token",ToDoRecentController]);
 } 

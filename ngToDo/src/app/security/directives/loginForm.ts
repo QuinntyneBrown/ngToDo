@@ -4,12 +4,12 @@
 
     class LoginForm {
 
-        constructor(private securityService: ISecurityService) {
+        constructor() {
             
         }
 
-        public static instance = (securityService: ISecurityService) => {
-            return new LoginForm(securityService);
+        public static instance = () => {
+            return new LoginForm();
         }
 
         public templateUrl: string = "/src/app/security/directives/loginForm.html";

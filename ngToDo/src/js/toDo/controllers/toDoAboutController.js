@@ -11,14 +11,15 @@ var app;
         "use strict";
         var ToDoAboutController = (function (_super) {
             __extends(ToDoAboutController, _super);
-            function ToDoAboutController($location, token) {
-                _super.call(this, $location, token);
+            function ToDoAboutController($location, token, $timeout) {
+                _super.call(this, $location, $timeout, token);
                 this.$location = $location;
                 this.token = token;
+                this.$timeout = $timeout;
             }
             return ToDoAboutController;
-        })(app.security.AuthorizedController);
-        angular.module("app.toDo").controller("toDoAboutController", ["$location", "token", ToDoAboutController]);
+        })(app.security.AuthenticatedController);
+        angular.module("app.toDo").controller("toDoAboutController", ["$location", "$timeout", "token", ToDoAboutController]);
     })(toDo = app.toDo || (app.toDo = {}));
 })(app || (app = {}));
 

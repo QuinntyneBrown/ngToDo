@@ -1,10 +1,9 @@
-﻿using System.IdentityModel.Selectors;
-using System.Threading.Tasks;
-using System.Web.Http;
+﻿using System.Web.Http;
 using ngToDo.Server.Data;
 
 namespace ngToDo.Server.Api.v1
 {
+    [Authorize]
     public class IdentityController : ApiController
     {
         public IdentityController(IUserRepository repository)
@@ -12,7 +11,6 @@ namespace ngToDo.Server.Api.v1
             this.repository = repository;
         }
 
-        [Authorize]
         [HttpGet]
         public IHttpActionResult GetCurrentUser()
         {

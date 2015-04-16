@@ -19,7 +19,12 @@ var app;
             };
             return AuthorizationInterceptor;
         })();
-        angular.module("app.security").factory("authorizationInterceptor", ["token", AuthorizationInterceptor.instance]);
+        angular.module("app.security").factory("authorizationInterceptor", ["token", AuthorizationInterceptor.instance]).config([
+            "$httpProvider",
+            function ($httpProvider) {
+                $httpProvider.interceptors.push("authorizationInterceptor");
+            }
+        ]);
     })(security = app.security || (app.security = {}));
 })(app || (app = {}));
 

@@ -12,10 +12,6 @@
             return new ToDoItems();
         }
 
-        public controller: string = "toDoItemsController";
-
-        public controllerAs: string = "toDoItems";
-
         public replace: boolean = true;
         
         public restrict: string = "E";

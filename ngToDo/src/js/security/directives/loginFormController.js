@@ -2,6 +2,7 @@ var app;
 (function (app) {
     var security;
     (function (security) {
+        "use strict";
         var LoginFormController = (function () {
             function LoginFormController($location, loginRedirect, securityService, token) {
                 var _this = this;

@@ -2,6 +2,7 @@ var app;
 (function (app) {
     var common;
     (function (common) {
+        "use strict";
         var RequestCounter = (function () {
             function RequestCounter($q) {
                 var _this = this;
@@ -32,8 +33,12 @@ var app;
             };
             return RequestCounter;
         })();
-        common.RequestCounter = RequestCounter;
-        angular.module("app.common").factory("requestCounter", ["$q", RequestCounter.instance]);
+        angular.module("app.common").factory("requestCounter", ["$q", RequestCounter.instance]).config([
+            "$httpProvider",
+            function ($httpProvider) {
+                $httpProvider.interceptors.push("requestCounter");
+            }
+        ]);
     })(common = app.common || (app.common = {}));
 })(app || (app = {}));
 

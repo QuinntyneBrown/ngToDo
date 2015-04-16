@@ -2,16 +2,17 @@
 
     "use strict";
 
-    class ToDoFormController extends security.AuthorizedController {
+    class ToDoFormController extends security.AuthenticatedController {
 
         constructor(
             public $location:ng.ILocationService,
             private $q: ng.IQService,            
             private $routeParams: ng.route.IRouteParamsService,
+            public $timeout: ng.ITimeoutService,
             private appBarService: ui.IAppBarService,
             private toDo: IToDo,
             public token: common.ISessionStorageProperty) {
-            super($location,token);
+            super($location, $timeout, token);
 
         }
 
@@ -43,19 +44,11 @@
             if (this.$routeParams["toDoId"]) {
 
                 this.toDo.getById(this.$routeParams["toDoId"]).then((results) => {
-
                     this.toDo = results;
-
                     this.setAppBarButtons();
-
                     deferred.resolve(true);
-
                 }).catch((Error) => {
-
-                    
-
                     deferred.resolve(false);
-
                 });
             } else {
                 this.toDo.instance(null).then((results) => {
@@ -63,7 +56,6 @@
                     this.setAppBarButtons();
                     deferred.resolve(true);
                 });
-
             }
 
             return deferred.promise;
@@ -72,5 +64,5 @@
     }
 
     angular.module("app.toDo")
-        .controller("toDoFormController", ["$location","$q","$routeParams", "appBarService","toDo","token", ToDoFormController]);
+        .controller("toDoFormController", ["$location", "$q", "$routeParams","$timeout","appBarService","toDo","token", ToDoFormController]);
 } 

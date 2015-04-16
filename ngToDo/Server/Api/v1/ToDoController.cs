@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Http;
 using ngToDo.Server.Data;
 using ngToDo.Server.Models;
+using System.Diagnostics.Contracts;
 
 namespace ngToDo.Server.Api.v1
 {
@@ -9,7 +11,7 @@ namespace ngToDo.Server.Api.v1
     public class ToDoController : ApiController
     {
         public ToDoController(IRepository<ToDo> repository)
-        {
+        {           
             this.repository = repository;
         }
 
@@ -18,7 +20,7 @@ namespace ngToDo.Server.Api.v1
         {
             using (repository)
             {                
-                return Ok(repository.GetAll().Where(x => !x.IsDeleted).ToList());    
+                return Ok(repository.GetAll().Where(x => !x.IsDeleted && x.Username == User.Identity.Name).ToList());    
             }            
         }
 
@@ -26,8 +28,8 @@ namespace ngToDo.Server.Api.v1
         public IHttpActionResult GetRecent()
         {            
             using (repository)
-            {                
-                return Ok(repository.GetAll().Where(x=>!x.IsDeleted).OrderByDescending(x => x.CreatedDateTime).Take(5).ToList());
+            {
+                return Ok(repository.GetAll().Where(x => !x.IsDeleted && x.Username == User.Identity.Name).OrderByDescending(x => x.CreatedDateTime).Take(5).ToList());
             }
         }
 

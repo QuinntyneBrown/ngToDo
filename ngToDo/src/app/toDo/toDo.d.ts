@@ -15,16 +15,20 @@
         getRecent(): ng.IPromise<any>;
     }
 
+    export interface IToDoStatuses {
+        new: number;
+        toDo: number;
+        toDoNever: number;
+        started: number;
+        completed: number;
+    }
+
     export interface IToDoFormController {
         toDo: IToDo;
     }
 
     export interface IToDoDetailController {
         toDo: IToDo;
-    }
-
-    export interface IToDoDetailRouteParams extends ng.route.IRouteParamsService {
-        toDoId:string;
     }
 
     export interface IToDoListController {

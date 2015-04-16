@@ -1,5 +1,7 @@
 ﻿module app.security {
     
+    "use strict";
+
     class LoginFormController implements ILoginController {
 
         constructor(

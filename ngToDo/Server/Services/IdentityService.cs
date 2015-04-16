@@ -4,9 +4,7 @@ using System.Linq;
 using ngToDo.Server.Config;
 using ngToDo.Server.Data;
 using ngToDo.Server.Dtos;
-using ngToDo.Server.Models;
 using ngToDo.Server.Services.Contracts;
-using System.IdentityModel.Claims;
 
 namespace ngToDo.Server.Services
 {
@@ -17,7 +15,6 @@ namespace ngToDo.Server.Services
             this.userRepository = userRepository;
             this.encryptionService = encryptionService;
         }
-
 
         public bool ValidateUser(string usermame, string password)
         {

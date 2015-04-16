@@ -57,7 +57,6 @@ var app;
             }
             return ToDoBreezeService;
         })();
-        toDo.ToDoBreezeService = ToDoBreezeService;
     })(toDo = app.toDo || (app.toDo = {}));
 })(app || (app = {}));
 

@@ -18,9 +18,7 @@
             "routesProvider",
              config
          ]);
-
-     
-
+    
      function config($componentLoaderProvider: any,
          $httpProvider: ng.IHttpProvider,
          $locationProvider: ng.ILocationProvider,
@@ -46,30 +44,6 @@
              { path: '/toDo/create', component: 'toDoForm' },
              { path: '/toDo/edit/:toDoId', component: 'toDoForm' }
          ]);
-
-         
-         $componentLoaderProvider.setTemplateMapping((name) => {
-             var viewLocation = null;
-             featureComponentsMappingsProvider.mappings.forEach((mapping) => {
-                 mapping.components.forEach((component) => {
-                     if (name === component) {
-                         viewLocation = 'src/app/' + mapping.feature + '/views/' + name + '.html';
-                     }
-                 });
-             });
-
-             return viewLocation;
-         });
-
-         $componentLoaderProvider.setCtrlNameMapping((name) => {
-             return name[0].toLowerCase() +
-                 name.substr(1) +
-                 'Controller';
-         });
-
-         $httpProvider.interceptors.push("authorizationInterceptor");
-
-         $httpProvider.interceptors.push("requestCounter");
 
          apiEndpointProvider.configure("/api/");
 

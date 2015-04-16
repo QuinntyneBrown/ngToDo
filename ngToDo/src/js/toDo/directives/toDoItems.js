@@ -5,8 +5,6 @@ var app;
         "use strict";
         var ToDoItems = (function () {
             function ToDoItems() {
-                this.controller = "toDoItemsController";
-                this.controllerAs = "toDoItems";
                 this.replace = true;
                 this.restrict = "E";
                 this.templateUrl = "/src/app/toDo/directives/toDoItems.html";

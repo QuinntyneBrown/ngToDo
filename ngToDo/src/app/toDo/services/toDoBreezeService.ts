@@ -2,7 +2,7 @@
 
     "use strict";
 
-    export class ToDoBreezeService implements IToDoService {
+    class ToDoBreezeService implements IToDoService {
         constructor(private $q: ng.IQService) {
             breeze.config.initializeAdapterInstance('modelLibrary', 'backingStore', true);
             breeze.NamingConvention.camelCase.setAsDefault();

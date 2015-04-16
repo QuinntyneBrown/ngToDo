@@ -21,6 +21,12 @@
         }
     }
 
-    angular.module("app.security").factory("authorizationInterceptor", ["token",AuthorizationInterceptor.instance]);
+    angular.module("app.security")
+        .factory("authorizationInterceptor", ["token", AuthorizationInterceptor.instance])
+        .config([
+        "$httpProvider", ($httpProvider) => {
+            $httpProvider.interceptors.push("authorizationInterceptor");
+            }
+        ]);
 
 }

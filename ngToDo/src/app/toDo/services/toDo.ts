@@ -1,5 +1,7 @@
 ﻿module app.toDo {
-    
+
+    "use strict";
+
     class ToDo extends common.Entity<ToDo> implements IToDo {
 
         constructor(public $location: ng.ILocationService,
@@ -95,13 +97,13 @@
 
                 var promises = [];
 
-                results.data.forEach((dataItem) => {
-                    promises.push(this.instance(dataItem));
+                results.data.forEach((result) => {
+                    promises.push(this.instance(result));
                 });
 
-                this.$q.all(promises).then((allResults) => {
-                    allResults.forEach((allResult) => {
-                        promises.push(this.instance(allResult));
+                this.$q.all(promises).then((resultsArray) => {
+                    resultsArray.forEach((results) => {
+                        promises.push(this.instance(results));
                     });                               
                     deferred.resolve(entities);
                 });

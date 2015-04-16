@@ -1,6 +1,8 @@
 ﻿module app.common {
     
-    export class RequestCounter implements IRequestCounter {
+    "use strict";
+
+    class RequestCounter implements IRequestCounter {
 
         constructor(private $q: ng.IQService) {
             
@@ -37,5 +39,10 @@
         }
     }
 
-    angular.module("app.common").factory("requestCounter", ["$q", RequestCounter.instance]);
+    angular.module("app.common").factory("requestCounter", ["$q", RequestCounter.instance])
+        .config([
+        "$httpProvider", ($httpProvider) => {
+            $httpProvider.interceptors.push("requestCounter");
+        }
+    ]);
 } 

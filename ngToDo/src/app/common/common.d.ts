@@ -43,6 +43,7 @@
 
     export interface IFeatureComponentsMappingsProvider extends ng.IServiceProvider {
         mappings: IFeatureComponentsMapping[];
+        setTemplateMapping($componentLoaderProvider: any):void;
     }
 
     export interface IRoutesProvider extends ng.IServiceProvider {
