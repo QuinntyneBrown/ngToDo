@@ -61,6 +61,12 @@ var app;
                     }
                     return deferred.promise;
                 };
+                this.deactivate = function () {
+                    _this.toDo = null;
+                    _this.token = null;
+                    _this.appBarService = null;
+                    _this.promise = null;
+                };
             }
             return ToDoFormController;
         })(app.security.AuthenticatedController);

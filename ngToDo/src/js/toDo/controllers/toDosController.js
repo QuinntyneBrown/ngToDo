@@ -29,6 +29,12 @@ var app;
                     });
                     return deferred.promise;
                 };
+                this.deactivate = function () {
+                    _this.toDos = null;
+                    _this.token = null;
+                    _this.toDo = null;
+                    _this.promise = null;
+                };
             }
             return ToDosController;
         })(app.security.AuthenticatedController);

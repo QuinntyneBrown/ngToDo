@@ -1,6 +1,3 @@
-.about > div {
-           margin-top:30px;
-       }
 ng-viewport {
   display: block;
 }
@@ -69,12 +66,9 @@ html, body, body > .container {
 .component {
     margin-left:10px;
 }
-h1.completed {
-    text-decoration:line-through;
-}
-.to-do-items h1 {
-    font-weight:500;
-}
+.about > div {
+           margin-top:30px;
+       }
 .app-bar-button {
     display:inline-block;
     margin-top:10px;
@@ -85,21 +79,6 @@ h1.completed {
 
 .app-bar-button.disabled a {
     color:rgb(72, 72, 72);
-}
-.app-bar {
-    background: none repeat scroll 0 0 #222222;
-    bottom: 0;
-    height: 70px;
-    overflow-y: hidden;
-    position: fixed;
-    width: 100%;
-    color:rgb(221,221,221);
-}
-
-.app-bar > div {
-    max-width:1024px;
-    margin:0 auto;
-    text-align:center;
 }
 .app-header {
     background-color: rgb(34,34,34);
@@ -168,6 +147,21 @@ h1.completed {
     }
 
 }
+.app-bar {
+    background: none repeat scroll 0 0 #222222;
+    bottom: 0;
+    height: 70px;
+    overflow-y: hidden;
+    position: fixed;
+    width: 100%;
+    color:rgb(221,221,221);
+}
+
+.app-bar > div {
+    max-width:1024px;
+    margin:0 auto;
+    text-align:center;
+}
 .hamburger-button {
     width:20px;
     height:24px;
@@ -222,4 +216,10 @@ h1.completed {
 }
 .login-form {
 
+}
+h1.completed {
+    text-decoration:line-through;
+}
+.to-do-items h1 {
+    font-weight:500;
 }

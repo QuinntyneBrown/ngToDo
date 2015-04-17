@@ -8,15 +8,17 @@
 
         }
 
-        public canActivate() {
+        public canActivate = () => {
             if (this.token.get())
                 return true;
 
-            this.$timeout(() => {
+            this.promise = this.$timeout(() => {
                 this.$location.path("/login");
             },0);
 
             return false;
         }
+
+        public promise: ng.IPromise<any>;
     }
 } 

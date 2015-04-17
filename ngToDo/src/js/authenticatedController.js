@@ -5,19 +5,19 @@ var app;
         "use strict";
         var AuthenticatedController = (function () {
             function AuthenticatedController($location, $timeout, token) {
+                var _this = this;
                 this.$location = $location;
                 this.$timeout = $timeout;
                 this.token = token;
+                this.canActivate = function () {
+                    if (_this.token.get())
+                        return true;
+                    _this.promise = _this.$timeout(function () {
+                        _this.$location.path("/login");
+                    }, 0);
+                    return false;
+                };
             }
-            AuthenticatedController.prototype.canActivate = function () {
-                var _this = this;
-                if (this.token.get())
-                    return true;
-                this.$timeout(function () {
-                    _this.$location.path("/login");
-                }, 0);
-                return false;
-            };
             return AuthenticatedController;
         })();
         security.AuthenticatedController = AuthenticatedController;

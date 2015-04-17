@@ -5,19 +5,19 @@ var app;
         "use strict";
         var AuthenticatedController = (function () {
             function AuthenticatedController($location, $timeout, token) {
+                var _this = this;
                 this.$location = $location;
                 this.$timeout = $timeout;
                 this.token = token;
+                this.canActivate = function () {
+                    if (_this.token.get())
+                        return true;
+                    _this.promise = _this.$timeout(function () {
+                        _this.$location.path("/login");
+                    }, 0);
+                    return false;
+                };
             }
-            AuthenticatedController.prototype.canActivate = function () {
-                var _this = this;
-                if (this.token.get())
-                    return true;
-                this.$timeout(function () {
-                    _this.$location.path("/login");
-                }, 0);
-                return false;
-            };
             return AuthenticatedController;
         })();
         security.AuthenticatedController = AuthenticatedController;
@@ -436,6 +436,218 @@ var app;
 //# sourceMappingURL=../../common/directives/workSpinner.js.map
 var app;
 (function (app) {
+    var common;
+    (function (common) {
+        "use strict";
+        var ApiEndpointProvider = (function () {
+            function ApiEndpointProvider() {
+                this.config = {
+                    baseUrl: "/api/"
+                };
+            }
+            ApiEndpointProvider.prototype.configure = function (baseUrl) {
+                this.config = {
+                    baseUrl: baseUrl
+                };
+            };
+            ApiEndpointProvider.prototype.$get = function () {
+                return this.config;
+            };
+            return ApiEndpointProvider;
+        })();
+        common.ApiEndpointProvider = ApiEndpointProvider;
+        angular.module("app.common").provider("apiEndpoint", ApiEndpointProvider);
+    })(common = app.common || (app.common = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../common/services/apiEndpointProvider.js.map
+var app;
+(function (app) {
+    var common;
+    (function (common) {
+        "use strict";
+        var FeatureComponentsMappingsProvider = (function () {
+            function FeatureComponentsMappingsProvider() {
+                var _this = this;
+                this.mappings = [];
+                this.setTemplateMapping = function ($componentLoaderProvider) {
+                    $componentLoaderProvider.setTemplateMapping(function (name) {
+                        var viewLocation = null;
+                        _this.mappings.forEach(function (mapping) {
+                            mapping.components.forEach(function (component) {
+                                if (name === component) {
+                                    viewLocation = 'src/app/' + mapping.feature + '/views/' + name + '.html';
+                                }
+                            });
+                        });
+                        return viewLocation;
+                    });
+                };
+            }
+            FeatureComponentsMappingsProvider.prototype.$get = function () {
+                return this.mappings;
+            };
+            return FeatureComponentsMappingsProvider;
+        })();
+        common.FeatureComponentsMappingsProvider = FeatureComponentsMappingsProvider;
+        angular.module("app.common").provider("featureComponentsMappings", FeatureComponentsMappingsProvider).config([
+            "$componentLoaderProvider",
+            "featureComponentsMappingsProvider",
+            function ($componentLoaderProvider, featureComponentsMappingsProvider) {
+                featureComponentsMappingsProvider.setTemplateMapping($componentLoaderProvider);
+                $componentLoaderProvider.setCtrlNameMapping(function (name) {
+                    return name[0].toLowerCase() + name.substr(1) + 'Controller';
+                });
+            }
+        ]);
+    })(common = app.common || (app.common = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../common/services/featureComponentsMappingsProvider.js.map
+var app;
+(function (app) {
+    var common;
+    (function (common) {
+        "use strict";
+        var formEncode = function () {
+            return function (data) {
+                var pairs = [];
+                for (var name in data) {
+                    pairs.push(encodeURIComponent(name) + '=' + encodeURIComponent(data[name]));
+                }
+                return pairs.join('&').replace(/%20/g, '+');
+            };
+        };
+        angular.module("app.common").factory("formEncode", formEncode);
+    })(common = app.common || (app.common = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../common/services/formEncode.js.map
+var app;
+(function (app) {
+    var common;
+    (function (common) {
+        "use strict";
+        var HistoryService = (function () {
+            function HistoryService() {
+            }
+            return HistoryService;
+        })();
+        angular.module("app.common").service("historyService", [HistoryService]);
+    })(common = app.common || (app.common = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../common/services/historyService.js.map
+var app;
+(function (app) {
+    var common;
+    (function (common) {
+        "use strict";
+        var NotificationService = (function () {
+            function NotificationService() {
+            }
+            return NotificationService;
+        })();
+        angular.module("app.common").service("notificationService", [NotificationService]);
+    })(common = app.common || (app.common = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../common/services/notificationService.js.map
+var app;
+(function (app) {
+    var common;
+    (function (common) {
+        "use strict";
+        var RequestCounter = (function () {
+            function RequestCounter($q) {
+                var _this = this;
+                this.$q = $q;
+                this.requests = 0;
+                this.request = function (config) {
+                    _this.requests += 1;
+                    return _this.$q.when(config);
+                };
+                this.requestError = function (error) {
+                    _this.requests -= 1;
+                    return _this.$q.reject(error);
+                };
+                this.response = function (response) {
+                    _this.requests -= 1;
+                    return _this.$q.when(response);
+                };
+                this.responseError = function (error) {
+                    _this.requests -= 1;
+                    return _this.$q.reject(error);
+                };
+                this.getRequestCount = function () {
+                    return _this.requests;
+                };
+            }
+            RequestCounter.instance = function ($q) {
+                return new RequestCounter($q);
+            };
+            return RequestCounter;
+        })();
+        angular.module("app.common").factory("requestCounter", ["$q", RequestCounter.instance]).config([
+            "$httpProvider",
+            function ($httpProvider) {
+                $httpProvider.interceptors.push("requestCounter");
+            }
+        ]);
+    })(common = app.common || (app.common = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../common/services/requestCounter.js.map
+var app;
+(function (app) {
+    var common;
+    (function (common) {
+        "use strict";
+        var RoutesProvider = (function () {
+            function RoutesProvider() {
+                var _this = this;
+                this.routes = [];
+                this.configure = function (routes) {
+                    routes.forEach(function (route) {
+                        _this.routes.push(route);
+                    });
+                };
+            }
+            RoutesProvider.prototype.$get = function () {
+                return this.routes;
+            };
+            return RoutesProvider;
+        })();
+        angular.module("app.common").provider("routes", RoutesProvider);
+    })(common = app.common || (app.common = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../common/services/routesProvider.js.map
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var app;
+(function (app) {
+    var common;
+    (function (common) {
+        "use strict";
+        var CommonStorage = (function (_super) {
+            __extends(CommonStorage, _super);
+            function CommonStorage() {
+                _super.call(this, "commonLocalStorage");
+            }
+            return CommonStorage;
+        })(common.Storage);
+        angular.module("app.common").service("storage", [CommonStorage]);
+    })(common = app.common || (app.common = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../common/services/storage.js.map
+var app;
+(function (app) {
     var security;
     (function (security) {
         "use strict";
@@ -499,6 +711,284 @@ var app;
 })(app || (app = {}));
 
 //# sourceMappingURL=../../security/directives/loginFormController.js.map
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var app;
+(function (app) {
+    var toDo;
+    (function (toDo) {
+        "use strict";
+        var ToDoAboutController = (function (_super) {
+            __extends(ToDoAboutController, _super);
+            function ToDoAboutController($location, token, $timeout) {
+                _super.call(this, $location, $timeout, token);
+                this.$location = $location;
+                this.token = token;
+                this.$timeout = $timeout;
+            }
+            return ToDoAboutController;
+        })(app.security.AuthenticatedController);
+        angular.module("app.toDo").controller("toDoAboutController", ["$location", "$timeout", "token", ToDoAboutController]);
+    })(toDo = app.toDo || (app.toDo = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../toDo/controllers/toDoAboutController.js.map
+var app;
+(function (app) {
+    var toDo;
+    (function (toDo) {
+        "use strict";
+        var ToDoAppController = (function () {
+            function ToDoAppController($interval, $location, $rootScope, $router, currentUser, routes, securityService, token) {
+                var _this = this;
+                this.$interval = $interval;
+                this.$location = $location;
+                this.$rootScope = $rootScope;
+                this.$router = $router;
+                this.currentUser = currentUser;
+                this.routes = routes;
+                this.securityService = securityService;
+                this.token = token;
+                this.isLoggedIn = function () {
+                    return _this.token.get();
+                };
+                this.getUsername = function () {
+                    var currentUser = _this.currentUser.get();
+                    if (currentUser)
+                        return currentUser.firstname + ' ' + currentUser.lastname;
+                    return null;
+                };
+                $router.config(routes);
+                $interval(function () {
+                    if (securityService.tokenExpired()) {
+                        //if(this.currentRouteRequiresAuthentication()) {
+                        //  this.loginRedirect.lastPath = this.$location.path();
+                        //  this.$location.path('/login');
+                        //}
+                        $location.path("/login");
+                    }
+                }, 6000);
+            }
+            return ToDoAppController;
+        })();
+        angular.module("app.toDo").controller("toDoAppController", ["$interval", "$location", "$rootScope", "$router", "currentUser", "routes", "securityService", "token", ToDoAppController]);
+    })(toDo = app.toDo || (app.toDo = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../toDo/controllers/toDoAppController.js.map
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var app;
+(function (app) {
+    var toDo;
+    (function (_toDo) {
+        "use strict";
+        var ToDoDetailController = (function (_super) {
+            __extends(ToDoDetailController, _super);
+            function ToDoDetailController($location, $q, $timeout, $routeParams, toDo, token) {
+                var _this = this;
+                _super.call(this, $location, $timeout, token);
+                this.$location = $location;
+                this.$q = $q;
+                this.$timeout = $timeout;
+                this.$routeParams = $routeParams;
+                this.toDo = toDo;
+                this.token = token;
+                this.activate = function () {
+                    var deferred = _this.$q.defer();
+                    if (_this.$routeParams["toDoId"]) {
+                        _this.toDo.getById(_this.$routeParams["toDoId"]).then(function (results) {
+                            _this.toDo = results;
+                            deferred.resolve(true);
+                        }).catch(function (Error) {
+                            deferred.resolve(false);
+                        });
+                    }
+                    else {
+                        _this.toDo.instance(null).then(function (results) {
+                            _this.toDo = results;
+                            deferred.resolve(true);
+                        });
+                    }
+                    return deferred.promise;
+                };
+            }
+            return ToDoDetailController;
+        })(app.security.AuthenticatedController);
+        angular.module("app.toDo").controller("toDoDetailController", ["$location", "$q", "$timeout", "$routeParams", "toDo", "token", ToDoDetailController]);
+    })(toDo = app.toDo || (app.toDo = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../toDo/controllers/toDoDetailController.js.map
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var app;
+(function (app) {
+    var toDo;
+    (function (_toDo) {
+        "use strict";
+        var ToDoFormController = (function (_super) {
+            __extends(ToDoFormController, _super);
+            function ToDoFormController($location, $q, $routeParams, $timeout, appBarService, toDo, token) {
+                var _this = this;
+                _super.call(this, $location, $timeout, token);
+                this.$location = $location;
+                this.$q = $q;
+                this.$routeParams = $routeParams;
+                this.$timeout = $timeout;
+                this.appBarService = appBarService;
+                this.toDo = toDo;
+                this.token = token;
+                this.setAppBarButtons = function () {
+                    _this.appBarService.setButtons([
+                        {
+                            type: "Done",
+                            text: "Done",
+                            onClick: _this.toDo.complete,
+                            isValid: _this.toDo.isValid
+                        },
+                        {
+                            type: "Save",
+                            text: "Save",
+                            onClick: function () {
+                                _this.toDo.save().then(function (results) {
+                                    _this.$location.path("/toDo/list");
+                                });
+                            },
+                            isValid: _this.toDo.isValid
+                        }
+                    ]);
+                };
+                this.activate = function () {
+                    var deferred = _this.$q.defer();
+                    if (_this.$routeParams["toDoId"]) {
+                        _this.toDo.getById(_this.$routeParams["toDoId"]).then(function (results) {
+                            _this.toDo = results;
+                            _this.setAppBarButtons();
+                            deferred.resolve(true);
+                        }).catch(function (Error) {
+                            deferred.resolve(false);
+                        });
+                    }
+                    else {
+                        _this.toDo.instance(null).then(function (results) {
+                            _this.toDo = results;
+                            _this.setAppBarButtons();
+                            deferred.resolve(true);
+                        });
+                    }
+                    return deferred.promise;
+                };
+                this.deactivate = function () {
+                    _this.toDo = null;
+                    _this.token = null;
+                    _this.appBarService = null;
+                    _this.promise = null;
+                };
+            }
+            return ToDoFormController;
+        })(app.security.AuthenticatedController);
+        angular.module("app.toDo").controller("toDoFormController", ["$location", "$q", "$routeParams", "$timeout", "appBarService", "toDo", "token", ToDoFormController]);
+    })(toDo = app.toDo || (app.toDo = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../toDo/controllers/toDoFormController.js.map
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var app;
+(function (app) {
+    var toDo;
+    (function (_toDo) {
+        "use strict";
+        var ToDoRecentController = (function (_super) {
+            __extends(ToDoRecentController, _super);
+            function ToDoRecentController($location, $q, $timeout, toDo, token) {
+                var _this = this;
+                _super.call(this, $location, $timeout, token);
+                this.$location = $location;
+                this.$q = $q;
+                this.$timeout = $timeout;
+                this.toDo = toDo;
+                this.token = token;
+                this.activate = function () {
+                    var deferred = _this.$q.defer();
+                    _this.toDo.getRecent().then(function (results) {
+                        _this.toDos = results;
+                        deferred.resolve(true);
+                    }).catch(function (Error) {
+                        deferred.resolve(false);
+                    });
+                    return deferred.promise;
+                };
+            }
+            return ToDoRecentController;
+        })(app.security.AuthenticatedController);
+        angular.module("app.toDo").controller("toDoRecentController", ["$location", "$timeout", "$q", "toDo", "token", ToDoRecentController]);
+    })(toDo = app.toDo || (app.toDo = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../toDo/controllers/toDoRecentController.js.map
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var app;
+(function (app) {
+    var toDo;
+    (function (_toDo) {
+        "use strict";
+        var ToDosController = (function (_super) {
+            __extends(ToDosController, _super);
+            function ToDosController($location, $q, $timeout, toDo, token) {
+                var _this = this;
+                _super.call(this, $location, $timeout, token);
+                this.$location = $location;
+                this.$q = $q;
+                this.$timeout = $timeout;
+                this.toDo = toDo;
+                this.token = token;
+                this.activate = function () {
+                    var deferred = _this.$q.defer();
+                    _this.toDo.getAll().then(function (results) {
+                        _this.toDos = results;
+                        deferred.resolve(true);
+                    }).catch(function (Error) {
+                        deferred.resolve(false);
+                    });
+                    return deferred.promise;
+                };
+                this.deactivate = function () {
+                    _this.toDos = null;
+                    _this.token = null;
+                    _this.toDo = null;
+                    _this.promise = null;
+                };
+            }
+            return ToDosController;
+        })(app.security.AuthenticatedController);
+        angular.module("app.toDo").controller("toDosController", ["$location", "$q", "$timeout", "toDo", "token", ToDosController]);
+    })(toDo = app.toDo || (app.toDo = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../toDo/controllers/toDosController.js.map
 var app;
 (function (app) {
     var security;
@@ -764,484 +1254,6 @@ var app;
 //# sourceMappingURL=../../security/services/user.js.map
 var app;
 (function (app) {
-    var common;
-    (function (common) {
-        "use strict";
-        var ApiEndpointProvider = (function () {
-            function ApiEndpointProvider() {
-                this.config = {
-                    baseUrl: "/api/"
-                };
-            }
-            ApiEndpointProvider.prototype.configure = function (baseUrl) {
-                this.config = {
-                    baseUrl: baseUrl
-                };
-            };
-            ApiEndpointProvider.prototype.$get = function () {
-                return this.config;
-            };
-            return ApiEndpointProvider;
-        })();
-        common.ApiEndpointProvider = ApiEndpointProvider;
-        angular.module("app.common").provider("apiEndpoint", ApiEndpointProvider);
-    })(common = app.common || (app.common = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../common/services/apiEndpointProvider.js.map
-var app;
-(function (app) {
-    var common;
-    (function (common) {
-        "use strict";
-        var FeatureComponentsMappingsProvider = (function () {
-            function FeatureComponentsMappingsProvider() {
-                var _this = this;
-                this.mappings = [];
-                this.setTemplateMapping = function ($componentLoaderProvider) {
-                    $componentLoaderProvider.setTemplateMapping(function (name) {
-                        var viewLocation = null;
-                        _this.mappings.forEach(function (mapping) {
-                            mapping.components.forEach(function (component) {
-                                if (name === component) {
-                                    viewLocation = 'src/app/' + mapping.feature + '/views/' + name + '.html';
-                                }
-                            });
-                        });
-                        return viewLocation;
-                    });
-                };
-            }
-            FeatureComponentsMappingsProvider.prototype.$get = function () {
-                return this.mappings;
-            };
-            return FeatureComponentsMappingsProvider;
-        })();
-        common.FeatureComponentsMappingsProvider = FeatureComponentsMappingsProvider;
-        angular.module("app.common").provider("featureComponentsMappings", FeatureComponentsMappingsProvider).config([
-            "$componentLoaderProvider",
-            "featureComponentsMappingsProvider",
-            function ($componentLoaderProvider, featureComponentsMappingsProvider) {
-                featureComponentsMappingsProvider.setTemplateMapping($componentLoaderProvider);
-                $componentLoaderProvider.setCtrlNameMapping(function (name) {
-                    return name[0].toLowerCase() + name.substr(1) + 'Controller';
-                });
-            }
-        ]);
-    })(common = app.common || (app.common = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../common/services/featureComponentsMappingsProvider.js.map
-var app;
-(function (app) {
-    var common;
-    (function (common) {
-        "use strict";
-        var formEncode = function () {
-            return function (data) {
-                var pairs = [];
-                for (var name in data) {
-                    pairs.push(encodeURIComponent(name) + '=' + encodeURIComponent(data[name]));
-                }
-                return pairs.join('&').replace(/%20/g, '+');
-            };
-        };
-        angular.module("app.common").factory("formEncode", formEncode);
-    })(common = app.common || (app.common = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../common/services/formEncode.js.map
-var app;
-(function (app) {
-    var common;
-    (function (common) {
-        "use strict";
-        var HistoryService = (function () {
-            function HistoryService() {
-            }
-            return HistoryService;
-        })();
-        angular.module("app.common").service("historyService", [HistoryService]);
-    })(common = app.common || (app.common = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../common/services/historyService.js.map
-var app;
-(function (app) {
-    var common;
-    (function (common) {
-        "use strict";
-        var NotificationService = (function () {
-            function NotificationService() {
-            }
-            return NotificationService;
-        })();
-        angular.module("app.common").service("notificationService", [NotificationService]);
-    })(common = app.common || (app.common = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../common/services/notificationService.js.map
-var app;
-(function (app) {
-    var common;
-    (function (common) {
-        "use strict";
-        var RequestCounter = (function () {
-            function RequestCounter($q) {
-                var _this = this;
-                this.$q = $q;
-                this.requests = 0;
-                this.request = function (config) {
-                    _this.requests += 1;
-                    return _this.$q.when(config);
-                };
-                this.requestError = function (error) {
-                    _this.requests -= 1;
-                    return _this.$q.reject(error);
-                };
-                this.response = function (response) {
-                    _this.requests -= 1;
-                    return _this.$q.when(response);
-                };
-                this.responseError = function (error) {
-                    _this.requests -= 1;
-                    return _this.$q.reject(error);
-                };
-                this.getRequestCount = function () {
-                    return _this.requests;
-                };
-            }
-            RequestCounter.instance = function ($q) {
-                return new RequestCounter($q);
-            };
-            return RequestCounter;
-        })();
-        angular.module("app.common").factory("requestCounter", ["$q", RequestCounter.instance]).config([
-            "$httpProvider",
-            function ($httpProvider) {
-                $httpProvider.interceptors.push("requestCounter");
-            }
-        ]);
-    })(common = app.common || (app.common = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../common/services/requestCounter.js.map
-var app;
-(function (app) {
-    var common;
-    (function (common) {
-        "use strict";
-        var RoutesProvider = (function () {
-            function RoutesProvider() {
-                var _this = this;
-                this.routes = [];
-                this.configure = function (routes) {
-                    routes.forEach(function (route) {
-                        _this.routes.push(route);
-                    });
-                };
-            }
-            RoutesProvider.prototype.$get = function () {
-                return this.routes;
-            };
-            return RoutesProvider;
-        })();
-        angular.module("app.common").provider("routes", RoutesProvider);
-    })(common = app.common || (app.common = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../common/services/routesProvider.js.map
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-var app;
-(function (app) {
-    var common;
-    (function (common) {
-        "use strict";
-        var CommonStorage = (function (_super) {
-            __extends(CommonStorage, _super);
-            function CommonStorage() {
-                _super.call(this, "commonLocalStorage");
-            }
-            return CommonStorage;
-        })(common.Storage);
-        angular.module("app.common").service("storage", [CommonStorage]);
-    })(common = app.common || (app.common = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../common/services/storage.js.map
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-var app;
-(function (app) {
-    var toDo;
-    (function (toDo) {
-        "use strict";
-        var ToDoAboutController = (function (_super) {
-            __extends(ToDoAboutController, _super);
-            function ToDoAboutController($location, token, $timeout) {
-                _super.call(this, $location, $timeout, token);
-                this.$location = $location;
-                this.token = token;
-                this.$timeout = $timeout;
-            }
-            return ToDoAboutController;
-        })(app.security.AuthenticatedController);
-        angular.module("app.toDo").controller("toDoAboutController", ["$location", "$timeout", "token", ToDoAboutController]);
-    })(toDo = app.toDo || (app.toDo = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../toDo/controllers/toDoAboutController.js.map
-var app;
-(function (app) {
-    var toDo;
-    (function (toDo) {
-        "use strict";
-        var ToDoAppController = (function () {
-            function ToDoAppController($interval, $location, $rootScope, $router, currentUser, routes, securityService, token) {
-                var _this = this;
-                this.$interval = $interval;
-                this.$location = $location;
-                this.$rootScope = $rootScope;
-                this.$router = $router;
-                this.currentUser = currentUser;
-                this.routes = routes;
-                this.securityService = securityService;
-                this.token = token;
-                this.isLoggedIn = function () {
-                    return _this.token.get();
-                };
-                this.getUsername = function () {
-                    var currentUser = _this.currentUser.get();
-                    if (currentUser)
-                        return currentUser.firstname + ' ' + currentUser.lastname;
-                    return null;
-                };
-                $router.config(routes);
-                $interval(function () {
-                    if (securityService.tokenExpired()) {
-                        //if(this.currentRouteRequiresAuthentication()) {
-                        //  this.loginRedirect.lastPath = this.$location.path();
-                        //  this.$location.path('/login');
-                        //}
-                        $location.path("/login");
-                    }
-                }, 6000);
-            }
-            return ToDoAppController;
-        })();
-        angular.module("app.toDo").controller("toDoAppController", ["$interval", "$location", "$rootScope", "$router", "currentUser", "routes", "securityService", "token", ToDoAppController]);
-    })(toDo = app.toDo || (app.toDo = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../toDo/controllers/toDoAppController.js.map
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-var app;
-(function (app) {
-    var toDo;
-    (function (_toDo) {
-        "use strict";
-        var ToDoDetailController = (function (_super) {
-            __extends(ToDoDetailController, _super);
-            function ToDoDetailController($location, $q, $timeout, $routeParams, toDo, token) {
-                var _this = this;
-                _super.call(this, $location, $timeout, token);
-                this.$location = $location;
-                this.$q = $q;
-                this.$timeout = $timeout;
-                this.$routeParams = $routeParams;
-                this.toDo = toDo;
-                this.token = token;
-                this.activate = function () {
-                    var deferred = _this.$q.defer();
-                    if (_this.$routeParams["toDoId"]) {
-                        _this.toDo.getById(_this.$routeParams["toDoId"]).then(function (results) {
-                            _this.toDo = results;
-                            deferred.resolve(true);
-                        }).catch(function (Error) {
-                            deferred.resolve(false);
-                        });
-                    }
-                    else {
-                        _this.toDo.instance(null).then(function (results) {
-                            _this.toDo = results;
-                            deferred.resolve(true);
-                        });
-                    }
-                    return deferred.promise;
-                };
-            }
-            return ToDoDetailController;
-        })(app.security.AuthenticatedController);
-        angular.module("app.toDo").controller("toDoDetailController", ["$location", "$q", "$timeout", "$routeParams", "toDo", "token", ToDoDetailController]);
-    })(toDo = app.toDo || (app.toDo = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../toDo/controllers/toDoDetailController.js.map
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-var app;
-(function (app) {
-    var toDo;
-    (function (_toDo) {
-        "use strict";
-        var ToDoFormController = (function (_super) {
-            __extends(ToDoFormController, _super);
-            function ToDoFormController($location, $q, $routeParams, $timeout, appBarService, toDo, token) {
-                var _this = this;
-                _super.call(this, $location, $timeout, token);
-                this.$location = $location;
-                this.$q = $q;
-                this.$routeParams = $routeParams;
-                this.$timeout = $timeout;
-                this.appBarService = appBarService;
-                this.toDo = toDo;
-                this.token = token;
-                this.setAppBarButtons = function () {
-                    _this.appBarService.setButtons([
-                        {
-                            type: "Done",
-                            text: "Done",
-                            onClick: _this.toDo.complete,
-                            isValid: _this.toDo.isValid
-                        },
-                        {
-                            type: "Save",
-                            text: "Save",
-                            onClick: function () {
-                                _this.toDo.save().then(function (results) {
-                                    _this.$location.path("/toDo/list");
-                                });
-                            },
-                            isValid: _this.toDo.isValid
-                        }
-                    ]);
-                };
-                this.activate = function () {
-                    var deferred = _this.$q.defer();
-                    if (_this.$routeParams["toDoId"]) {
-                        _this.toDo.getById(_this.$routeParams["toDoId"]).then(function (results) {
-                            _this.toDo = results;
-                            _this.setAppBarButtons();
-                            deferred.resolve(true);
-                        }).catch(function (Error) {
-                            deferred.resolve(false);
-                        });
-                    }
-                    else {
-                        _this.toDo.instance(null).then(function (results) {
-                            _this.toDo = results;
-                            _this.setAppBarButtons();
-                            deferred.resolve(true);
-                        });
-                    }
-                    return deferred.promise;
-                };
-            }
-            return ToDoFormController;
-        })(app.security.AuthenticatedController);
-        angular.module("app.toDo").controller("toDoFormController", ["$location", "$q", "$routeParams", "$timeout", "appBarService", "toDo", "token", ToDoFormController]);
-    })(toDo = app.toDo || (app.toDo = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../toDo/controllers/toDoFormController.js.map
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-var app;
-(function (app) {
-    var toDo;
-    (function (_toDo) {
-        "use strict";
-        var ToDoRecentController = (function (_super) {
-            __extends(ToDoRecentController, _super);
-            function ToDoRecentController($location, $q, $timeout, toDo, token) {
-                var _this = this;
-                _super.call(this, $location, $timeout, token);
-                this.$location = $location;
-                this.$q = $q;
-                this.$timeout = $timeout;
-                this.toDo = toDo;
-                this.token = token;
-                this.activate = function () {
-                    var deferred = _this.$q.defer();
-                    _this.toDo.getRecent().then(function (results) {
-                        _this.toDos = results;
-                        deferred.resolve(true);
-                    }).catch(function (Error) {
-                        deferred.resolve(false);
-                    });
-                    return deferred.promise;
-                };
-            }
-            return ToDoRecentController;
-        })(app.security.AuthenticatedController);
-        angular.module("app.toDo").controller("toDoRecentController", ["$location", "$timeout", "$q", "toDo", "token", ToDoRecentController]);
-    })(toDo = app.toDo || (app.toDo = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../toDo/controllers/toDoRecentController.js.map
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-var app;
-(function (app) {
-    var toDo;
-    (function (_toDo) {
-        "use strict";
-        var ToDosController = (function (_super) {
-            __extends(ToDosController, _super);
-            function ToDosController($location, $q, $timeout, toDo, token) {
-                var _this = this;
-                _super.call(this, $location, $timeout, token);
-                this.$location = $location;
-                this.$q = $q;
-                this.$timeout = $timeout;
-                this.toDo = toDo;
-                this.token = token;
-                this.activate = function () {
-                    var deferred = _this.$q.defer();
-                    _this.toDo.getAll().then(function (results) {
-                        _this.toDos = results;
-                        deferred.resolve(true);
-                    }).catch(function (Error) {
-                        deferred.resolve(false);
-                    });
-                    return deferred.promise;
-                };
-            }
-            return ToDosController;
-        })(app.security.AuthenticatedController);
-        angular.module("app.toDo").controller("toDosController", ["$location", "$q", "$timeout", "toDo", "token", ToDosController]);
-    })(toDo = app.toDo || (app.toDo = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../toDo/controllers/toDosController.js.map
-var app;
-(function (app) {
     var toDo;
     (function (toDo) {
         "use strict";
@@ -1321,6 +1333,7 @@ var app;
                         toDo.name = data.name;
                         toDo.description = data.description;
                         toDo.toDoStatus = data.toDoStatus || 0;
+                        toDo.username = data.username;
                     }
                     deferred.resolve(toDo);
                     return deferred.promise;
@@ -1581,6 +1594,60 @@ var app;
 (function (app) {
     var ui;
     (function (ui) {
+        "use strict";
+        var AppBarButton = (function () {
+            function AppBarButton() {
+                this.restrict = "E";
+                this.replace = true;
+                this.templateUrl = "/src/app/ui/appBarButton/appBarButton.html";
+                this.scope = {
+                    button: "="
+                };
+            }
+            AppBarButton.instance = function () {
+                return new AppBarButton();
+            };
+            return AppBarButton;
+        })();
+        ui.AppBarButton = AppBarButton;
+        angular.module("app.ui").directive("appBarButton", [AppBarButton.instance]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appBarButton/appBarButton.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        var Backdrop = (function () {
+            function Backdrop($timeout) {
+                var _this = this;
+                this.$timeout = $timeout;
+                this.replace = true;
+                this.restrict = "E";
+                this.link = function (scope, element, attributes) {
+                    scope.backdropClass = attributes.backdropClass || '';
+                    scope.animate = false;
+                    _this.$timeout(function () {
+                        scope.animate = true;
+                    });
+                };
+            }
+            Backdrop.instance = function ($timeout) {
+                return new Backdrop($timeout);
+            };
+            return Backdrop;
+        })();
+        ui.Backdrop = Backdrop;
+        angular.module("app.ui").directive("modalBackdrop", [Backdrop.instance]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/backdrop/backdrop.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
         var AppHeader = (function () {
             function AppHeader() {
                 this.templateUrl = "src/app/ui/appHeader/appHeader.html";
@@ -1620,59 +1687,6 @@ var app;
 })(app || (app = {}));
 
 //# sourceMappingURL=../../ui/appHeader/appHeaderController.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        var Backdrop = (function () {
-            function Backdrop($timeout) {
-                var _this = this;
-                this.$timeout = $timeout;
-                this.replace = true;
-                this.restrict = "E";
-                this.link = function (scope, element, attributes) {
-                    scope.backdropClass = attributes.backdropClass || '';
-                    scope.animate = false;
-                    _this.$timeout(function () {
-                        scope.animate = true;
-                    });
-                };
-            }
-            Backdrop.instance = function ($timeout) {
-                return new Backdrop($timeout);
-            };
-            return Backdrop;
-        })();
-        ui.Backdrop = Backdrop;
-        angular.module("app.ui").directive("modalBackdrop", [Backdrop.instance]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/backdrop/backdrop.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        "use strict";
-        var HamburgerButton = (function () {
-            function HamburgerButton() {
-                this.templateUrl = "src/app/ui/hamburgerButton/hamburgerButton.html";
-                this.replace = true;
-                this.restrict = "E";
-                this.scope = {
-                    onClick: "&"
-                };
-            }
-            HamburgerButton.instance = function () {
-                return new HamburgerButton();
-            };
-            return HamburgerButton;
-        })();
-        angular.module("app.ui").directive("hamburgerButton", [HamburgerButton.instance]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/hamburgerButton/hamburgerButton.js.map
 var app;
 (function (app) {
     var ui;
@@ -1896,26 +1910,25 @@ var app;
     var ui;
     (function (ui) {
         "use strict";
-        var AppBarButton = (function () {
-            function AppBarButton() {
-                this.restrict = "E";
+        var HamburgerButton = (function () {
+            function HamburgerButton() {
+                this.templateUrl = "src/app/ui/hamburgerButton/hamburgerButton.html";
                 this.replace = true;
-                this.templateUrl = "/src/app/ui/appBarButton/appBarButton.html";
+                this.restrict = "E";
                 this.scope = {
-                    button: "="
+                    onClick: "&"
                 };
             }
-            AppBarButton.instance = function () {
-                return new AppBarButton();
+            HamburgerButton.instance = function () {
+                return new HamburgerButton();
             };
-            return AppBarButton;
+            return HamburgerButton;
         })();
-        ui.AppBarButton = AppBarButton;
-        angular.module("app.ui").directive("appBarButton", [AppBarButton.instance]);
+        angular.module("app.ui").directive("hamburgerButton", [HamburgerButton.instance]);
     })(ui = app.ui || (app.ui = {}));
 })(app || (app = {}));
 
-//# sourceMappingURL=../../ui/appBarButton/appBarButton.js.map
+//# sourceMappingURL=../../ui/hamburgerButton/hamburgerButton.js.map
 var app;
 (function (app) {
     var ui;
@@ -1937,6 +1950,28 @@ var app;
 })(app || (app = {}));
 
 //# sourceMappingURL=../../ui/modal/modalService.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        "use strict";
+        var DynamicElementDirective = (function () {
+            function DynamicElementDirective(dynamicElement) {
+                this.dynamicElement = dynamicElement;
+                this.restrict = "A";
+                this.link = function (scope, element, attributes) {
+                };
+            }
+            DynamicElementDirective.instance = function (dynamicElement) {
+                return new DynamicElementDirective(dynamicElement);
+            };
+            return DynamicElementDirective;
+        })();
+        angular.module("app.ui").directive("dynamicElement", ["dynamicElement", DynamicElementDirective.instance]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../../ui/dynamicElement/directives/dynamicElement.js.map
 var app;
 (function (app) {
     var ui;
@@ -2180,25 +2215,3 @@ var app;
 })(app || (app = {}));
 
 //# sourceMappingURL=../../../ui/dynamicElement/services/dynamicElement.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        "use strict";
-        var DynamicElementDirective = (function () {
-            function DynamicElementDirective(dynamicElement) {
-                this.dynamicElement = dynamicElement;
-                this.restrict = "A";
-                this.link = function (scope, element, attributes) {
-                };
-            }
-            DynamicElementDirective.instance = function (dynamicElement) {
-                return new DynamicElementDirective(dynamicElement);
-            };
-            return DynamicElementDirective;
-        })();
-        angular.module("app.ui").directive("dynamicElement", ["dynamicElement", DynamicElementDirective.instance]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../../ui/dynamicElement/directives/dynamicElement.js.map

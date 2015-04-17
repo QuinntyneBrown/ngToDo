@@ -14,6 +14,7 @@
             public token: common.ISessionStorageProperty) {
             super($location, $timeout, token);
 
+
         }
 
         public setAppBarButtons = () => {
@@ -61,6 +62,12 @@
             return deferred.promise;
         }
 
+        public deactivate = () => {            
+            this.toDo = null;
+            this.token = null;
+            this.appBarService = null;
+            this.promise = null;
+        }
     }
 
     angular.module("app.toDo")

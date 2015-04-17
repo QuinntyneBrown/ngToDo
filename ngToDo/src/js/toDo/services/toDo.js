@@ -31,6 +31,7 @@ var app;
                         toDo.name = data.name;
                         toDo.description = data.description;
                         toDo.toDoStatus = data.toDoStatus || 0;
+                        toDo.username = data.username;
                     }
                     deferred.resolve(toDo);
                     return deferred.promise;

@@ -19,7 +19,7 @@ namespace ngToDo.Server.Api.v1
         public IHttpActionResult GetAll()
         {
             using (repository)
-            {                
+            {
                 return Ok(repository.GetAll().Where(x => !x.IsDeleted && x.Username == User.Identity.Name).ToList());    
             }            
         }
