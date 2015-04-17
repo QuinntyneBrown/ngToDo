@@ -110,13 +110,13 @@
             this.notifyChanged("deleted");
         }
 
-        public notifyChanged(changeType:string) {
-            this.notify("entityChanged",{ target: this, changeType: changeType });
+        public notifyChanged = (changeType:string) => {
+            this.notify("viewModelChanged", { target: this, changeType: changeType });
         }
 
-        public notify(customeEventName: string, detailArg:any) {
+        public notify = (name: string, detailArg:any) => {
             var event = document.createEvent('CustomEvent');
-            event.initCustomEvent(customeEventName, false, false, detailArg);
+            event.initCustomEvent(name, false, false, detailArg);
             document.dispatchEvent(event);
         }
 

@@ -89,6 +89,14 @@ var app;
                 this.notifyDeleted = function () {
                     _this.notifyChanged("deleted");
                 };
+                this.notifyChanged = function (changeType) {
+                    _this.notify("viewModelChanged", { target: _this, changeType: changeType });
+                };
+                this.notify = function (name, detailArg) {
+                    var event = document.createEvent('CustomEvent');
+                    event.initCustomEvent(name, false, false, detailArg);
+                    document.dispatchEvent(event);
+                };
                 this.instance = function (data) {
                     throw new Error("Not Implemented");
                 };
@@ -98,14 +106,6 @@ var app;
                 this.id = 0;
                 this.isDeleted = false;
             }
-            Entity.prototype.notifyChanged = function (changeType) {
-                this.notify("entityChanged", { target: this, changeType: changeType });
-            };
-            Entity.prototype.notify = function (customeEventName, detailArg) {
-                var event = document.createEvent('CustomEvent');
-                event.initCustomEvent(customeEventName, false, false, detailArg);
-                document.dispatchEvent(event);
-            };
             return Entity;
         })();
         common.Entity = Entity;

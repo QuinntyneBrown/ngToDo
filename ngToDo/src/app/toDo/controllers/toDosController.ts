@@ -13,6 +13,10 @@
             ) {
             super($location, $timeout, token);
 
+            document.addEventListener("viewModelChanged", (event: MSEventObj) => {
+                // process viewModel Change
+            });
+
         }
 
         public activate = () => {

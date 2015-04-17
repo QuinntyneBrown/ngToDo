@@ -35,6 +35,9 @@ var app;
                     _this.toDo = null;
                     _this.promise = null;
                 };
+                document.addEventListener("viewModelChanged", function (event) {
+                    // process viewModel Change
+                });
             }
             return ToDosController;
         })(app.security.AuthenticatedController);

@@ -197,6 +197,14 @@ var app;
                 this.notifyDeleted = function () {
                     _this.notifyChanged("deleted");
                 };
+                this.notifyChanged = function (changeType) {
+                    _this.notify("viewModelChanged", { target: _this, changeType: changeType });
+                };
+                this.notify = function (name, detailArg) {
+                    var event = document.createEvent('CustomEvent');
+                    event.initCustomEvent(name, false, false, detailArg);
+                    document.dispatchEvent(event);
+                };
                 this.instance = function (data) {
                     throw new Error("Not Implemented");
                 };
@@ -206,14 +214,6 @@ var app;
                 this.id = 0;
                 this.isDeleted = false;
             }
-            Entity.prototype.notifyChanged = function (changeType) {
-                this.notify("entityChanged", { target: this, changeType: changeType });
-            };
-            Entity.prototype.notify = function (customeEventName, detailArg) {
-                var event = document.createEvent('CustomEvent');
-                event.initCustomEvent(customeEventName, false, false, detailArg);
-                document.dispatchEvent(event);
-            };
             return Entity;
         })();
         common.Entity = Entity;
@@ -355,6 +355,15 @@ var app;
 //# sourceMappingURL=../security/security.module.js.map
 var app;
 (function (app) {
+    var ui;
+    (function (ui) {
+        angular.module("app.ui", []);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../ui/ui.module.js.map
+var app;
+(function (app) {
     var toDo;
     (function (toDo) {
         angular.module("app.toDo", [
@@ -394,46 +403,6 @@ var app;
 })(app || (app = {}));
 
 //# sourceMappingURL=../toDo/toDo.module.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        angular.module("app.ui", []);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../ui/ui.module.js.map
-var app;
-(function (app) {
-    var common;
-    (function (common) {
-        "use strict";
-        var WorkSpinner = (function () {
-            function WorkSpinner(requestCounter) {
-                var _this = this;
-                this.requestCounter = requestCounter;
-                this.restrict = "E";
-                this.replace = true;
-                this.scope = {};
-                this.template = "<div data-ng-show='requestCount' class='work-spinner'><i class='fa fa-spinner fa-spin fade'></i></div>";
-                this.link = function (scope) {
-                    scope.$watch(function () {
-                        return _this.requestCounter.getRequestCount();
-                    }, function (requestCount) {
-                        scope["requestCount"] = requestCount;
-                    });
-                };
-            }
-            WorkSpinner.instance = function (requestCounter) {
-                return new WorkSpinner(requestCounter);
-            };
-            return WorkSpinner;
-        })();
-        angular.module("app.common").directive("workSpinner", ["requestCounter", WorkSpinner.instance]);
-    })(common = app.common || (app.common = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../common/directives/workSpinner.js.map
 var app;
 (function (app) {
     var common;
@@ -648,6 +617,37 @@ var app;
 //# sourceMappingURL=../../common/services/storage.js.map
 var app;
 (function (app) {
+    var common;
+    (function (common) {
+        "use strict";
+        var WorkSpinner = (function () {
+            function WorkSpinner(requestCounter) {
+                var _this = this;
+                this.requestCounter = requestCounter;
+                this.restrict = "E";
+                this.replace = true;
+                this.scope = {};
+                this.template = "<div data-ng-show='requestCount' class='work-spinner'><i class='fa fa-spinner fa-spin fade'></i></div>";
+                this.link = function (scope) {
+                    scope.$watch(function () {
+                        return _this.requestCounter.getRequestCount();
+                    }, function (requestCount) {
+                        scope["requestCount"] = requestCount;
+                    });
+                };
+            }
+            WorkSpinner.instance = function (requestCounter) {
+                return new WorkSpinner(requestCounter);
+            };
+            return WorkSpinner;
+        })();
+        angular.module("app.common").directive("workSpinner", ["requestCounter", WorkSpinner.instance]);
+    })(common = app.common || (app.common = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../common/directives/workSpinner.js.map
+var app;
+(function (app) {
     var security;
     (function (security) {
         "use strict";
@@ -711,6 +711,707 @@ var app;
 })(app || (app = {}));
 
 //# sourceMappingURL=../../security/directives/loginFormController.js.map
+var app;
+(function (app) {
+    var security;
+    (function (security) {
+        "use strict";
+        var AuthorizationInterceptor = (function () {
+            function AuthorizationInterceptor(token) {
+                var _this = this;
+                this.token = token;
+                this.request = function (config) {
+                    if (_this.token.get()) {
+                        config.headers.Authorization = "Bearer " + _this.token.get();
+                    }
+                    return config;
+                };
+            }
+            AuthorizationInterceptor.instance = function (token) {
+                return new AuthorizationInterceptor(token);
+            };
+            return AuthorizationInterceptor;
+        })();
+        angular.module("app.security").factory("authorizationInterceptor", ["token", AuthorizationInterceptor.instance]).config([
+            "$httpProvider",
+            function ($httpProvider) {
+                $httpProvider.interceptors.push("authorizationInterceptor");
+            }
+        ]);
+    })(security = app.security || (app.security = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../security/services/authorizationInterceptor.js.map
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var app;
+(function (app) {
+    var security;
+    (function (security) {
+        "use strict";
+        var CurrentUser = (function (_super) {
+            __extends(CurrentUser, _super);
+            function CurrentUser($rootScope, storage) {
+                _super.call(this, $rootScope, storage, "currentUser");
+            }
+            return CurrentUser;
+        })(app.common.SessionStorageProperty);
+        angular.module("app.security").service("currentUser", ["$rootScope", "storage", CurrentUser]);
+    })(security = app.security || (app.security = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../security/services/currentUser.js.map
+var app;
+(function (app) {
+    var security;
+    (function (security) {
+        "use strict";
+        var LoginRedirectProvider = (function () {
+            function LoginRedirectProvider() {
+                var _this = this;
+                this.loginUrl = "/login";
+                this.defaultPath = "/";
+                this.setLoginUrl = function (value) {
+                    _this.loginUrl = value;
+                };
+                this.setDefaultUrl = function (value) {
+                    _this.defaultPath = value;
+                };
+                this.$get = ["$q", "$location", function ($q, $location) {
+                    return {
+                        responseError: function (response) {
+                            if (response.status == 401) {
+                                _this.lastPath = $location.path();
+                                $location.path(_this.loginUrl);
+                            }
+                            return $q.reject(response);
+                        },
+                        redirectPreLogin: function () {
+                            if (_this.lastPath) {
+                                $location.path(_this.lastPath);
+                                _this.lastPath = "";
+                            }
+                            else {
+                                $location.path(_this.defaultPath);
+                            }
+                        }
+                    };
+                }];
+            }
+            return LoginRedirectProvider;
+        })();
+        angular.module("app.security").provider("loginRedirect", [LoginRedirectProvider]).config(["$httpProvider", config]);
+        function config($httpProvider) {
+            $httpProvider.interceptors.push("loginRedirect");
+        }
+    })(security = app.security || (app.security = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../security/services/loginRedirectProvider.js.map
+var app;
+(function (app) {
+    var security;
+    (function (security) {
+        "use strict";
+        var OAuthEndpointProvider = (function () {
+            function OAuthEndpointProvider() {
+                this.config = {
+                    baseUrl: "/login"
+                };
+            }
+            OAuthEndpointProvider.prototype.configure = function (baseUrl) {
+                this.config = {
+                    baseUrl: baseUrl
+                };
+            };
+            OAuthEndpointProvider.prototype.$get = function () {
+                return this.config;
+            };
+            return OAuthEndpointProvider;
+        })();
+        security.OAuthEndpointProvider = OAuthEndpointProvider;
+        angular.module("app.security").provider("oauthEndpoint", OAuthEndpointProvider);
+    })(security = app.security || (app.security = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../security/services/oauthEndpointProvider.js.map
+var app;
+(function (app) {
+    var security;
+    (function (security) {
+        "use strict";
+        var SecurityService = (function () {
+            function SecurityService($http, $interval, $location, $q, currentUser, formEncode, oauthEndpoint, token, tokenExpiryDate) {
+                var _this = this;
+                this.$http = $http;
+                this.$interval = $interval;
+                this.$location = $location;
+                this.$q = $q;
+                this.currentUser = currentUser;
+                this.formEncode = formEncode;
+                this.oauthEndpoint = oauthEndpoint;
+                this.token = token;
+                this.tokenExpiryDate = tokenExpiryDate;
+                this.login = function (username, password) {
+                    var deferred = _this.$q.defer();
+                    var configuration = {
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        }
+                    };
+                    var data = _this.formEncode({
+                        username: username,
+                        password: password,
+                        grant_type: "password"
+                    });
+                    _this.$http.post(_this.oauthEndpoint.baseUrl, data, configuration).then(function (response) {
+                        _this.processToken(username, response).then(function (results) {
+                            deferred.resolve(true);
+                        });
+                    }).catch(function (Error) {
+                        deferred.reject();
+                    });
+                    return deferred.promise;
+                };
+                this.processToken = function (username, response) {
+                    var deferred = _this.$q.defer();
+                    _this.token.set({ data: response.data.access_token });
+                    _this.tokenExpiryDate.set({ data: Date.now() + response.data.expires_in * 100 });
+                    _this.getCurrentUser().then(function (results) {
+                        _this.currentUser.set({ data: results });
+                        deferred.resolve();
+                    });
+                    return deferred.promise;
+                };
+                this.getCurrentUser = function () {
+                    var deferred = _this.$q.defer();
+                    _this.$http({ method: "GET", url: "api/identity/getCurrentUser" }).then(function (results) {
+                        deferred.resolve(results.data);
+                    }).catch(function (error) {
+                        deferred.reject(error);
+                    });
+                    return deferred.promise;
+                };
+                this.tokenExpired = function () {
+                    return Date.now() > _this.tokenExpiryDate.get();
+                };
+            }
+            return SecurityService;
+        })();
+        security.SecurityService = SecurityService;
+        angular.module("app.security").service("securityService", ["$http", "$interval", "$location", "$q", "currentUser", "formEncode", "oauthEndpoint", "token", "tokenExpiryDate", SecurityService]);
+    })(security = app.security || (app.security = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../security/services/securityService.js.map
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var app;
+(function (app) {
+    var security;
+    (function (security) {
+        "use strict";
+        var Token = (function (_super) {
+            __extends(Token, _super);
+            function Token($rootScope, storage) {
+                _super.call(this, $rootScope, storage, "token");
+            }
+            return Token;
+        })(app.common.SessionStorageProperty);
+        angular.module("app.security").service("token", ["$rootScope", "storage", Token]);
+    })(security = app.security || (app.security = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../security/services/token.js.map
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var app;
+(function (app) {
+    var security;
+    (function (security) {
+        "use strict";
+        var Token = (function (_super) {
+            __extends(Token, _super);
+            function Token($rootScope, storage) {
+                _super.call(this, $rootScope, storage, "tokenExpiryDate");
+            }
+            return Token;
+        })(app.common.SessionStorageProperty);
+        angular.module("app.security").service("tokenExpiryDate", ["$rootScope", "storage", Token]);
+    })(security = app.security || (app.security = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../security/services/tokenExpiryDate.js.map
+var app;
+(function (app) {
+    var security;
+    (function (security) {
+        "use strict";
+        var User = (function () {
+            function User() {
+                this.instance = function (data) {
+                };
+                this.getName = function () {
+                };
+                this.getCurrent = function () {
+                };
+            }
+            return User;
+        })();
+    })(security = app.security || (app.security = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../security/services/user.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        "use strict";
+        var AppBar = (function () {
+            function AppBar() {
+                this.templateUrl = "src/app/ui/appBar/appBar.html";
+                this.replace = true;
+                this.restrict = "E";
+                this.controller = "appBarController";
+                this.controllerAs = "appBar";
+            }
+            AppBar.instance = function () {
+                return new AppBar();
+            };
+            return AppBar;
+        })();
+        ui.AppBar = AppBar;
+        angular.module("app.ui").directive("appBar", [AppBar.instance]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appBar/appBar.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        "use strict";
+        var AppBarController = (function () {
+            function AppBarController(appBarService) {
+                this.appBarService = appBarService;
+            }
+            return AppBarController;
+        })();
+        angular.module("app.ui").controller("appBarController", ["appBarService", AppBarController]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appBar/appBarController.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        "use strict";
+        var AppBarService = (function () {
+            function AppBarService($rootScope, historyService, notificationService) {
+                var _this = this;
+                this.historyService = historyService;
+                this.notificationService = notificationService;
+                this.getPreviousUrl = function () {
+                    return null;
+                };
+                this.goBack = function () {
+                };
+                this.hasNotifications = function () {
+                    return false;
+                };
+                this.setButtons = function (buttons) {
+                    _this.buttons = buttons;
+                };
+                this.resetButtons = function () {
+                    _this.buttons = null;
+                };
+                this.getButtons = function () {
+                    return _this.buttons;
+                };
+                this.buttons = [];
+                $rootScope.$on("$locationChangeStart", this.resetButtons);
+            }
+            return AppBarService;
+        })();
+        ui.AppBarService = AppBarService;
+        angular.module("app.ui").service("appBarService", ["$rootScope", "historyService", "notificationService", AppBarService]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appBar/appBarService.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        var AppHeader = (function () {
+            function AppHeader() {
+                this.templateUrl = "src/app/ui/appHeader/appHeader.html";
+                this.replace = true;
+                this.restrict = "E";
+                this.controller = "appHeaderController";
+                this.controllerAs = "appHeader";
+                this.scope = {
+                    title: "@",
+                    isLoggedIn: "&",
+                    getUsername: "&"
+                };
+            }
+            AppHeader.instance = function () {
+                return new AppHeader();
+            };
+            return AppHeader;
+        })();
+        ui.AppHeader = AppHeader;
+        angular.module("app.ui").directive("appHeader", [AppHeader.instance]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appHeader/appHeader.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        var AppHeaderController = (function () {
+            function AppHeaderController() {
+            }
+            return AppHeaderController;
+        })();
+        ui.AppHeaderController = AppHeaderController;
+        angular.module("app.ui").controller("appHeaderController", [AppHeaderController]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appHeader/appHeaderController.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        "use strict";
+        var AppBarButton = (function () {
+            function AppBarButton() {
+                this.restrict = "E";
+                this.replace = true;
+                this.templateUrl = "/src/app/ui/appBarButton/appBarButton.html";
+                this.scope = {
+                    button: "="
+                };
+            }
+            AppBarButton.instance = function () {
+                return new AppBarButton();
+            };
+            return AppBarButton;
+        })();
+        ui.AppBarButton = AppBarButton;
+        angular.module("app.ui").directive("appBarButton", [AppBarButton.instance]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appBarButton/appBarButton.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        var Backdrop = (function () {
+            function Backdrop($timeout) {
+                var _this = this;
+                this.$timeout = $timeout;
+                this.replace = true;
+                this.restrict = "E";
+                this.link = function (scope, element, attributes) {
+                    scope.backdropClass = attributes.backdropClass || '';
+                    scope.animate = false;
+                    _this.$timeout(function () {
+                        scope.animate = true;
+                    });
+                };
+            }
+            Backdrop.instance = function ($timeout) {
+                return new Backdrop($timeout);
+            };
+            return Backdrop;
+        })();
+        ui.Backdrop = Backdrop;
+        angular.module("app.ui").directive("modalBackdrop", [Backdrop.instance]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/backdrop/backdrop.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        angular.module("app.ui").value("bind", function (element, object) {
+            if (element) {
+                for (var event in object) {
+                    var callback = object[event];
+                    event.split(/\s+/).forEach(function (event) {
+                        element.addEventListener(event, callback);
+                    });
+                }
+            }
+        });
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/functions/bind.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        angular.module("app.ui").value("clientRectEquals", function (clientRectA, clientRectB) {
+            if (!clientRectA || !clientRectB) {
+                return false;
+            }
+            return (clientRectA.top === clientRectB.top && clientRectA.left === clientRectB.left && clientRectA.bottom === clientRectB.bottom && clientRectA.right === clientRectB.right);
+        });
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/functions/clientRectEquals.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        angular.module("app.ui").value("fire", function (target, type, properties) {
+            var htmlEvent = document.createEvent("HTMLEvents");
+            htmlEvent.initEvent(type, true, true);
+            for (var j in properties) {
+                htmlEvent[j] = properties[j];
+            }
+            target.dispatchEvent(htmlEvent);
+        });
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/functions/fire.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        angular.module("app.ui").value("getBoundingRectForDetachedElement", function (detachedElement) {
+            var clientRect;
+            detachedElement.style.visibility = 'none';
+            document.body.appendChild(detachedElement);
+            clientRect = detachedElement.getBoundingClientRect();
+            detachedElement.parentNode.removeChild(detachedElement);
+            return clientRect;
+        });
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/functions/getBoundingRectForDetachedElement.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        angular.module("app.ui").value("getSurroundingWindowSpace", function (element, _window) {
+            var clientRect = element.getBoundingClientRect();
+            return {
+                top: clientRect.top,
+                left: clientRect.left,
+                bottom: _window.innerHeight - clientRect.bottom,
+                right: _window.innerWidth - clientRect.right
+            };
+        });
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/functions/getSurroundingWindowSpace.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        angular.module("app.ui").value("positionDetachedElement", function (triggerElement, element, directionPriorityList, elementRect, alignment, elementSurroundingWindowSpaceRect) {
+            var triggerElementRect = triggerElement.getBoundingClientRect();
+            if (alignment === "center") {
+                var triggerElementVerticalMiddle = ((triggerElementRect.bottom - triggerElementRect.top) / 2) + triggerElementRect.top;
+                var triggerElementHorizontalMiddle = ((triggerElementRect.right - triggerElementRect.left) / 2) + triggerElementRect.left;
+                for (var i = 0; i < directionPriorityList.length; i++) {
+                    var lastOption = directionPriorityList.length == i + 1;
+                    switch (directionPriorityList[i]) {
+                        case "top":
+                            if (triggerElementRect.top > elementRect.height || lastOption) {
+                                if (triggerElementRect.width > elementRect.width || lastOption) {
+                                    element.style.top = (triggerElementRect.top - elementRect.height) + "px";
+                                    element.style.left = triggerElementHorizontalMiddle - (elementRect.width / 2) + "px";
+                                    return {
+                                        position: directionPriorityList[i],
+                                        elementRect: elementRect
+                                    };
+                                }
+                                else {
+                                    var diff = (elementRect.width - triggerElementRect.width) / 2;
+                                    if (((triggerElementRect.right + diff) < window.innerWidth) && triggerElementRect.left > diff) {
+                                        element.style.top = (triggerElementRect.top - elementRect.height) + "px";
+                                        element.style.left = triggerElementHorizontalMiddle - (elementRect.width / 2) + "px";
+                                        return {
+                                            position: directionPriorityList[i],
+                                            elementRect: elementRect
+                                        };
+                                    }
+                                }
+                            }
+                            break;
+                        case "left":
+                            if (triggerElementRect.left > elementRect.width || lastOption) {
+                                if (triggerElementRect.height > elementRect.height || lastOption) {
+                                    element.style.left = (triggerElementRect.left - elementRect.width) + "px";
+                                    element.style.top = triggerElementVerticalMiddle - (elementRect.height / 2) + "px";
+                                    return {
+                                        position: directionPriorityList[i],
+                                        elementRect: elementRect
+                                    };
+                                }
+                                else {
+                                    var diff = (elementRect.height - triggerElementRect.height) / 2;
+                                    if (((triggerElementRect.bottom + diff) < window.innerHeight) && triggerElementRect.top > diff) {
+                                        element.style.left = (triggerElementRect.left - elementRect.width) + "px";
+                                        element.style.top = triggerElementVerticalMiddle - (elementRect.height / 2) + "px";
+                                        return {
+                                            position: directionPriorityList[i],
+                                            elementRect: elementRect
+                                        };
+                                    }
+                                }
+                            }
+                            break;
+                        case "bottom":
+                            if (((window.innerHeight - triggerElementRect.bottom) > elementRect.height) || lastOption) {
+                                if (triggerElementRect.width > elementRect.width || lastOption) {
+                                    element.style.top = triggerElementRect.bottom + "px";
+                                    element.style.left = triggerElementHorizontalMiddle - (elementRect.width / 2) + "px";
+                                    return {
+                                        position: directionPriorityList[i],
+                                        elementRect: elementRect
+                                    };
+                                }
+                                else {
+                                    var diff = (elementRect.width - triggerElementRect.width) / 2;
+                                    if (((triggerElementRect.right + diff) < window.innerWidth) && triggerElementRect.left > diff) {
+                                        element.style.top = triggerElementRect.bottom + "px";
+                                        element.style.left = triggerElementHorizontalMiddle - (elementRect.width / 2) + "px";
+                                        return {
+                                            position: directionPriorityList[i],
+                                            elementRect: elementRect
+                                        };
+                                    }
+                                }
+                            }
+                            break;
+                        case "right":
+                            if (((window.innerWidth - triggerElementRect.right) > elementRect.width) || lastOption) {
+                                if (triggerElementRect.height > elementRect.height || lastOption) {
+                                    element.style.left = triggerElementRect.right + "px";
+                                    element.style.top = triggerElementVerticalMiddle - (elementRect.height / 2) + "px";
+                                    return {
+                                        position: directionPriorityList[i],
+                                        elementRect: elementRect
+                                    };
+                                }
+                                else {
+                                    var diff = (elementRect.height - triggerElementRect.height) / 2;
+                                    if (((triggerElementRect.bottom + diff) < window.innerHeight) && triggerElementRect.top > diff) {
+                                        element.style.left = triggerElementRect.right + "px";
+                                        element.style.top = triggerElementVerticalMiddle - (elementRect.height / 2) + "px";
+                                        return {
+                                            position: directionPriorityList[i],
+                                            elementRect: elementRect
+                                        };
+                                    }
+                                }
+                            }
+                            break;
+                    }
+                }
+                throw new Error("Unable to position place pop up.");
+            }
+            if (alignment === "left") {
+                element.style.left = triggerElementRect.left + "px";
+                for (var i = 0; i < directionPriorityList.length; i++) {
+                    var lastOption = directionPriorityList.length == i + 1;
+                    if (directionPriorityList[i] === "top") {
+                        if (triggerElementRect.top >= elementRect.height || lastOption) {
+                            element.style.bottom = triggerElementRect.top + "px";
+                            return {
+                                position: directionPriorityList[i],
+                                elementRect: elementRect
+                            };
+                        }
+                    }
+                    if (directionPriorityList[i] === "bottom") {
+                        if (window.innerHeight - triggerElementRect.bottom >= elementRect.height || lastOption) {
+                            element.style.top = triggerElementRect.bottom + "px";
+                            return {
+                                position: directionPriorityList[i],
+                                elementRect: elementRect
+                            };
+                        }
+                    }
+                }
+            }
+        });
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/functions/positionDetachedElement.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        "use strict";
+        var ModalService = (function () {
+            function ModalService($q) {
+                var _this = this;
+                this.$q = $q;
+                this.showModal = function (options) {
+                    var deferred = _this.$q.defer();
+                    return deferred.promise;
+                };
+            }
+            return ModalService;
+        })();
+        angular.module("app.ui").service("modalService", [ModalService]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/modal/modalService.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        "use strict";
+        var HamburgerButton = (function () {
+            function HamburgerButton() {
+                this.templateUrl = "src/app/ui/hamburgerButton/hamburgerButton.html";
+                this.replace = true;
+                this.restrict = "E";
+                this.scope = {
+                    onClick: "&"
+                };
+            }
+            HamburgerButton.instance = function () {
+                return new HamburgerButton();
+            };
+            return HamburgerButton;
+        })();
+        angular.module("app.ui").directive("hamburgerButton", [HamburgerButton.instance]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/hamburgerButton/hamburgerButton.js.map
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -981,6 +1682,9 @@ var app;
                     _this.toDo = null;
                     _this.promise = null;
                 };
+                document.addEventListener("viewModelChanged", function (event) {
+                    // process viewModel Change
+                });
             }
             return ToDosController;
         })(app.security.AuthenticatedController);
@@ -989,269 +1693,6 @@ var app;
 })(app || (app = {}));
 
 //# sourceMappingURL=../../toDo/controllers/toDosController.js.map
-var app;
-(function (app) {
-    var security;
-    (function (security) {
-        "use strict";
-        var AuthorizationInterceptor = (function () {
-            function AuthorizationInterceptor(token) {
-                var _this = this;
-                this.token = token;
-                this.request = function (config) {
-                    if (_this.token.get()) {
-                        config.headers.Authorization = "Bearer " + _this.token.get();
-                    }
-                    return config;
-                };
-            }
-            AuthorizationInterceptor.instance = function (token) {
-                return new AuthorizationInterceptor(token);
-            };
-            return AuthorizationInterceptor;
-        })();
-        angular.module("app.security").factory("authorizationInterceptor", ["token", AuthorizationInterceptor.instance]).config([
-            "$httpProvider",
-            function ($httpProvider) {
-                $httpProvider.interceptors.push("authorizationInterceptor");
-            }
-        ]);
-    })(security = app.security || (app.security = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../security/services/authorizationInterceptor.js.map
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-var app;
-(function (app) {
-    var security;
-    (function (security) {
-        "use strict";
-        var CurrentUser = (function (_super) {
-            __extends(CurrentUser, _super);
-            function CurrentUser($rootScope, storage) {
-                _super.call(this, $rootScope, storage, "currentUser");
-            }
-            return CurrentUser;
-        })(app.common.SessionStorageProperty);
-        angular.module("app.security").service("currentUser", ["$rootScope", "storage", CurrentUser]);
-    })(security = app.security || (app.security = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../security/services/currentUser.js.map
-var app;
-(function (app) {
-    var security;
-    (function (security) {
-        "use strict";
-        var LoginRedirectProvider = (function () {
-            function LoginRedirectProvider() {
-                var _this = this;
-                this.loginUrl = "/login";
-                this.defaultPath = "/";
-                this.setLoginUrl = function (value) {
-                    _this.loginUrl = value;
-                };
-                this.setDefaultUrl = function (value) {
-                    _this.defaultPath = value;
-                };
-                this.$get = ["$q", "$location", function ($q, $location) {
-                    return {
-                        responseError: function (response) {
-                            if (response.status == 401) {
-                                _this.lastPath = $location.path();
-                                $location.path(_this.loginUrl);
-                            }
-                            return $q.reject(response);
-                        },
-                        redirectPreLogin: function () {
-                            if (_this.lastPath) {
-                                $location.path(_this.lastPath);
-                                _this.lastPath = "";
-                            }
-                            else {
-                                $location.path(_this.defaultPath);
-                            }
-                        }
-                    };
-                }];
-            }
-            return LoginRedirectProvider;
-        })();
-        angular.module("app.security").provider("loginRedirect", [LoginRedirectProvider]).config(["$httpProvider", config]);
-        function config($httpProvider) {
-            $httpProvider.interceptors.push("loginRedirect");
-        }
-    })(security = app.security || (app.security = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../security/services/loginRedirectProvider.js.map
-var app;
-(function (app) {
-    var security;
-    (function (security) {
-        "use strict";
-        var OAuthEndpointProvider = (function () {
-            function OAuthEndpointProvider() {
-                this.config = {
-                    baseUrl: "/login"
-                };
-            }
-            OAuthEndpointProvider.prototype.configure = function (baseUrl) {
-                this.config = {
-                    baseUrl: baseUrl
-                };
-            };
-            OAuthEndpointProvider.prototype.$get = function () {
-                return this.config;
-            };
-            return OAuthEndpointProvider;
-        })();
-        security.OAuthEndpointProvider = OAuthEndpointProvider;
-        angular.module("app.security").provider("oauthEndpoint", OAuthEndpointProvider);
-    })(security = app.security || (app.security = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../security/services/oauthEndpointProvider.js.map
-var app;
-(function (app) {
-    var security;
-    (function (security) {
-        "use strict";
-        var SecurityService = (function () {
-            function SecurityService($http, $interval, $location, $q, currentUser, formEncode, oauthEndpoint, token, tokenExpiryDate) {
-                var _this = this;
-                this.$http = $http;
-                this.$interval = $interval;
-                this.$location = $location;
-                this.$q = $q;
-                this.currentUser = currentUser;
-                this.formEncode = formEncode;
-                this.oauthEndpoint = oauthEndpoint;
-                this.token = token;
-                this.tokenExpiryDate = tokenExpiryDate;
-                this.login = function (username, password) {
-                    var deferred = _this.$q.defer();
-                    var configuration = {
-                        headers: {
-                            "Content-Type": "application/x-www-form-urlencoded"
-                        }
-                    };
-                    var data = _this.formEncode({
-                        username: username,
-                        password: password,
-                        grant_type: "password"
-                    });
-                    _this.$http.post(_this.oauthEndpoint.baseUrl, data, configuration).then(function (response) {
-                        _this.processToken(username, response).then(function (results) {
-                            deferred.resolve(true);
-                        });
-                    }).catch(function (Error) {
-                        deferred.reject();
-                    });
-                    return deferred.promise;
-                };
-                this.processToken = function (username, response) {
-                    var deferred = _this.$q.defer();
-                    _this.token.set({ data: response.data.access_token });
-                    _this.tokenExpiryDate.set({ data: Date.now() + response.data.expires_in * 100 });
-                    _this.getCurrentUser().then(function (results) {
-                        _this.currentUser.set({ data: results });
-                        deferred.resolve();
-                    });
-                    return deferred.promise;
-                };
-                this.getCurrentUser = function () {
-                    var deferred = _this.$q.defer();
-                    _this.$http({ method: "GET", url: "api/identity/getCurrentUser" }).then(function (results) {
-                        deferred.resolve(results.data);
-                    }).catch(function (error) {
-                        deferred.reject(error);
-                    });
-                    return deferred.promise;
-                };
-                this.tokenExpired = function () {
-                    return Date.now() > _this.tokenExpiryDate.get();
-                };
-            }
-            return SecurityService;
-        })();
-        security.SecurityService = SecurityService;
-        angular.module("app.security").service("securityService", ["$http", "$interval", "$location", "$q", "currentUser", "formEncode", "oauthEndpoint", "token", "tokenExpiryDate", SecurityService]);
-    })(security = app.security || (app.security = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../security/services/securityService.js.map
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-var app;
-(function (app) {
-    var security;
-    (function (security) {
-        "use strict";
-        var Token = (function (_super) {
-            __extends(Token, _super);
-            function Token($rootScope, storage) {
-                _super.call(this, $rootScope, storage, "token");
-            }
-            return Token;
-        })(app.common.SessionStorageProperty);
-        angular.module("app.security").service("token", ["$rootScope", "storage", Token]);
-    })(security = app.security || (app.security = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../security/services/token.js.map
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-var app;
-(function (app) {
-    var security;
-    (function (security) {
-        "use strict";
-        var Token = (function (_super) {
-            __extends(Token, _super);
-            function Token($rootScope, storage) {
-                _super.call(this, $rootScope, storage, "tokenExpiryDate");
-            }
-            return Token;
-        })(app.common.SessionStorageProperty);
-        angular.module("app.security").service("tokenExpiryDate", ["$rootScope", "storage", Token]);
-    })(security = app.security || (app.security = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../security/services/tokenExpiryDate.js.map
-var app;
-(function (app) {
-    var security;
-    (function (security) {
-        "use strict";
-        var User = (function () {
-            function User() {
-                this.instance = function (data) {
-                };
-                this.getName = function () {
-                };
-                this.getCurrent = function () {
-                };
-            }
-            return User;
-        })();
-    })(security = app.security || (app.security = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../security/services/user.js.map
 var app;
 (function (app) {
     var toDo;
@@ -1512,444 +1953,6 @@ var app;
 })(app || (app = {}));
 
 //# sourceMappingURL=../../toDo/services/toDoStatuses.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        "use strict";
-        var AppBar = (function () {
-            function AppBar() {
-                this.templateUrl = "src/app/ui/appBar/appBar.html";
-                this.replace = true;
-                this.restrict = "E";
-                this.controller = "appBarController";
-                this.controllerAs = "appBar";
-            }
-            AppBar.instance = function () {
-                return new AppBar();
-            };
-            return AppBar;
-        })();
-        ui.AppBar = AppBar;
-        angular.module("app.ui").directive("appBar", [AppBar.instance]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/appBar/appBar.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        "use strict";
-        var AppBarController = (function () {
-            function AppBarController(appBarService) {
-                this.appBarService = appBarService;
-            }
-            return AppBarController;
-        })();
-        angular.module("app.ui").controller("appBarController", ["appBarService", AppBarController]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/appBar/appBarController.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        "use strict";
-        var AppBarService = (function () {
-            function AppBarService($rootScope, historyService, notificationService) {
-                var _this = this;
-                this.historyService = historyService;
-                this.notificationService = notificationService;
-                this.getPreviousUrl = function () {
-                    return null;
-                };
-                this.goBack = function () {
-                };
-                this.hasNotifications = function () {
-                    return false;
-                };
-                this.setButtons = function (buttons) {
-                    _this.buttons = buttons;
-                };
-                this.resetButtons = function () {
-                    _this.buttons = null;
-                };
-                this.getButtons = function () {
-                    return _this.buttons;
-                };
-                this.buttons = [];
-                $rootScope.$on("$locationChangeStart", this.resetButtons);
-            }
-            return AppBarService;
-        })();
-        ui.AppBarService = AppBarService;
-        angular.module("app.ui").service("appBarService", ["$rootScope", "historyService", "notificationService", AppBarService]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/appBar/appBarService.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        "use strict";
-        var AppBarButton = (function () {
-            function AppBarButton() {
-                this.restrict = "E";
-                this.replace = true;
-                this.templateUrl = "/src/app/ui/appBarButton/appBarButton.html";
-                this.scope = {
-                    button: "="
-                };
-            }
-            AppBarButton.instance = function () {
-                return new AppBarButton();
-            };
-            return AppBarButton;
-        })();
-        ui.AppBarButton = AppBarButton;
-        angular.module("app.ui").directive("appBarButton", [AppBarButton.instance]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/appBarButton/appBarButton.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        var Backdrop = (function () {
-            function Backdrop($timeout) {
-                var _this = this;
-                this.$timeout = $timeout;
-                this.replace = true;
-                this.restrict = "E";
-                this.link = function (scope, element, attributes) {
-                    scope.backdropClass = attributes.backdropClass || '';
-                    scope.animate = false;
-                    _this.$timeout(function () {
-                        scope.animate = true;
-                    });
-                };
-            }
-            Backdrop.instance = function ($timeout) {
-                return new Backdrop($timeout);
-            };
-            return Backdrop;
-        })();
-        ui.Backdrop = Backdrop;
-        angular.module("app.ui").directive("modalBackdrop", [Backdrop.instance]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/backdrop/backdrop.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        var AppHeader = (function () {
-            function AppHeader() {
-                this.templateUrl = "src/app/ui/appHeader/appHeader.html";
-                this.replace = true;
-                this.restrict = "E";
-                this.controller = "appHeaderController";
-                this.controllerAs = "appHeader";
-                this.scope = {
-                    title: "@",
-                    isLoggedIn: "&",
-                    getUsername: "&"
-                };
-            }
-            AppHeader.instance = function () {
-                return new AppHeader();
-            };
-            return AppHeader;
-        })();
-        ui.AppHeader = AppHeader;
-        angular.module("app.ui").directive("appHeader", [AppHeader.instance]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/appHeader/appHeader.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        var AppHeaderController = (function () {
-            function AppHeaderController() {
-            }
-            return AppHeaderController;
-        })();
-        ui.AppHeaderController = AppHeaderController;
-        angular.module("app.ui").controller("appHeaderController", [AppHeaderController]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/appHeader/appHeaderController.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        angular.module("app.ui").value("bind", function (element, object) {
-            if (element) {
-                for (var event in object) {
-                    var callback = object[event];
-                    event.split(/\s+/).forEach(function (event) {
-                        element.addEventListener(event, callback);
-                    });
-                }
-            }
-        });
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/functions/bind.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        angular.module("app.ui").value("clientRectEquals", function (clientRectA, clientRectB) {
-            if (!clientRectA || !clientRectB) {
-                return false;
-            }
-            return (clientRectA.top === clientRectB.top && clientRectA.left === clientRectB.left && clientRectA.bottom === clientRectB.bottom && clientRectA.right === clientRectB.right);
-        });
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/functions/clientRectEquals.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        angular.module("app.ui").value("fire", function (target, type, properties) {
-            var htmlEvent = document.createEvent("HTMLEvents");
-            htmlEvent.initEvent(type, true, true);
-            for (var j in properties) {
-                htmlEvent[j] = properties[j];
-            }
-            target.dispatchEvent(htmlEvent);
-        });
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/functions/fire.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        angular.module("app.ui").value("getBoundingRectForDetachedElement", function (detachedElement) {
-            var clientRect;
-            detachedElement.style.visibility = 'none';
-            document.body.appendChild(detachedElement);
-            clientRect = detachedElement.getBoundingClientRect();
-            detachedElement.parentNode.removeChild(detachedElement);
-            return clientRect;
-        });
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/functions/getBoundingRectForDetachedElement.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        angular.module("app.ui").value("getSurroundingWindowSpace", function (element, _window) {
-            var clientRect = element.getBoundingClientRect();
-            return {
-                top: clientRect.top,
-                left: clientRect.left,
-                bottom: _window.innerHeight - clientRect.bottom,
-                right: _window.innerWidth - clientRect.right
-            };
-        });
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/functions/getSurroundingWindowSpace.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        angular.module("app.ui").value("positionDetachedElement", function (triggerElement, element, directionPriorityList, elementRect, alignment, elementSurroundingWindowSpaceRect) {
-            var triggerElementRect = triggerElement.getBoundingClientRect();
-            if (alignment === "center") {
-                var triggerElementVerticalMiddle = ((triggerElementRect.bottom - triggerElementRect.top) / 2) + triggerElementRect.top;
-                var triggerElementHorizontalMiddle = ((triggerElementRect.right - triggerElementRect.left) / 2) + triggerElementRect.left;
-                for (var i = 0; i < directionPriorityList.length; i++) {
-                    var lastOption = directionPriorityList.length == i + 1;
-                    switch (directionPriorityList[i]) {
-                        case "top":
-                            if (triggerElementRect.top > elementRect.height || lastOption) {
-                                if (triggerElementRect.width > elementRect.width || lastOption) {
-                                    element.style.top = (triggerElementRect.top - elementRect.height) + "px";
-                                    element.style.left = triggerElementHorizontalMiddle - (elementRect.width / 2) + "px";
-                                    return {
-                                        position: directionPriorityList[i],
-                                        elementRect: elementRect
-                                    };
-                                }
-                                else {
-                                    var diff = (elementRect.width - triggerElementRect.width) / 2;
-                                    if (((triggerElementRect.right + diff) < window.innerWidth) && triggerElementRect.left > diff) {
-                                        element.style.top = (triggerElementRect.top - elementRect.height) + "px";
-                                        element.style.left = triggerElementHorizontalMiddle - (elementRect.width / 2) + "px";
-                                        return {
-                                            position: directionPriorityList[i],
-                                            elementRect: elementRect
-                                        };
-                                    }
-                                }
-                            }
-                            break;
-                        case "left":
-                            if (triggerElementRect.left > elementRect.width || lastOption) {
-                                if (triggerElementRect.height > elementRect.height || lastOption) {
-                                    element.style.left = (triggerElementRect.left - elementRect.width) + "px";
-                                    element.style.top = triggerElementVerticalMiddle - (elementRect.height / 2) + "px";
-                                    return {
-                                        position: directionPriorityList[i],
-                                        elementRect: elementRect
-                                    };
-                                }
-                                else {
-                                    var diff = (elementRect.height - triggerElementRect.height) / 2;
-                                    if (((triggerElementRect.bottom + diff) < window.innerHeight) && triggerElementRect.top > diff) {
-                                        element.style.left = (triggerElementRect.left - elementRect.width) + "px";
-                                        element.style.top = triggerElementVerticalMiddle - (elementRect.height / 2) + "px";
-                                        return {
-                                            position: directionPriorityList[i],
-                                            elementRect: elementRect
-                                        };
-                                    }
-                                }
-                            }
-                            break;
-                        case "bottom":
-                            if (((window.innerHeight - triggerElementRect.bottom) > elementRect.height) || lastOption) {
-                                if (triggerElementRect.width > elementRect.width || lastOption) {
-                                    element.style.top = triggerElementRect.bottom + "px";
-                                    element.style.left = triggerElementHorizontalMiddle - (elementRect.width / 2) + "px";
-                                    return {
-                                        position: directionPriorityList[i],
-                                        elementRect: elementRect
-                                    };
-                                }
-                                else {
-                                    var diff = (elementRect.width - triggerElementRect.width) / 2;
-                                    if (((triggerElementRect.right + diff) < window.innerWidth) && triggerElementRect.left > diff) {
-                                        element.style.top = triggerElementRect.bottom + "px";
-                                        element.style.left = triggerElementHorizontalMiddle - (elementRect.width / 2) + "px";
-                                        return {
-                                            position: directionPriorityList[i],
-                                            elementRect: elementRect
-                                        };
-                                    }
-                                }
-                            }
-                            break;
-                        case "right":
-                            if (((window.innerWidth - triggerElementRect.right) > elementRect.width) || lastOption) {
-                                if (triggerElementRect.height > elementRect.height || lastOption) {
-                                    element.style.left = triggerElementRect.right + "px";
-                                    element.style.top = triggerElementVerticalMiddle - (elementRect.height / 2) + "px";
-                                    return {
-                                        position: directionPriorityList[i],
-                                        elementRect: elementRect
-                                    };
-                                }
-                                else {
-                                    var diff = (elementRect.height - triggerElementRect.height) / 2;
-                                    if (((triggerElementRect.bottom + diff) < window.innerHeight) && triggerElementRect.top > diff) {
-                                        element.style.left = triggerElementRect.right + "px";
-                                        element.style.top = triggerElementVerticalMiddle - (elementRect.height / 2) + "px";
-                                        return {
-                                            position: directionPriorityList[i],
-                                            elementRect: elementRect
-                                        };
-                                    }
-                                }
-                            }
-                            break;
-                    }
-                }
-                throw new Error("Unable to position place pop up.");
-            }
-            if (alignment === "left") {
-                element.style.left = triggerElementRect.left + "px";
-                for (var i = 0; i < directionPriorityList.length; i++) {
-                    var lastOption = directionPriorityList.length == i + 1;
-                    if (directionPriorityList[i] === "top") {
-                        if (triggerElementRect.top >= elementRect.height || lastOption) {
-                            element.style.bottom = triggerElementRect.top + "px";
-                            return {
-                                position: directionPriorityList[i],
-                                elementRect: elementRect
-                            };
-                        }
-                    }
-                    if (directionPriorityList[i] === "bottom") {
-                        if (window.innerHeight - triggerElementRect.bottom >= elementRect.height || lastOption) {
-                            element.style.top = triggerElementRect.bottom + "px";
-                            return {
-                                position: directionPriorityList[i],
-                                elementRect: elementRect
-                            };
-                        }
-                    }
-                }
-            }
-        });
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/functions/positionDetachedElement.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        "use strict";
-        var HamburgerButton = (function () {
-            function HamburgerButton() {
-                this.templateUrl = "src/app/ui/hamburgerButton/hamburgerButton.html";
-                this.replace = true;
-                this.restrict = "E";
-                this.scope = {
-                    onClick: "&"
-                };
-            }
-            HamburgerButton.instance = function () {
-                return new HamburgerButton();
-            };
-            return HamburgerButton;
-        })();
-        angular.module("app.ui").directive("hamburgerButton", [HamburgerButton.instance]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/hamburgerButton/hamburgerButton.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        "use strict";
-        var ModalService = (function () {
-            function ModalService($q) {
-                var _this = this;
-                this.$q = $q;
-                this.showModal = function (options) {
-                    var deferred = _this.$q.defer();
-                    return deferred.promise;
-                };
-            }
-            return ModalService;
-        })();
-        angular.module("app.ui").service("modalService", [ModalService]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/modal/modalService.js.map
 var app;
 (function (app) {
     var ui;
