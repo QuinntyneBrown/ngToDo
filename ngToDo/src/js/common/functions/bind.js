@@ -2,7 +2,7 @@ var app;
 (function (app) {
     var ui;
     (function (ui) {
-        angular.module("app.ui").value("bind", function (element, object) {
+        angular.module("app.common").value("bind", function (element, object) {
             if (element) {
                 for (var event in object) {
                     var callback = object[event];
@@ -15,4 +15,4 @@ var app;
     })(ui = app.ui || (app.ui = {}));
 })(app || (app = {}));
 
-//# sourceMappingURL=../../ui/functions/bind.js.map
+//# sourceMappingURL=../../common/functions/bind.js.map

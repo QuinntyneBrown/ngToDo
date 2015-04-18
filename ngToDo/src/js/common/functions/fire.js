@@ -2,7 +2,7 @@ var app;
 (function (app) {
     var ui;
     (function (ui) {
-        angular.module("app.ui").value("fire", function (target, type, properties) {
+        angular.module("app.common").value("fire", function (target, type, properties) {
             var htmlEvent = document.createEvent("HTMLEvents");
             htmlEvent.initEvent(type, true, true);
             for (var j in properties) {
@@ -13,4 +13,4 @@ var app;
     })(ui = app.ui || (app.ui = {}));
 })(app || (app = {}));
 
-//# sourceMappingURL=../../ui/functions/fire.js.map
+//# sourceMappingURL=../../common/functions/fire.js.map

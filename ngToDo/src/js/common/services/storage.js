@@ -11,12 +11,20 @@ var app;
         "use strict";
         var CommonStorage = (function (_super) {
             __extends(CommonStorage, _super);
-            function CommonStorage() {
+            function CommonStorage($rootScope) {
+                var _this = this;
                 _super.call(this, "commonLocalStorage");
+                $rootScope.$on("$locationChangeStart", function (event, newState) {
+                    if (newState.indexOf("/login") > 0) {
+                        _this.get().forEach(function (item) {
+                            _this.put({ name: item.name, value: null });
+                        });
+                    }
+                });
             }
             return CommonStorage;
         })(common.Storage);
-        angular.module("app.common").service("storage", [CommonStorage]);
+        angular.module("app.common").service("storage", ["$rootScope", CommonStorage]);
     })(common = app.common || (app.common = {}));
 })(app || (app = {}));
 

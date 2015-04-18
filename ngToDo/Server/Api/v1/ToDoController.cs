@@ -1,9 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Http;
 using ngToDo.Server.Data;
 using ngToDo.Server.Models;
-using System.Diagnostics.Contracts;
+using WebApi.OutputCache.V2;
 
 namespace ngToDo.Server.Api.v1
 {
@@ -16,6 +15,7 @@ namespace ngToDo.Server.Api.v1
         }
 
         [HttpGet]
+        [CacheOutput(ServerTimeSpan = 50)]
         public IHttpActionResult GetAll()
         {
             using (repository)
@@ -25,6 +25,7 @@ namespace ngToDo.Server.Api.v1
         }
 
         [HttpGet]
+        [CacheOutput(ServerTimeSpan = 50)]
         public IHttpActionResult GetRecent()
         {            
             using (repository)
@@ -34,6 +35,7 @@ namespace ngToDo.Server.Api.v1
         }
 
         [HttpGet]
+        [CacheOutput(ServerTimeSpan = 50)]
         public IHttpActionResult GetById(int id)
         {
             using (repository)
@@ -43,6 +45,10 @@ namespace ngToDo.Server.Api.v1
         }
 
         [HttpDelete]
+        [InvalidateCacheOutput("Get")]
+        [InvalidateCacheOutput("GetAll")]
+        [InvalidateCacheOutput("GetById")]
+        [InvalidateCacheOutput("GetRecent")]
         public IHttpActionResult Remove(int id)
         {
             using (repository)
@@ -55,6 +61,10 @@ namespace ngToDo.Server.Api.v1
         }
 
         [HttpPost]
+        [InvalidateCacheOutput("Get")]
+        [InvalidateCacheOutput("GetAll")]
+        [InvalidateCacheOutput("GetById")]
+        [InvalidateCacheOutput("GetRecent")]
         public IHttpActionResult Add(ToDo entity)
         {
             using (repository)
@@ -67,6 +77,10 @@ namespace ngToDo.Server.Api.v1
         }
 
         [HttpPut]
+        [InvalidateCacheOutput("Get")]
+        [InvalidateCacheOutput("GetAll")]
+        [InvalidateCacheOutput("GetById")]
+        [InvalidateCacheOutput("GetRecent")]
         public IHttpActionResult Update(ToDo entity)
         {
             using (repository)

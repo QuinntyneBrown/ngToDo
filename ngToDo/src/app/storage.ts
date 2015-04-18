@@ -6,6 +6,10 @@
 
         }
 
+        public instance = (storageId: string) => {
+            return new Storage(storageId);
+        }
+
         public get = () => {
             return JSON.parse(localStorage.getItem(this.storageId) || '[]');
         }
@@ -33,6 +37,7 @@
                 if (params.name === item.name) {
                     itemExist = true;
                     item.value = params.value;
+                    item.category = params.category;
                     localStorage.setItem(this.storageId, JSON.stringify(items));                    
                 }
             });

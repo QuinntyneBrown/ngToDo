@@ -2,7 +2,7 @@
 
     export class Entity<T> implements IEntity<T> {
 
-        constructor(public $location, public $q: ng.IQService, private dataService: common.IDataService, public baseUri: string) {
+        constructor(public $location, public $q: ng.IQService, public fire:IFire, private dataService: common.IDataService, public entityName: string) {
             this.id = 0;
             this.isDeleted = false;
         }
@@ -54,12 +54,17 @@
         public save = () => {
             
             var deferred = this.$q.defer();
-            var _entity = this;
+
             var promises = [];
+
+            var action: string;
+
             if (this.isValid()) {
                 if (this.id) {
+                    action = "update";
                     promises.push(this.dataService.update(this));
                 } else {
+                    action = "add";
                     promises.push(this.dataService.add(this));
                 }
             } else {
@@ -67,10 +72,9 @@
             }
 
             this.$q.all(promises).then((results) => {
-                this.instance(results[0].data).then((results) => {
-                    _entity = results;
-                    _entity.notifySaved();
-                    deferred.resolve(_entity);
+                this.instance(results[0].data).then((results) => {                    
+                    this.fire(document.getElementsByTagName("body")[0], this.entityName + "Saved", { entity: this, action: action });
+                    deferred.resolve();
                 });
             }).catch(() => {
                 deferred.reject();
@@ -83,9 +87,8 @@
             var deferred = this.$q.defer();
 
             if (this.id) {
-                this.dataService.remove(this.id).then(() => {
-                    this.isDeleted = true;
-                    this.notifyDeleted();
+                this.dataService.remove(this.id).then(() => {         
+                    this.fire(document.getElementsByTagName("body")[0], this.entityName + "Removed", { entity: this, action: "remove" });           
                     deferred.resolve();
                 });
             } else {
@@ -102,23 +105,6 @@
             return false;
         }
 
-        public notifySaved = () => {
-            this.notifyChanged("saved");
-        }
-
-        public notifyDeleted = () => {
-            this.notifyChanged("deleted");
-        }
-
-        public notifyChanged = (changeType:string) => {
-            this.notify("viewModelChanged", { target: this, changeType: changeType });
-        }
-
-        public notify = (name: string, detailArg:any) => {
-            var event = document.createEvent('CustomEvent');
-            event.initCustomEvent(name, false, false, detailArg);
-            document.dispatchEvent(event);
-        }
 
         public instance = (data: any): ng.IPromise<any> => {
             throw new Error("Not Implemented");

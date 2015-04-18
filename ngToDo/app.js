@@ -30,15 +30,17 @@ var app;
     var common;
     (function (common) {
         var DataService = (function () {
-            function DataService($http, $cacheFactory, $q, baseUri) {
+            function DataService($http, $q, baseUri, entityName, storage) {
                 var _this = this;
                 this.$http = $http;
-                this.$cacheFactory = $cacheFactory;
                 this.$q = $q;
                 this.baseUri = baseUri;
+                this.entityName = entityName;
+                this.storage = storage;
                 this.add = function (entity) {
                     var deferred = _this.$q.defer();
-                    _this.$http({ method: "POST", url: _this.baseUri + "add", data: entity }).then(function (results) {
+                    _this.$http({ method: "POST", url: _this.baseUri + "/add", data: entity }).then(function (results) {
+                        _this.notifySaved();
                         deferred.resolve(results);
                     }).catch(function (error) {
                         deferred.reject(error);
@@ -47,7 +49,8 @@ var app;
                 };
                 this.update = function (entity) {
                     var deferred = _this.$q.defer();
-                    _this.$http({ method: "PUT", url: _this.baseUri + "update", data: JSON.stringify(entity) }).then(function (results) {
+                    _this.$http({ method: "PUT", url: _this.baseUri + "/update", data: JSON.stringify(entity) }).then(function (results) {
+                        _this.notifySaved();
                         deferred.resolve(results);
                     }).catch(function (error) {
                         deferred.reject(error);
@@ -55,47 +58,58 @@ var app;
                     return deferred.promise;
                 };
                 this.getById = function (id) {
-                    var deferred = _this.$q.defer();
-                    _this.$http({ method: "GET", url: _this.baseUri + "getbyid?id=" + id }).then(function (results) {
-                        deferred.resolve(results);
-                    }).catch(function (error) {
-                        deferred.reject(error);
-                    });
-                    return deferred.promise;
+                    return _this.fromCacheOrService({ method: "GET", uri: _this.baseUri + "/getbyid", params: { id: id } });
                 };
                 this.getAll = function () {
-                    var deferred = _this.$q.defer();
-                    _this.$http({ method: "GET", url: _this.baseUri + "getAll" }).then(function (results) {
-                        deferred.resolve(results);
-                    }).catch(function (error) {
-                        deferred.reject(error);
-                    });
-                    return deferred.promise;
+                    return _this.fromCacheOrService({ method: "GET", uri: _this.baseUri + "/getAll" });
                 };
                 this.remove = function (id) {
                     var deferred = _this.$q.defer();
-                    _this.$http({ method: "DELETE", url: _this.baseUri + "remove?id=" + id }).then(function (results) {
+                    _this.$http({ method: "DELETE", url: _this.baseUri + "/remove?id=" + id }).then(function (results) {
+                        _this.notifyDeleted();
                         deferred.resolve(results);
                     }).catch(function (error) {
                         deferred.reject(error);
                     });
                     return deferred.promise;
                 };
-                this.deleteFromCache = function (key) {
+                this.notifySaved = function () {
+                    _this.notifyChanged("saved");
                 };
+                this.notifyDeleted = function () {
+                    _this.notifyChanged("deleted");
+                };
+                this.notifyChanged = function (changeType) {
+                    _this.notify(_this.entityName + "InvalidateCache", { changeType: changeType });
+                };
+                this.notify = function (name, detailArg) {
+                    var event = document.createEvent('CustomEvent');
+                    event.initCustomEvent(name, false, false, detailArg);
+                    document.dispatchEvent(event);
+                };
+                this.baseUri = this.baseUri + "/" + entityName;
+                document.addEventListener(this.entityName + "InvalidateCache", function (event) {
+                    _this.storage.get().forEach(function (item) {
+                        if (item.category === entityName) {
+                            _this.storage.put({ name: item.name, value: null });
+                        }
+                    });
+                });
             }
-            DataService.prototype.fromCacheOrService = function (action, key) {
+            DataService.prototype.fromCacheOrService = function (action) {
+                var _this = this;
                 var deferred = this.$q.defer();
-                var dataCache = this.$cacheFactory.get(key);
-                if (!dataCache) {
-                    this.$http({ method: "GET", url: this.baseUri + "getAll" }).then(function (results) {
-                        deferred.resolve(results.data);
+                var dataCache = this.storage.getByName({ name: action.uri + JSON.stringify(action.params) });
+                if (!dataCache || !dataCache.value) {
+                    this.$http({ method: action.method, url: action.uri, data: action.data, params: action.params }).then(function (results) {
+                        _this.storage.put({ category: _this.entityName, name: action.uri + JSON.stringify(action.params), value: results });
+                        deferred.resolve(results);
                     }).catch(function (error) {
                         deferred.reject(error);
                     });
                 }
                 else {
-                    deferred.resolve(dataCache);
+                    deferred.resolve(dataCache.value);
                 }
                 return deferred.promise;
             };
@@ -111,12 +125,13 @@ var app;
     var common;
     (function (common) {
         var Entity = (function () {
-            function Entity($location, $q, dataService, baseUri) {
+            function Entity($location, $q, fire, dataService, entityName) {
                 var _this = this;
                 this.$location = $location;
                 this.$q = $q;
+                this.fire = fire;
                 this.dataService = dataService;
-                this.baseUri = baseUri;
+                this.entityName = entityName;
                 this.getById = function (id) {
                     var deferred = _this.$q.defer();
                     _this.dataService.getById(id).then(function (results) {
@@ -147,13 +162,15 @@ var app;
                 };
                 this.save = function () {
                     var deferred = _this.$q.defer();
-                    var _entity = _this;
                     var promises = [];
+                    var action;
                     if (_this.isValid()) {
                         if (_this.id) {
+                            action = "update";
                             promises.push(_this.dataService.update(_this));
                         }
                         else {
+                            action = "add";
                             promises.push(_this.dataService.add(_this));
                         }
                     }
@@ -162,9 +179,8 @@ var app;
                     }
                     _this.$q.all(promises).then(function (results) {
                         _this.instance(results[0].data).then(function (results) {
-                            _entity = results;
-                            _entity.notifySaved();
-                            deferred.resolve(_entity);
+                            _this.fire(document.getElementsByTagName("body")[0], _this.entityName + "Saved", { entity: _this, action: action });
+                            deferred.resolve();
                         });
                     }).catch(function () {
                         deferred.reject();
@@ -175,8 +191,7 @@ var app;
                     var deferred = _this.$q.defer();
                     if (_this.id) {
                         _this.dataService.remove(_this.id).then(function () {
-                            _this.isDeleted = true;
-                            _this.notifyDeleted();
+                            _this.fire(document.getElementsByTagName("body")[0], _this.entityName + "Removed", { entity: _this, action: "remove" });
                             deferred.resolve();
                         });
                     }
@@ -190,20 +205,6 @@ var app;
                         return true;
                     }
                     return false;
-                };
-                this.notifySaved = function () {
-                    _this.notifyChanged("saved");
-                };
-                this.notifyDeleted = function () {
-                    _this.notifyChanged("deleted");
-                };
-                this.notifyChanged = function (changeType) {
-                    _this.notify("viewModelChanged", { target: _this, changeType: changeType });
-                };
-                this.notify = function (name, detailArg) {
-                    var event = document.createEvent('CustomEvent');
-                    event.initCustomEvent(name, false, false, detailArg);
-                    document.dispatchEvent(event);
                 };
                 this.instance = function (data) {
                     throw new Error("Not Implemented");
@@ -287,6 +288,9 @@ var app;
             function Storage(storageId) {
                 var _this = this;
                 this.storageId = storageId;
+                this.instance = function (storageId) {
+                    return new Storage(storageId);
+                };
                 this.get = function () {
                     return JSON.parse(localStorage.getItem(_this.storageId) || '[]');
                 };
@@ -307,6 +311,7 @@ var app;
                         if (params.name === item.name) {
                             itemExist = true;
                             item.value = params.value;
+                            item.category = params.category;
                             localStorage.setItem(_this.storageId, JSON.stringify(items));
                         }
                     });
@@ -355,15 +360,6 @@ var app;
 //# sourceMappingURL=../security/security.module.js.map
 var app;
 (function (app) {
-    var ui;
-    (function (ui) {
-        angular.module("app.ui", []);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../ui/ui.module.js.map
-var app;
-(function (app) {
     var toDo;
     (function (toDo) {
         angular.module("app.toDo", [
@@ -397,12 +393,101 @@ var app;
                 { path: '/toDo/create', component: 'toDoForm' },
                 { path: '/toDo/edit/:toDoId', component: 'toDoForm' }
             ]);
-            apiEndpointProvider.configure("/api/");
+            apiEndpointProvider.configure("/api");
         }
     })(toDo = app.toDo || (app.toDo = {}));
 })(app || (app = {}));
 
 //# sourceMappingURL=../toDo/toDo.module.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        angular.module("app.ui", []);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../ui/ui.module.js.map
+var app;
+(function (app) {
+    var common;
+    (function (common) {
+        "use strict";
+        var WorkSpinner = (function () {
+            function WorkSpinner(requestCounter) {
+                var _this = this;
+                this.requestCounter = requestCounter;
+                this.restrict = "E";
+                this.replace = true;
+                this.scope = {};
+                this.template = "<div data-ng-show='requestCount > 0' class='work-spinner'><i class='fa fa-spinner fa-spin fade'></i></div>";
+                this.link = function (scope) {
+                    scope.$watch(function () {
+                        return _this.requestCounter.getRequestCount();
+                    }, function (requestCount) {
+                        scope["requestCount"] = requestCount;
+                    });
+                };
+            }
+            WorkSpinner.instance = function (requestCounter) {
+                return new WorkSpinner(requestCounter);
+            };
+            return WorkSpinner;
+        })();
+        angular.module("app.common").directive("workSpinner", ["requestCounter", WorkSpinner.instance]);
+    })(common = app.common || (app.common = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../common/directives/workSpinner.js.map
+var app;
+(function (app) {
+    var security;
+    (function (security) {
+        "use strict";
+        var LoginController = (function () {
+            function LoginController() {
+            }
+            return LoginController;
+        })();
+        angular.module("app.security").controller("loginController", [LoginController]);
+    })(security = app.security || (app.security = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../security/controllers/loginController.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        angular.module("app.common").value("bind", function (element, object) {
+            if (element) {
+                for (var event in object) {
+                    var callback = object[event];
+                    event.split(/\s+/).forEach(function (event) {
+                        element.addEventListener(event, callback);
+                    });
+                }
+            }
+        });
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../common/functions/bind.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        angular.module("app.common").value("fire", function (target, type, properties) {
+            var htmlEvent = document.createEvent("HTMLEvents");
+            htmlEvent.initEvent(type, true, true);
+            for (var j in properties) {
+                htmlEvent[j] = properties[j];
+            }
+            target.dispatchEvent(htmlEvent);
+        });
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../common/functions/fire.js.map
 var app;
 (function (app) {
     var common;
@@ -411,7 +496,7 @@ var app;
         var ApiEndpointProvider = (function () {
             function ApiEndpointProvider() {
                 this.config = {
-                    baseUrl: "/api/"
+                    baseUrl: "/api"
                 };
             }
             ApiEndpointProvider.prototype.configure = function (baseUrl) {
@@ -605,62 +690,24 @@ var app;
         "use strict";
         var CommonStorage = (function (_super) {
             __extends(CommonStorage, _super);
-            function CommonStorage() {
+            function CommonStorage($rootScope) {
+                var _this = this;
                 _super.call(this, "commonLocalStorage");
+                $rootScope.$on("$locationChangeStart", function (event, newState) {
+                    if (newState.indexOf("/login") > 0) {
+                        _this.get().forEach(function (item) {
+                            _this.put({ name: item.name, value: null });
+                        });
+                    }
+                });
             }
             return CommonStorage;
         })(common.Storage);
-        angular.module("app.common").service("storage", [CommonStorage]);
+        angular.module("app.common").service("storage", ["$rootScope", CommonStorage]);
     })(common = app.common || (app.common = {}));
 })(app || (app = {}));
 
 //# sourceMappingURL=../../common/services/storage.js.map
-var app;
-(function (app) {
-    var common;
-    (function (common) {
-        "use strict";
-        var WorkSpinner = (function () {
-            function WorkSpinner(requestCounter) {
-                var _this = this;
-                this.requestCounter = requestCounter;
-                this.restrict = "E";
-                this.replace = true;
-                this.scope = {};
-                this.template = "<div data-ng-show='requestCount' class='work-spinner'><i class='fa fa-spinner fa-spin fade'></i></div>";
-                this.link = function (scope) {
-                    scope.$watch(function () {
-                        return _this.requestCounter.getRequestCount();
-                    }, function (requestCount) {
-                        scope["requestCount"] = requestCount;
-                    });
-                };
-            }
-            WorkSpinner.instance = function (requestCounter) {
-                return new WorkSpinner(requestCounter);
-            };
-            return WorkSpinner;
-        })();
-        angular.module("app.common").directive("workSpinner", ["requestCounter", WorkSpinner.instance]);
-    })(common = app.common || (app.common = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../common/directives/workSpinner.js.map
-var app;
-(function (app) {
-    var security;
-    (function (security) {
-        "use strict";
-        var LoginController = (function () {
-            function LoginController() {
-            }
-            return LoginController;
-        })();
-        angular.module("app.security").controller("loginController", [LoginController]);
-    })(security = app.security || (app.security = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../security/controllers/loginController.js.map
 var app;
 (function (app) {
     var security;
@@ -974,444 +1021,6 @@ var app;
 })(app || (app = {}));
 
 //# sourceMappingURL=../../security/services/user.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        "use strict";
-        var AppBar = (function () {
-            function AppBar() {
-                this.templateUrl = "src/app/ui/appBar/appBar.html";
-                this.replace = true;
-                this.restrict = "E";
-                this.controller = "appBarController";
-                this.controllerAs = "appBar";
-            }
-            AppBar.instance = function () {
-                return new AppBar();
-            };
-            return AppBar;
-        })();
-        ui.AppBar = AppBar;
-        angular.module("app.ui").directive("appBar", [AppBar.instance]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/appBar/appBar.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        "use strict";
-        var AppBarController = (function () {
-            function AppBarController(appBarService) {
-                this.appBarService = appBarService;
-            }
-            return AppBarController;
-        })();
-        angular.module("app.ui").controller("appBarController", ["appBarService", AppBarController]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/appBar/appBarController.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        "use strict";
-        var AppBarService = (function () {
-            function AppBarService($rootScope, historyService, notificationService) {
-                var _this = this;
-                this.historyService = historyService;
-                this.notificationService = notificationService;
-                this.getPreviousUrl = function () {
-                    return null;
-                };
-                this.goBack = function () {
-                };
-                this.hasNotifications = function () {
-                    return false;
-                };
-                this.setButtons = function (buttons) {
-                    _this.buttons = buttons;
-                };
-                this.resetButtons = function () {
-                    _this.buttons = null;
-                };
-                this.getButtons = function () {
-                    return _this.buttons;
-                };
-                this.buttons = [];
-                $rootScope.$on("$locationChangeStart", this.resetButtons);
-            }
-            return AppBarService;
-        })();
-        ui.AppBarService = AppBarService;
-        angular.module("app.ui").service("appBarService", ["$rootScope", "historyService", "notificationService", AppBarService]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/appBar/appBarService.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        var AppHeader = (function () {
-            function AppHeader() {
-                this.templateUrl = "src/app/ui/appHeader/appHeader.html";
-                this.replace = true;
-                this.restrict = "E";
-                this.controller = "appHeaderController";
-                this.controllerAs = "appHeader";
-                this.scope = {
-                    title: "@",
-                    isLoggedIn: "&",
-                    getUsername: "&"
-                };
-            }
-            AppHeader.instance = function () {
-                return new AppHeader();
-            };
-            return AppHeader;
-        })();
-        ui.AppHeader = AppHeader;
-        angular.module("app.ui").directive("appHeader", [AppHeader.instance]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/appHeader/appHeader.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        var AppHeaderController = (function () {
-            function AppHeaderController() {
-            }
-            return AppHeaderController;
-        })();
-        ui.AppHeaderController = AppHeaderController;
-        angular.module("app.ui").controller("appHeaderController", [AppHeaderController]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/appHeader/appHeaderController.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        "use strict";
-        var AppBarButton = (function () {
-            function AppBarButton() {
-                this.restrict = "E";
-                this.replace = true;
-                this.templateUrl = "/src/app/ui/appBarButton/appBarButton.html";
-                this.scope = {
-                    button: "="
-                };
-            }
-            AppBarButton.instance = function () {
-                return new AppBarButton();
-            };
-            return AppBarButton;
-        })();
-        ui.AppBarButton = AppBarButton;
-        angular.module("app.ui").directive("appBarButton", [AppBarButton.instance]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/appBarButton/appBarButton.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        var Backdrop = (function () {
-            function Backdrop($timeout) {
-                var _this = this;
-                this.$timeout = $timeout;
-                this.replace = true;
-                this.restrict = "E";
-                this.link = function (scope, element, attributes) {
-                    scope.backdropClass = attributes.backdropClass || '';
-                    scope.animate = false;
-                    _this.$timeout(function () {
-                        scope.animate = true;
-                    });
-                };
-            }
-            Backdrop.instance = function ($timeout) {
-                return new Backdrop($timeout);
-            };
-            return Backdrop;
-        })();
-        ui.Backdrop = Backdrop;
-        angular.module("app.ui").directive("modalBackdrop", [Backdrop.instance]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/backdrop/backdrop.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        angular.module("app.ui").value("bind", function (element, object) {
-            if (element) {
-                for (var event in object) {
-                    var callback = object[event];
-                    event.split(/\s+/).forEach(function (event) {
-                        element.addEventListener(event, callback);
-                    });
-                }
-            }
-        });
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/functions/bind.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        angular.module("app.ui").value("clientRectEquals", function (clientRectA, clientRectB) {
-            if (!clientRectA || !clientRectB) {
-                return false;
-            }
-            return (clientRectA.top === clientRectB.top && clientRectA.left === clientRectB.left && clientRectA.bottom === clientRectB.bottom && clientRectA.right === clientRectB.right);
-        });
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/functions/clientRectEquals.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        angular.module("app.ui").value("fire", function (target, type, properties) {
-            var htmlEvent = document.createEvent("HTMLEvents");
-            htmlEvent.initEvent(type, true, true);
-            for (var j in properties) {
-                htmlEvent[j] = properties[j];
-            }
-            target.dispatchEvent(htmlEvent);
-        });
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/functions/fire.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        angular.module("app.ui").value("getBoundingRectForDetachedElement", function (detachedElement) {
-            var clientRect;
-            detachedElement.style.visibility = 'none';
-            document.body.appendChild(detachedElement);
-            clientRect = detachedElement.getBoundingClientRect();
-            detachedElement.parentNode.removeChild(detachedElement);
-            return clientRect;
-        });
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/functions/getBoundingRectForDetachedElement.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        angular.module("app.ui").value("getSurroundingWindowSpace", function (element, _window) {
-            var clientRect = element.getBoundingClientRect();
-            return {
-                top: clientRect.top,
-                left: clientRect.left,
-                bottom: _window.innerHeight - clientRect.bottom,
-                right: _window.innerWidth - clientRect.right
-            };
-        });
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/functions/getSurroundingWindowSpace.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        angular.module("app.ui").value("positionDetachedElement", function (triggerElement, element, directionPriorityList, elementRect, alignment, elementSurroundingWindowSpaceRect) {
-            var triggerElementRect = triggerElement.getBoundingClientRect();
-            if (alignment === "center") {
-                var triggerElementVerticalMiddle = ((triggerElementRect.bottom - triggerElementRect.top) / 2) + triggerElementRect.top;
-                var triggerElementHorizontalMiddle = ((triggerElementRect.right - triggerElementRect.left) / 2) + triggerElementRect.left;
-                for (var i = 0; i < directionPriorityList.length; i++) {
-                    var lastOption = directionPriorityList.length == i + 1;
-                    switch (directionPriorityList[i]) {
-                        case "top":
-                            if (triggerElementRect.top > elementRect.height || lastOption) {
-                                if (triggerElementRect.width > elementRect.width || lastOption) {
-                                    element.style.top = (triggerElementRect.top - elementRect.height) + "px";
-                                    element.style.left = triggerElementHorizontalMiddle - (elementRect.width / 2) + "px";
-                                    return {
-                                        position: directionPriorityList[i],
-                                        elementRect: elementRect
-                                    };
-                                }
-                                else {
-                                    var diff = (elementRect.width - triggerElementRect.width) / 2;
-                                    if (((triggerElementRect.right + diff) < window.innerWidth) && triggerElementRect.left > diff) {
-                                        element.style.top = (triggerElementRect.top - elementRect.height) + "px";
-                                        element.style.left = triggerElementHorizontalMiddle - (elementRect.width / 2) + "px";
-                                        return {
-                                            position: directionPriorityList[i],
-                                            elementRect: elementRect
-                                        };
-                                    }
-                                }
-                            }
-                            break;
-                        case "left":
-                            if (triggerElementRect.left > elementRect.width || lastOption) {
-                                if (triggerElementRect.height > elementRect.height || lastOption) {
-                                    element.style.left = (triggerElementRect.left - elementRect.width) + "px";
-                                    element.style.top = triggerElementVerticalMiddle - (elementRect.height / 2) + "px";
-                                    return {
-                                        position: directionPriorityList[i],
-                                        elementRect: elementRect
-                                    };
-                                }
-                                else {
-                                    var diff = (elementRect.height - triggerElementRect.height) / 2;
-                                    if (((triggerElementRect.bottom + diff) < window.innerHeight) && triggerElementRect.top > diff) {
-                                        element.style.left = (triggerElementRect.left - elementRect.width) + "px";
-                                        element.style.top = triggerElementVerticalMiddle - (elementRect.height / 2) + "px";
-                                        return {
-                                            position: directionPriorityList[i],
-                                            elementRect: elementRect
-                                        };
-                                    }
-                                }
-                            }
-                            break;
-                        case "bottom":
-                            if (((window.innerHeight - triggerElementRect.bottom) > elementRect.height) || lastOption) {
-                                if (triggerElementRect.width > elementRect.width || lastOption) {
-                                    element.style.top = triggerElementRect.bottom + "px";
-                                    element.style.left = triggerElementHorizontalMiddle - (elementRect.width / 2) + "px";
-                                    return {
-                                        position: directionPriorityList[i],
-                                        elementRect: elementRect
-                                    };
-                                }
-                                else {
-                                    var diff = (elementRect.width - triggerElementRect.width) / 2;
-                                    if (((triggerElementRect.right + diff) < window.innerWidth) && triggerElementRect.left > diff) {
-                                        element.style.top = triggerElementRect.bottom + "px";
-                                        element.style.left = triggerElementHorizontalMiddle - (elementRect.width / 2) + "px";
-                                        return {
-                                            position: directionPriorityList[i],
-                                            elementRect: elementRect
-                                        };
-                                    }
-                                }
-                            }
-                            break;
-                        case "right":
-                            if (((window.innerWidth - triggerElementRect.right) > elementRect.width) || lastOption) {
-                                if (triggerElementRect.height > elementRect.height || lastOption) {
-                                    element.style.left = triggerElementRect.right + "px";
-                                    element.style.top = triggerElementVerticalMiddle - (elementRect.height / 2) + "px";
-                                    return {
-                                        position: directionPriorityList[i],
-                                        elementRect: elementRect
-                                    };
-                                }
-                                else {
-                                    var diff = (elementRect.height - triggerElementRect.height) / 2;
-                                    if (((triggerElementRect.bottom + diff) < window.innerHeight) && triggerElementRect.top > diff) {
-                                        element.style.left = triggerElementRect.right + "px";
-                                        element.style.top = triggerElementVerticalMiddle - (elementRect.height / 2) + "px";
-                                        return {
-                                            position: directionPriorityList[i],
-                                            elementRect: elementRect
-                                        };
-                                    }
-                                }
-                            }
-                            break;
-                    }
-                }
-                throw new Error("Unable to position place pop up.");
-            }
-            if (alignment === "left") {
-                element.style.left = triggerElementRect.left + "px";
-                for (var i = 0; i < directionPriorityList.length; i++) {
-                    var lastOption = directionPriorityList.length == i + 1;
-                    if (directionPriorityList[i] === "top") {
-                        if (triggerElementRect.top >= elementRect.height || lastOption) {
-                            element.style.bottom = triggerElementRect.top + "px";
-                            return {
-                                position: directionPriorityList[i],
-                                elementRect: elementRect
-                            };
-                        }
-                    }
-                    if (directionPriorityList[i] === "bottom") {
-                        if (window.innerHeight - triggerElementRect.bottom >= elementRect.height || lastOption) {
-                            element.style.top = triggerElementRect.bottom + "px";
-                            return {
-                                position: directionPriorityList[i],
-                                elementRect: elementRect
-                            };
-                        }
-                    }
-                }
-            }
-        });
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/functions/positionDetachedElement.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        "use strict";
-        var ModalService = (function () {
-            function ModalService($q) {
-                var _this = this;
-                this.$q = $q;
-                this.showModal = function (options) {
-                    var deferred = _this.$q.defer();
-                    return deferred.promise;
-                };
-            }
-            return ModalService;
-        })();
-        angular.module("app.ui").service("modalService", [ModalService]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/modal/modalService.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        "use strict";
-        var HamburgerButton = (function () {
-            function HamburgerButton() {
-                this.templateUrl = "src/app/ui/hamburgerButton/hamburgerButton.html";
-                this.replace = true;
-                this.restrict = "E";
-                this.scope = {
-                    onClick: "&"
-                };
-            }
-            HamburgerButton.instance = function () {
-                return new HamburgerButton();
-            };
-            return HamburgerButton;
-        })();
-        angular.module("app.ui").directive("hamburgerButton", [HamburgerButton.instance]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/hamburgerButton/hamburgerButton.js.map
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1658,15 +1267,18 @@ var app;
         "use strict";
         var ToDosController = (function (_super) {
             __extends(ToDosController, _super);
-            function ToDosController($location, $q, $timeout, toDo, token) {
+            function ToDosController($document, $location, $q, $timeout, bind, toDo, token) {
                 var _this = this;
                 _super.call(this, $location, $timeout, token);
+                this.$document = $document;
                 this.$location = $location;
                 this.$q = $q;
                 this.$timeout = $timeout;
+                this.bind = bind;
                 this.toDo = toDo;
                 this.token = token;
                 this.activate = function () {
+                    angular.element(_this.$document).bind("toDoRemoved", _this.onToDoRemoved);
                     var deferred = _this.$q.defer();
                     _this.toDo.getAll().then(function (results) {
                         _this.toDos = results;
@@ -1677,22 +1289,54 @@ var app;
                     return deferred.promise;
                 };
                 this.deactivate = function () {
+                    angular.element(_this.$document).unbind("toDoRemoved");
                     _this.toDos = null;
                     _this.token = null;
                     _this.toDo = null;
                     _this.promise = null;
                 };
-                document.addEventListener("viewModelChanged", function (event) {
-                    // process viewModel Change
-                });
+                this.onToDoRemoved = function (event) {
+                    if (event.action === "remove") {
+                        for (var i = 0; i < _this.toDos.length; i++) {
+                            if (_this.toDos[i].id === event.entity.id) {
+                                _this.toDos.splice(i, 1);
+                            }
+                        }
+                    }
+                };
             }
             return ToDosController;
         })(app.security.AuthenticatedController);
-        angular.module("app.toDo").controller("toDosController", ["$location", "$q", "$timeout", "toDo", "token", ToDosController]);
+        angular.module("app.toDo").controller("toDosController", ["$document", "$location", "$q", "$timeout", "bind", "toDo", "token", ToDosController]);
     })(toDo = app.toDo || (app.toDo = {}));
 })(app || (app = {}));
 
 //# sourceMappingURL=../../toDo/controllers/toDosController.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        "use strict";
+        var AppBarButton = (function () {
+            function AppBarButton() {
+                this.restrict = "E";
+                this.replace = true;
+                this.templateUrl = "/src/app/ui/appBarButton/appBarButton.html";
+                this.scope = {
+                    button: "="
+                };
+            }
+            AppBarButton.instance = function () {
+                return new AppBarButton();
+            };
+            return AppBarButton;
+        })();
+        ui.AppBarButton = AppBarButton;
+        angular.module("app.ui").directive("appBarButton", [AppBarButton.instance]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appBarButton/appBarButton.js.map
 var app;
 (function (app) {
     var toDo;
@@ -1741,6 +1385,127 @@ var app;
 })(app || (app = {}));
 
 //# sourceMappingURL=../../toDo/directives/toDoItems.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        "use strict";
+        var AppBar = (function () {
+            function AppBar() {
+                this.templateUrl = "src/app/ui/appBar/appBar.html";
+                this.replace = true;
+                this.restrict = "E";
+                this.controller = "appBarController";
+                this.controllerAs = "appBar";
+            }
+            AppBar.instance = function () {
+                return new AppBar();
+            };
+            return AppBar;
+        })();
+        ui.AppBar = AppBar;
+        angular.module("app.ui").directive("appBar", [AppBar.instance]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appBar/appBar.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        "use strict";
+        var AppBarController = (function () {
+            function AppBarController(appBarService) {
+                this.appBarService = appBarService;
+            }
+            return AppBarController;
+        })();
+        angular.module("app.ui").controller("appBarController", ["appBarService", AppBarController]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appBar/appBarController.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        "use strict";
+        var AppBarService = (function () {
+            function AppBarService($rootScope, historyService, notificationService) {
+                var _this = this;
+                this.historyService = historyService;
+                this.notificationService = notificationService;
+                this.getPreviousUrl = function () {
+                    return null;
+                };
+                this.goBack = function () {
+                };
+                this.hasNotifications = function () {
+                    return false;
+                };
+                this.setButtons = function (buttons) {
+                    _this.buttons = buttons;
+                };
+                this.resetButtons = function () {
+                    _this.buttons = null;
+                };
+                this.getButtons = function () {
+                    return _this.buttons;
+                };
+                this.buttons = [];
+                $rootScope.$on("$locationChangeStart", this.resetButtons);
+            }
+            return AppBarService;
+        })();
+        ui.AppBarService = AppBarService;
+        angular.module("app.ui").service("appBarService", ["$rootScope", "historyService", "notificationService", AppBarService]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appBar/appBarService.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        var AppHeader = (function () {
+            function AppHeader() {
+                this.templateUrl = "src/app/ui/appHeader/appHeader.html";
+                this.replace = true;
+                this.restrict = "E";
+                this.controller = "appHeaderController";
+                this.controllerAs = "appHeader";
+                this.scope = {
+                    title: "@",
+                    isLoggedIn: "&",
+                    getUsername: "&"
+                };
+            }
+            AppHeader.instance = function () {
+                return new AppHeader();
+            };
+            return AppHeader;
+        })();
+        ui.AppHeader = AppHeader;
+        angular.module("app.ui").directive("appHeader", [AppHeader.instance]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appHeader/appHeader.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        var AppHeaderController = (function () {
+            function AppHeaderController() {
+            }
+            return AppHeaderController;
+        })();
+        ui.AppHeaderController = AppHeaderController;
+        angular.module("app.ui").controller("appHeaderController", [AppHeaderController]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appHeader/appHeaderController.js.map
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1754,26 +1519,30 @@ var app;
         "use strict";
         var ToDo = (function (_super) {
             __extends(ToDo, _super);
-            function ToDo($location, $q, toDoService, toDoStatuses) {
+            function ToDo($location, $q, fire, toDoService, toDoStatuses, toDoPritories) {
                 var _this = this;
-                _super.call(this, $location, $q, toDoService, '/toDo');
+                _super.call(this, $location, $q, fire, toDoService, 'toDo');
                 this.$location = $location;
                 this.$q = $q;
+                this.fire = fire;
                 this.toDoService = toDoService;
                 this.toDoStatuses = toDoStatuses;
+                this.toDoPritories = toDoPritories;
                 this.instance = function (data) {
                     if (data === void 0) { data = null; }
                     var deferred = _this.$q.defer();
                     var toDo;
                     if (data === null) {
-                        toDo = new ToDo(_this.$location, _this.$q, _this.toDoService, _this.toDoStatuses);
+                        toDo = new ToDo(_this.$location, _this.$q, _this.fire, _this.toDoService, _this.toDoStatuses, _this.toDoPritories);
                     }
                     else {
-                        toDo = new ToDo(_this.$location, _this.$q, _this.toDoService, _this.toDoStatuses);
+                        toDo = new ToDo(_this.$location, _this.$q, _this.fire, _this.toDoService, _this.toDoStatuses, _this.toDoPritories);
                         toDo.id = data.id || 0;
                         toDo.name = data.name;
                         toDo.description = data.description;
-                        toDo.toDoStatus = data.toDoStatus || 0;
+                        toDo.toDoStatus = data.toDoStatus;
+                        toDo.toDoPriority = data.toDoPriority;
+                        toDo.dueDate = data.dueDate;
                         toDo.username = data.username;
                     }
                     deferred.resolve(toDo);
@@ -1793,13 +1562,19 @@ var app;
                     }
                 };
                 this.toDo = function () {
-                    return _this.setStatus(_this.toDoStatuses.toDo);
+                    if (_this.isValid()) {
+                        return _this.setStatus(_this.toDoStatuses.toDo);
+                    }
                 };
                 this.toDoNever = function () {
-                    return _this.setStatus(_this.toDoStatuses.toDoNever);
+                    if (_this.isValid()) {
+                        return _this.setStatus(_this.toDoStatuses.toDoNever);
+                    }
                 };
                 this.start = function () {
-                    return _this.setStatus(_this.toDoStatuses.started);
+                    if (_this.isValid()) {
+                        return _this.setStatus(_this.toDoStatuses.started);
+                    }
                 };
                 this.setStatus = function (toDoStatus) {
                     var deferred = _this.$q.defer();
@@ -1827,10 +1602,11 @@ var app;
                     return deferred.promise;
                 };
                 this.toDoStatus = toDoStatuses.new;
+                this.toDoPriority = toDoPritories.medium;
             }
             return ToDo;
         })(app.common.Entity);
-        angular.module("app.toDo").service("toDo", ["$location", "$q", "toDoService", "toDoStatuses", ToDo]);
+        angular.module("app.toDo").service("toDo", ["$location", "$q", "fire", "toDoService", "toDoStatuses", "toDoPriorities", ToDo]);
     })(toDo = app.toDo || (app.toDo = {}));
 })(app || (app = {}));
 
@@ -1898,6 +1674,22 @@ var app;
 })(app || (app = {}));
 
 //# sourceMappingURL=../../toDo/services/toDoBreezeService.js.map
+var app;
+(function (app) {
+    var toDo;
+    (function (toDo) {
+        "use strict";
+        var ToDoPriorities;
+        (function (ToDoPriorities) {
+            ToDoPriorities[ToDoPriorities["low"] = 0] = "low";
+            ToDoPriorities[ToDoPriorities["medium"] = 1] = "medium";
+            ToDoPriorities[ToDoPriorities["high"] = 2] = "high";
+        })(ToDoPriorities || (ToDoPriorities = {}));
+        angular.module("app.toDo").value("toDoPriorities", ToDoPriorities);
+    })(toDo = app.toDo || (app.toDo = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../toDo/services/toDoPriorities.js.map
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1911,26 +1703,20 @@ var app;
         "use strict";
         var ToDoService = (function (_super) {
             __extends(ToDoService, _super);
-            function ToDoService($http, $cacheFactory, $q, apiEndpoint) {
+            function ToDoService($http, $q, apiEndpoint, storage) {
                 var _this = this;
-                _super.call(this, $http, $cacheFactory, $q, apiEndpoint.baseUrl + "todo/");
+                _super.call(this, $http, $q, apiEndpoint.baseUrl, "toDo", storage);
                 this.$http = $http;
-                this.$cacheFactory = $cacheFactory;
                 this.$q = $q;
                 this.apiEndpoint = apiEndpoint;
+                this.storage = storage;
                 this.getRecent = function () {
-                    var deferred = _this.$q.defer();
-                    _this.$http({ method: "GET", url: _this.baseUri + "getRecent" }).then(function (results) {
-                        deferred.resolve(results);
-                    }).catch(function (error) {
-                        deferred.reject(error);
-                    });
-                    return deferred.promise;
+                    return _this.fromCacheOrService({ method: "GET", uri: _this.baseUri + "getRecent" });
                 };
             }
             return ToDoService;
         })(app.common.DataService);
-        angular.module("app.toDo").service("toDoService", ["$http", "$cacheFactory", "$q", "apiEndpoint", ToDoService]);
+        angular.module("app.toDo").service("toDoService", ["$http", "$q", "apiEndpoint", "storage", ToDoService]);
     })(toDo = app.toDo || (app.toDo = {}));
 })(app || (app = {}));
 
@@ -1953,6 +1739,264 @@ var app;
 })(app || (app = {}));
 
 //# sourceMappingURL=../../toDo/services/toDoStatuses.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        var Backdrop = (function () {
+            function Backdrop($timeout) {
+                var _this = this;
+                this.$timeout = $timeout;
+                this.replace = true;
+                this.restrict = "E";
+                this.link = function (scope, element, attributes) {
+                    scope.backdropClass = attributes.backdropClass || '';
+                    scope.animate = false;
+                    _this.$timeout(function () {
+                        scope.animate = true;
+                    });
+                };
+            }
+            Backdrop.instance = function ($timeout) {
+                return new Backdrop($timeout);
+            };
+            return Backdrop;
+        })();
+        ui.Backdrop = Backdrop;
+        angular.module("app.ui").directive("modalBackdrop", [Backdrop.instance]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/backdrop/backdrop.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        angular.module("app.ui").value("clientRectEquals", function (clientRectA, clientRectB) {
+            if (!clientRectA || !clientRectB) {
+                return false;
+            }
+            return (clientRectA.top === clientRectB.top && clientRectA.left === clientRectB.left && clientRectA.bottom === clientRectB.bottom && clientRectA.right === clientRectB.right);
+        });
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/functions/clientRectEquals.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        angular.module("app.ui").value("getBoundingRectForDetachedElement", function (detachedElement) {
+            var clientRect;
+            detachedElement.style.visibility = 'none';
+            document.body.appendChild(detachedElement);
+            clientRect = detachedElement.getBoundingClientRect();
+            detachedElement.parentNode.removeChild(detachedElement);
+            return clientRect;
+        });
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/functions/getBoundingRectForDetachedElement.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        angular.module("app.ui").value("getSurroundingWindowSpace", function (element, _window) {
+            var clientRect = element.getBoundingClientRect();
+            return {
+                top: clientRect.top,
+                left: clientRect.left,
+                bottom: _window.innerHeight - clientRect.bottom,
+                right: _window.innerWidth - clientRect.right
+            };
+        });
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/functions/getSurroundingWindowSpace.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        angular.module("app.ui").value("positionDetachedElement", function (triggerElement, element, directionPriorityList, elementRect, alignment, elementSurroundingWindowSpaceRect) {
+            var triggerElementRect = triggerElement.getBoundingClientRect();
+            if (alignment === "center") {
+                var triggerElementVerticalMiddle = ((triggerElementRect.bottom - triggerElementRect.top) / 2) + triggerElementRect.top;
+                var triggerElementHorizontalMiddle = ((triggerElementRect.right - triggerElementRect.left) / 2) + triggerElementRect.left;
+                for (var i = 0; i < directionPriorityList.length; i++) {
+                    var lastOption = directionPriorityList.length == i + 1;
+                    switch (directionPriorityList[i]) {
+                        case "top":
+                            if (triggerElementRect.top > elementRect.height || lastOption) {
+                                if (triggerElementRect.width > elementRect.width || lastOption) {
+                                    element.style.top = (triggerElementRect.top - elementRect.height) + "px";
+                                    element.style.left = triggerElementHorizontalMiddle - (elementRect.width / 2) + "px";
+                                    return {
+                                        position: directionPriorityList[i],
+                                        elementRect: elementRect
+                                    };
+                                }
+                                else {
+                                    var diff = (elementRect.width - triggerElementRect.width) / 2;
+                                    if (((triggerElementRect.right + diff) < window.innerWidth) && triggerElementRect.left > diff) {
+                                        element.style.top = (triggerElementRect.top - elementRect.height) + "px";
+                                        element.style.left = triggerElementHorizontalMiddle - (elementRect.width / 2) + "px";
+                                        return {
+                                            position: directionPriorityList[i],
+                                            elementRect: elementRect
+                                        };
+                                    }
+                                }
+                            }
+                            break;
+                        case "left":
+                            if (triggerElementRect.left > elementRect.width || lastOption) {
+                                if (triggerElementRect.height > elementRect.height || lastOption) {
+                                    element.style.left = (triggerElementRect.left - elementRect.width) + "px";
+                                    element.style.top = triggerElementVerticalMiddle - (elementRect.height / 2) + "px";
+                                    return {
+                                        position: directionPriorityList[i],
+                                        elementRect: elementRect
+                                    };
+                                }
+                                else {
+                                    var diff = (elementRect.height - triggerElementRect.height) / 2;
+                                    if (((triggerElementRect.bottom + diff) < window.innerHeight) && triggerElementRect.top > diff) {
+                                        element.style.left = (triggerElementRect.left - elementRect.width) + "px";
+                                        element.style.top = triggerElementVerticalMiddle - (elementRect.height / 2) + "px";
+                                        return {
+                                            position: directionPriorityList[i],
+                                            elementRect: elementRect
+                                        };
+                                    }
+                                }
+                            }
+                            break;
+                        case "bottom":
+                            if (((window.innerHeight - triggerElementRect.bottom) > elementRect.height) || lastOption) {
+                                if (triggerElementRect.width > elementRect.width || lastOption) {
+                                    element.style.top = triggerElementRect.bottom + "px";
+                                    element.style.left = triggerElementHorizontalMiddle - (elementRect.width / 2) + "px";
+                                    return {
+                                        position: directionPriorityList[i],
+                                        elementRect: elementRect
+                                    };
+                                }
+                                else {
+                                    var diff = (elementRect.width - triggerElementRect.width) / 2;
+                                    if (((triggerElementRect.right + diff) < window.innerWidth) && triggerElementRect.left > diff) {
+                                        element.style.top = triggerElementRect.bottom + "px";
+                                        element.style.left = triggerElementHorizontalMiddle - (elementRect.width / 2) + "px";
+                                        return {
+                                            position: directionPriorityList[i],
+                                            elementRect: elementRect
+                                        };
+                                    }
+                                }
+                            }
+                            break;
+                        case "right":
+                            if (((window.innerWidth - triggerElementRect.right) > elementRect.width) || lastOption) {
+                                if (triggerElementRect.height > elementRect.height || lastOption) {
+                                    element.style.left = triggerElementRect.right + "px";
+                                    element.style.top = triggerElementVerticalMiddle - (elementRect.height / 2) + "px";
+                                    return {
+                                        position: directionPriorityList[i],
+                                        elementRect: elementRect
+                                    };
+                                }
+                                else {
+                                    var diff = (elementRect.height - triggerElementRect.height) / 2;
+                                    if (((triggerElementRect.bottom + diff) < window.innerHeight) && triggerElementRect.top > diff) {
+                                        element.style.left = triggerElementRect.right + "px";
+                                        element.style.top = triggerElementVerticalMiddle - (elementRect.height / 2) + "px";
+                                        return {
+                                            position: directionPriorityList[i],
+                                            elementRect: elementRect
+                                        };
+                                    }
+                                }
+                            }
+                            break;
+                    }
+                }
+                throw new Error("Unable to position place pop up.");
+            }
+            if (alignment === "left") {
+                element.style.left = triggerElementRect.left + "px";
+                for (var i = 0; i < directionPriorityList.length; i++) {
+                    var lastOption = directionPriorityList.length == i + 1;
+                    if (directionPriorityList[i] === "top") {
+                        if (triggerElementRect.top >= elementRect.height || lastOption) {
+                            element.style.bottom = triggerElementRect.top + "px";
+                            return {
+                                position: directionPriorityList[i],
+                                elementRect: elementRect
+                            };
+                        }
+                    }
+                    if (directionPriorityList[i] === "bottom") {
+                        if (window.innerHeight - triggerElementRect.bottom >= elementRect.height || lastOption) {
+                            element.style.top = triggerElementRect.bottom + "px";
+                            return {
+                                position: directionPriorityList[i],
+                                elementRect: elementRect
+                            };
+                        }
+                    }
+                }
+            }
+        });
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/functions/positionDetachedElement.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        "use strict";
+        var HamburgerButton = (function () {
+            function HamburgerButton() {
+                this.templateUrl = "src/app/ui/hamburgerButton/hamburgerButton.html";
+                this.replace = true;
+                this.restrict = "E";
+                this.scope = {
+                    onClick: "&"
+                };
+            }
+            HamburgerButton.instance = function () {
+                return new HamburgerButton();
+            };
+            return HamburgerButton;
+        })();
+        angular.module("app.ui").directive("hamburgerButton", [HamburgerButton.instance]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/hamburgerButton/hamburgerButton.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        "use strict";
+        var ModalService = (function () {
+            function ModalService($q) {
+                var _this = this;
+                this.$q = $q;
+                this.showModal = function (options) {
+                    var deferred = _this.$q.defer();
+                    return deferred.promise;
+                };
+            }
+            return ModalService;
+        })();
+        angular.module("app.ui").service("modalService", [ModalService]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/modal/modalService.js.map
 var app;
 (function (app) {
     var ui;

@@ -6,6 +6,9 @@ var app;
             function Storage(storageId) {
                 var _this = this;
                 this.storageId = storageId;
+                this.instance = function (storageId) {
+                    return new Storage(storageId);
+                };
                 this.get = function () {
                     return JSON.parse(localStorage.getItem(_this.storageId) || '[]');
                 };
@@ -26,6 +29,7 @@ var app;
                         if (params.name === item.name) {
                             itemExist = true;
                             item.value = params.value;
+                            item.category = params.category;
                             localStorage.setItem(_this.storageId, JSON.stringify(items));
                         }
                     });

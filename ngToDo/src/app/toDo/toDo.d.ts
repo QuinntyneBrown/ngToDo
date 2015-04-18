@@ -15,6 +15,13 @@
         getRecent(): ng.IPromise<any>;
     }
 
+
+    export interface IToDoPritories {
+        low: number;
+        medium: number;
+        high: number;
+    }
+
     export interface IToDoStatuses {
         new: number;
         toDo: number;

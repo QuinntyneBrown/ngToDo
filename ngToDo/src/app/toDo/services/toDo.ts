@@ -6,10 +6,13 @@
 
         constructor(public $location: ng.ILocationService,
             public $q: ng.IQService,
+            public fire: common.IFire,
             private toDoService: IToDoService,
-            private toDoStatuses: IToDoStatuses) {
-            super($location,$q, toDoService,'/toDo');
+            private toDoStatuses: IToDoStatuses,
+            private toDoPritories: IToDoPritories) {
+            super($location,$q, fire, toDoService,'toDo');
             this.toDoStatus = toDoStatuses.new;
+            this.toDoPriority = toDoPritories.medium;
         }
 
         public instance = (data: any = null) => {
@@ -18,13 +21,15 @@
             var toDo;
 
             if (data === null) {
-                toDo = new ToDo(this.$location,this.$q, this.toDoService, this.toDoStatuses);
+                toDo = new ToDo(this.$location, this.$q, this.fire, this.toDoService, this.toDoStatuses, this.toDoPritories);
             } else {
-                toDo = new ToDo(this.$location, this.$q, this.toDoService, this.toDoStatuses);
+                toDo = new ToDo(this.$location, this.$q, this.fire, this.toDoService, this.toDoStatuses, this.toDoPritories);
                 toDo.id = data.id || 0;
                 toDo.name = data.name;
                 toDo.description = data.description;
-                toDo.toDoStatus = data.toDoStatus || 0;
+                toDo.toDoStatus = data.toDoStatus;
+                toDo.toDoPriority = data.toDoPriority;
+                toDo.dueDate = data.dueDate;
                 toDo.username = data.username;
             }
 
@@ -40,6 +45,8 @@
         public description: string;
 
         public toDoStatus: number;
+
+        public toDoPriority: number;
 
         public completedDateTime: Date;
 
@@ -65,18 +72,24 @@
         }
 
         public toDo = () => {
-            return this.setStatus(this.toDoStatuses.toDo);
+            if (this.isValid()) {
+                return this.setStatus(this.toDoStatuses.toDo);
+            }
         }
 
         public toDoNever = () => {
-            return this.setStatus(this.toDoStatuses.toDoNever);
+            if (this.isValid()) {
+                return this.setStatus(this.toDoStatuses.toDoNever);    
+            }            
         }
 
         public start = () => {
-            return this.setStatus(this.toDoStatuses.started);
+            if (this.isValid()) {
+                return this.setStatus(this.toDoStatuses.started);
+            }
         }
 
-        public setStatus = (toDoStatus: number) => {
+        private setStatus = (toDoStatus: number) => {
 
             var deferred = this.$q.defer();
 
@@ -116,5 +129,5 @@
 
     }
 
-    angular.module("app.toDo").service("toDo", ["$location", "$q", "toDoService","toDoStatuses",ToDo]);
+    angular.module("app.toDo").service("toDo", ["$location", "$q","fire","toDoService", "toDoStatuses", "toDoPriorities",ToDo]);
 } 

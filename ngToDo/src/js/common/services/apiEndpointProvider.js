@@ -6,7 +6,7 @@ var app;
         var ApiEndpointProvider = (function () {
             function ApiEndpointProvider() {
                 this.config = {
-                    baseUrl: "/api/"
+                    baseUrl: "/api"
                 };
             }
             ApiEndpointProvider.prototype.configure = function (baseUrl) {

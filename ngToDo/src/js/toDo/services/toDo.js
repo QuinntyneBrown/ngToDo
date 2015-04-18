@@ -11,26 +11,30 @@ var app;
         "use strict";
         var ToDo = (function (_super) {
             __extends(ToDo, _super);
-            function ToDo($location, $q, toDoService, toDoStatuses) {
+            function ToDo($location, $q, fire, toDoService, toDoStatuses, toDoPritories) {
                 var _this = this;
-                _super.call(this, $location, $q, toDoService, '/toDo');
+                _super.call(this, $location, $q, fire, toDoService, 'toDo');
                 this.$location = $location;
                 this.$q = $q;
+                this.fire = fire;
                 this.toDoService = toDoService;
                 this.toDoStatuses = toDoStatuses;
+                this.toDoPritories = toDoPritories;
                 this.instance = function (data) {
                     if (data === void 0) { data = null; }
                     var deferred = _this.$q.defer();
                     var toDo;
                     if (data === null) {
-                        toDo = new ToDo(_this.$location, _this.$q, _this.toDoService, _this.toDoStatuses);
+                        toDo = new ToDo(_this.$location, _this.$q, _this.fire, _this.toDoService, _this.toDoStatuses, _this.toDoPritories);
                     }
                     else {
-                        toDo = new ToDo(_this.$location, _this.$q, _this.toDoService, _this.toDoStatuses);
+                        toDo = new ToDo(_this.$location, _this.$q, _this.fire, _this.toDoService, _this.toDoStatuses, _this.toDoPritories);
                         toDo.id = data.id || 0;
                         toDo.name = data.name;
                         toDo.description = data.description;
-                        toDo.toDoStatus = data.toDoStatus || 0;
+                        toDo.toDoStatus = data.toDoStatus;
+                        toDo.toDoPriority = data.toDoPriority;
+                        toDo.dueDate = data.dueDate;
                         toDo.username = data.username;
                     }
                     deferred.resolve(toDo);
@@ -50,13 +54,19 @@ var app;
                     }
                 };
                 this.toDo = function () {
-                    return _this.setStatus(_this.toDoStatuses.toDo);
+                    if (_this.isValid()) {
+                        return _this.setStatus(_this.toDoStatuses.toDo);
+                    }
                 };
                 this.toDoNever = function () {
-                    return _this.setStatus(_this.toDoStatuses.toDoNever);
+                    if (_this.isValid()) {
+                        return _this.setStatus(_this.toDoStatuses.toDoNever);
+                    }
                 };
                 this.start = function () {
-                    return _this.setStatus(_this.toDoStatuses.started);
+                    if (_this.isValid()) {
+                        return _this.setStatus(_this.toDoStatuses.started);
+                    }
                 };
                 this.setStatus = function (toDoStatus) {
                     var deferred = _this.$q.defer();
@@ -84,10 +94,11 @@ var app;
                     return deferred.promise;
                 };
                 this.toDoStatus = toDoStatuses.new;
+                this.toDoPriority = toDoPritories.medium;
             }
             return ToDo;
         })(app.common.Entity);
-        angular.module("app.toDo").service("toDo", ["$location", "$q", "toDoService", "toDoStatuses", ToDo]);
+        angular.module("app.toDo").service("toDo", ["$location", "$q", "fire", "toDoService", "toDoStatuses", "toDoPriorities", ToDo]);
     })(toDo = app.toDo || (app.toDo = {}));
 })(app || (app = {}));
 

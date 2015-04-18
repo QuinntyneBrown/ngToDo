@@ -1,6 +1,6 @@
 ﻿module app.ui {
 
-    angular.module("app.ui").value("bind",(element, object) => {
+    angular.module("app.common").value("bind",(element, object) => {
         if (element) {
             for (var event in object) {
                 var callback = object[event];

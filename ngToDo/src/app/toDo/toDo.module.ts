@@ -45,7 +45,7 @@
              { path: '/toDo/edit/:toDoId', component: 'toDoForm' }
          ]);
 
-         apiEndpointProvider.configure("/api/");
+         apiEndpointProvider.configure("/api");
 
      }
 

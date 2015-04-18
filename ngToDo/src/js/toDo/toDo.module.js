@@ -33,7 +33,7 @@ var app;
                 { path: '/toDo/create', component: 'toDoForm' },
                 { path: '/toDo/edit/:toDoId', component: 'toDoForm' }
             ]);
-            apiEndpointProvider.configure("/api/");
+            apiEndpointProvider.configure("/api");
         }
     })(toDo = app.toDo || (app.toDo = {}));
 })(app || (app = {}));

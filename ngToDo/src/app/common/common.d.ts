@@ -18,6 +18,15 @@
         configure(baseUrl: string): void;
     }
 
+    export interface IBind {
+        (element: HTMLElement, object: any): void;
+    }
+
+    export interface IFire {
+
+        (target: HTMLElement, type: string, properties:any):void;
+    }
+
     export interface IHistoryService {
 
     }
@@ -80,15 +89,19 @@
 
         uri: string;
 
-        data: any;
+        data?: any;
+
+        params?:any;
 
     }
 
     export interface INameValuePair {
 
+        category?: string;
+
         name: string;
 
-        value: any;
+        value?: any;
     }
 
     export interface ISessionStorageProperty {
@@ -98,6 +111,14 @@
     }
 
     export interface IStorage {
+
+        instance(storageId: string): IStorage;
+
+        put(params: INameValuePair): void;
+
+        get(): any;
+
+        getByName(params: INameValuePair):any;
 
     }
 } 

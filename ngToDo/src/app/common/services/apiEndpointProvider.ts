@@ -4,7 +4,7 @@
 
     export class ApiEndpointProvider implements ng.IServiceProvider, IApiEndpointProvider {
         config: IApiEndpointConfig = {
-            baseUrl: "/api/"
+            baseUrl: "/api"
         };
 
         configure(baseUrl: string): void {

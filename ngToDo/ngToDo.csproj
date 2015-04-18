@@ -145,6 +145,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Spatial, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Spatial.5.6.0\lib\net40\System.Spatial.dll</HintPath>
     </Reference>
@@ -189,6 +190,12 @@
     </Reference>
     <Reference Include="WebActivator">
       <HintPath>..\packages\WebActivator.1.5.3\lib\net40\WebActivator.dll</HintPath>
+    </Reference>
+    <Reference Include="WebApi.OutputCache.Core">
+      <HintPath>..\packages\Strathweb.CacheOutput.WebApi2.0.6\lib\net45\WebApi.OutputCache.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="WebApi.OutputCache.V2">
+      <HintPath>..\packages\Strathweb.CacheOutput.WebApi2.0.6\lib\net45\WebApi.OutputCache.V2.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -289,6 +296,9 @@
       <DependentUpon>loginForm.ts</DependentUpon>
     </Content>
     <Content Include="src\app\security\views\login.html" />
+    <Content Include="src\app\toDo\directives\toDoItem.css">
+      <DependentUpon>toDoItem.less</DependentUpon>
+    </Content>
     <Content Include="src\app\toDo\directives\toDoItem.html">
       <DependentUpon>toDoItem.ts</DependentUpon>
     </Content>
@@ -380,6 +390,9 @@
     <Content Include="src\app\ui\hamburgerButton\hamburgerButton.css.map">
       <DependentUpon>hamburgerButton.css</DependentUpon>
     </Content>
+    <Content Include="src\app\toDo\directives\toDoItem.css.map">
+      <DependentUpon>toDoItem.css</DependentUpon>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -412,6 +425,7 @@
     <Compile Include="Server\Api\v1\BreezeDataServiceController.cs" />
     <Compile Include="Server\Data\EF\ToDoRepository.cs" />
     <Compile Include="Server\Data\IToDoRepository.cs" />
+    <Compile Include="Server\Models\ToDoPriority.cs" />
     <Compile Include="Server\StartUp\BreezeWebApiConfig.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -513,6 +527,7 @@
     <TypeScriptCompile Include="src\app\toDo\directives\toDoItems.ts" />
     <TypeScriptCompile Include="src\app\toDo\services\toDo.ts" />
     <TypeScriptCompile Include="src\app\toDo\services\toDoBreezeService.ts" />
+    <TypeScriptCompile Include="src\app\toDo\services\toDoPriorities.ts" />
     <TypeScriptCompile Include="src\app\toDo\services\toDoStatuses.ts" />
     <TypeScriptCompile Include="src\app\toDo\toDo.module.ts" />
     <TypeScriptCompile Include="src\app\toDo\controllers\toDosController.ts" />
@@ -528,9 +543,9 @@
     <TypeScriptCompile Include="src\app\ui\appHeader\appHeaderController.ts" />
     <TypeScriptCompile Include="src\app\ui\dynamicElement\directives\dynamicElement.ts" />
     <TypeScriptCompile Include="src\app\ui\dynamicElement\services\dynamicElement.ts" />
-    <TypeScriptCompile Include="src\app\ui\functions\bind.ts" />
+    <TypeScriptCompile Include="src\app\common\functions\bind.ts" />
     <TypeScriptCompile Include="src\app\ui\functions\clientRectEquals.ts" />
-    <TypeScriptCompile Include="src\app\ui\functions\fire.ts" />
+    <TypeScriptCompile Include="src\app\common\functions\fire.ts" />
     <TypeScriptCompile Include="src\app\ui\functions\getBoundingRectForDetachedElement.ts" />
     <TypeScriptCompile Include="src\app\ui\functions\getSurroundingWindowSpace.ts" />
     <TypeScriptCompile Include="src\app\ui\functions\positionDetachedElement.ts" />

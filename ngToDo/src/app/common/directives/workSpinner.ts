@@ -18,7 +18,7 @@
 
         public scope:any = {};
 
-        public template = "<div data-ng-show='requestCount' class='work-spinner'><i class='fa fa-spinner fa-spin fade'></i></div>";
+        public template = "<div data-ng-show='requestCount > 0' class='work-spinner'><i class='fa fa-spinner fa-spin fade'></i></div>";
 
         public link = (scope: ng.IScope) => {
             scope.$watch(() => {
@@ -26,6 +26,7 @@
             },(requestCount) => {
                     scope["requestCount"] = requestCount;
             });
+
         };
 
     }

@@ -3,12 +3,13 @@ var app;
     var common;
     (function (common) {
         var Entity = (function () {
-            function Entity($location, $q, dataService, baseUri) {
+            function Entity($location, $q, fire, dataService, entityName) {
                 var _this = this;
                 this.$location = $location;
                 this.$q = $q;
+                this.fire = fire;
                 this.dataService = dataService;
-                this.baseUri = baseUri;
+                this.entityName = entityName;
                 this.getById = function (id) {
                     var deferred = _this.$q.defer();
                     _this.dataService.getById(id).then(function (results) {
@@ -39,13 +40,15 @@ var app;
                 };
                 this.save = function () {
                     var deferred = _this.$q.defer();
-                    var _entity = _this;
                     var promises = [];
+                    var action;
                     if (_this.isValid()) {
                         if (_this.id) {
+                            action = "update";
                             promises.push(_this.dataService.update(_this));
                         }
                         else {
+                            action = "add";
                             promises.push(_this.dataService.add(_this));
                         }
                     }
@@ -54,9 +57,8 @@ var app;
                     }
                     _this.$q.all(promises).then(function (results) {
                         _this.instance(results[0].data).then(function (results) {
-                            _entity = results;
-                            _entity.notifySaved();
-                            deferred.resolve(_entity);
+                            _this.fire(document.getElementsByTagName("body")[0], _this.entityName + "Saved", { entity: _this, action: action });
+                            deferred.resolve();
                         });
                     }).catch(function () {
                         deferred.reject();
@@ -67,8 +69,7 @@ var app;
                     var deferred = _this.$q.defer();
                     if (_this.id) {
                         _this.dataService.remove(_this.id).then(function () {
-                            _this.isDeleted = true;
-                            _this.notifyDeleted();
+                            _this.fire(document.getElementsByTagName("body")[0], _this.entityName + "Removed", { entity: _this, action: "remove" });
                             deferred.resolve();
                         });
                     }
@@ -82,20 +83,6 @@ var app;
                         return true;
                     }
                     return false;
-                };
-                this.notifySaved = function () {
-                    _this.notifyChanged("saved");
-                };
-                this.notifyDeleted = function () {
-                    _this.notifyChanged("deleted");
-                };
-                this.notifyChanged = function (changeType) {
-                    _this.notify("viewModelChanged", { target: _this, changeType: changeType });
-                };
-                this.notify = function (name, detailArg) {
-                    var event = document.createEvent('CustomEvent');
-                    event.initCustomEvent(name, false, false, detailArg);
-                    document.dispatchEvent(event);
                 };
                 this.instance = function (data) {
                     throw new Error("Not Implemented");

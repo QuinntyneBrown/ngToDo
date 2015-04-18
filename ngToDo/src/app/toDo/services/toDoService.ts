@@ -6,25 +6,21 @@
     {
         constructor(
             public $http: ng.IHttpService,
-            public $cacheFactory: ng.ICacheFactoryService,
             public $q: ng.IQService,
-            public apiEndpoint: common.IApiEndpointConfig) {
-            super($http, $cacheFactory, $q, apiEndpoint.baseUrl + "todo/");
+            public apiEndpoint: common.IApiEndpointConfig,
+            public storage: common.IStorage) {
+            super($http,$q, apiEndpoint.baseUrl, "toDo", storage);
 
         }
 
         public getRecent = () => {
-            var deferred = this.$q.defer();
-            this.$http({ method: "GET", url: this.baseUri + "getRecent" }).then((results) => {
-                deferred.resolve(results);
-            }).catch((error) => {
-                deferred.reject(error);
-            });
-            return deferred.promise;
+
+            return this.fromCacheOrService({ method: "GET", uri: this.baseUri + "getRecent" });
+
         }
     }
 
-    angular.module("app.toDo").service("toDoService", ["$http", "$cacheFactory", "$q", "apiEndpoint", ToDoService]);
+    angular.module("app.toDo").service("toDoService", ["$http", "$q", "apiEndpoint","storage", ToDoService]);
 
 
 } 
