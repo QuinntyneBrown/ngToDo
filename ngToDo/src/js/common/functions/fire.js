@@ -1,7 +1,7 @@
 var app;
 (function (app) {
-    var ui;
-    (function (ui) {
+    var common;
+    (function (common) {
         angular.module("app.common").value("fire", function (target, type, properties) {
             var htmlEvent = document.createEvent("HTMLEvents");
             htmlEvent.initEvent(type, true, true);
@@ -10,7 +10,7 @@ var app;
             }
             target.dispatchEvent(htmlEvent);
         });
-    })(ui = app.ui || (app.ui = {}));
+    })(common = app.common || (app.common = {}));
 })(app || (app = {}));
 
 //# sourceMappingURL=../../common/functions/fire.js.map

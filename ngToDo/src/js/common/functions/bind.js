@@ -1,7 +1,7 @@
 var app;
 (function (app) {
-    var ui;
-    (function (ui) {
+    var common;
+    (function (common) {
         angular.module("app.common").value("bind", function (element, object) {
             if (element) {
                 for (var event in object) {
@@ -12,7 +12,7 @@ var app;
                 }
             }
         });
-    })(ui = app.ui || (app.ui = {}));
+    })(common = app.common || (app.common = {}));
 })(app || (app = {}));
 
 //# sourceMappingURL=../../common/functions/bind.js.map

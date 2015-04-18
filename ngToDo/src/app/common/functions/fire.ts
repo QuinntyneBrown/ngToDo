@@ -1,4 +1,4 @@
-﻿module app.ui {
+﻿module app.common {
 
     angular.module("app.common").value("fire",(target, type, properties) =>{
         var htmlEvent = document.createEvent("HTMLEvents");

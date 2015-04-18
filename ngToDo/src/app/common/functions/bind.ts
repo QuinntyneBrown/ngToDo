@@ -1,4 +1,4 @@
-﻿module app.ui {
+﻿module app.common {
 
     angular.module("app.common").value("bind",(element, object) => {
         if (element) {
