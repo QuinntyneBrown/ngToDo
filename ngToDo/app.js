@@ -30,17 +30,23 @@ var app;
     var common;
     (function (common) {
         var DataService = (function () {
-            function DataService($http, $q, baseUri, entityName, storage) {
+            function DataService($http, $q, _baseUri, entityName, storage) {
                 var _this = this;
                 this.$http = $http;
                 this.$q = $q;
-                this.baseUri = baseUri;
+                this._baseUri = _baseUri;
                 this.entityName = entityName;
                 this.storage = storage;
+                this.getById = function (id) {
+                    return _this.fromCacheOrService({ method: "GET", uri: _this.baseUri + "/getbyid", params: { id: id } });
+                };
+                this.getAll = function () {
+                    return _this.fromCacheOrService({ method: "GET", uri: _this.baseUri + "/getAll" });
+                };
                 this.add = function (entity) {
                     var deferred = _this.$q.defer();
                     _this.$http({ method: "POST", url: _this.baseUri + "/add", data: entity }).then(function (results) {
-                        _this.notifySaved();
+                        _this.invalidateCache();
                         deferred.resolve(results);
                     }).catch(function (error) {
                         deferred.reject(error);
@@ -50,51 +56,30 @@ var app;
                 this.update = function (entity) {
                     var deferred = _this.$q.defer();
                     _this.$http({ method: "PUT", url: _this.baseUri + "/update", data: JSON.stringify(entity) }).then(function (results) {
-                        _this.notifySaved();
+                        _this.invalidateCache();
                         deferred.resolve(results);
                     }).catch(function (error) {
                         deferred.reject(error);
                     });
                     return deferred.promise;
-                };
-                this.getById = function (id) {
-                    return _this.fromCacheOrService({ method: "GET", uri: _this.baseUri + "/getbyid", params: { id: id } });
-                };
-                this.getAll = function () {
-                    return _this.fromCacheOrService({ method: "GET", uri: _this.baseUri + "/getAll" });
                 };
                 this.remove = function (id) {
                     var deferred = _this.$q.defer();
                     _this.$http({ method: "DELETE", url: _this.baseUri + "/remove?id=" + id }).then(function (results) {
-                        _this.notifyDeleted();
+                        _this.invalidateCache();
                         deferred.resolve(results);
                     }).catch(function (error) {
                         deferred.reject(error);
                     });
                     return deferred.promise;
                 };
-                this.notifySaved = function () {
-                    _this.notifyChanged("saved");
-                };
-                this.notifyDeleted = function () {
-                    _this.notifyChanged("deleted");
-                };
-                this.notifyChanged = function (changeType) {
-                    _this.notify(_this.entityName + "InvalidateCache", { changeType: changeType });
-                };
-                this.notify = function (name, detailArg) {
-                    var event = document.createEvent('CustomEvent');
-                    event.initCustomEvent(name, false, false, detailArg);
-                    document.dispatchEvent(event);
-                };
-                this.baseUri = this.baseUri + "/" + entityName;
-                document.addEventListener(this.entityName + "InvalidateCache", function (event) {
+                this.invalidateCache = function () {
                     _this.storage.get().forEach(function (item) {
-                        if (item.category === entityName) {
+                        if (item.category === _this.entityName) {
                             _this.storage.put({ name: item.name, value: null });
                         }
                     });
-                });
+                };
             }
             DataService.prototype.fromCacheOrService = function (action) {
                 var _this = this;
@@ -113,6 +98,13 @@ var app;
                 }
                 return deferred.promise;
             };
+            Object.defineProperty(DataService.prototype, "baseUri", {
+                get: function () {
+                    return this._baseUri + "/" + this.entityName;
+                },
+                enumerable: true,
+                configurable: true
+            });
             return DataService;
         })();
         common.DataService = DataService;
@@ -360,15 +352,6 @@ var app;
 //# sourceMappingURL=../security/security.module.js.map
 var app;
 (function (app) {
-    var ui;
-    (function (ui) {
-        angular.module("app.ui", []);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../ui/ui.module.js.map
-var app;
-(function (app) {
     var toDo;
     (function (toDo) {
         angular.module("app.toDo", [
@@ -408,6 +391,15 @@ var app;
 })(app || (app = {}));
 
 //# sourceMappingURL=../toDo/toDo.module.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        angular.module("app.ui", []);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../ui/ui.module.js.map
 var app;
 (function (app) {
     var common;
@@ -473,21 +465,6 @@ var app;
 })(app || (app = {}));
 
 //# sourceMappingURL=../../common/directives/workSpinner.js.map
-var app;
-(function (app) {
-    var security;
-    (function (security) {
-        "use strict";
-        var LoginController = (function () {
-            function LoginController() {
-            }
-            return LoginController;
-        })();
-        angular.module("app.security").controller("loginController", [LoginController]);
-    })(security = app.security || (app.security = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../security/controllers/loginController.js.map
 var app;
 (function (app) {
     var common;
@@ -708,6 +685,21 @@ var app;
 })(app || (app = {}));
 
 //# sourceMappingURL=../../common/services/storage.js.map
+var app;
+(function (app) {
+    var security;
+    (function (security) {
+        "use strict";
+        var LoginController = (function () {
+            function LoginController() {
+            }
+            return LoginController;
+        })();
+        angular.module("app.security").controller("loginController", [LoginController]);
+    })(security = app.security || (app.security = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../security/controllers/loginController.js.map
 var app;
 (function (app) {
     var security;
@@ -1023,408 +1015,52 @@ var app;
 //# sourceMappingURL=../../security/services/user.js.map
 var app;
 (function (app) {
-    var ui;
-    (function (ui) {
+    var toDo;
+    (function (toDo) {
         "use strict";
-        var AppBarButton = (function () {
-            function AppBarButton() {
+        var ToDoItem = (function () {
+            function ToDoItem() {
                 this.restrict = "E";
                 this.replace = true;
-                this.templateUrl = "/src/app/ui/appBarButton/appBarButton.html";
+                this.templateUrl = "/src/app/toDo/directives/toDoItem.html";
                 this.scope = {
-                    button: "="
+                    toDoItem: "="
                 };
             }
-            AppBarButton.instance = function () {
-                return new AppBarButton();
+            ToDoItem.instance = function () {
+                return new ToDoItem();
             };
-            return AppBarButton;
+            return ToDoItem;
         })();
-        ui.AppBarButton = AppBarButton;
-        angular.module("app.ui").directive("appBarButton", [AppBarButton.instance]);
-    })(ui = app.ui || (app.ui = {}));
+        angular.module("app.toDo").directive("toDoItem", [ToDoItem.instance]);
+    })(toDo = app.toDo || (app.toDo = {}));
 })(app || (app = {}));
 
-//# sourceMappingURL=../../ui/appBarButton/appBarButton.js.map
+//# sourceMappingURL=../../toDo/directives/toDoItem.js.map
 var app;
 (function (app) {
-    var ui;
-    (function (ui) {
-        var AppHeader = (function () {
-            function AppHeader() {
-                this.templateUrl = "src/app/ui/appHeader/appHeader.html";
+    var toDo;
+    (function (toDo) {
+        "use strict";
+        var ToDoItems = (function () {
+            function ToDoItems() {
                 this.replace = true;
                 this.restrict = "E";
-                this.controller = "appHeaderController";
-                this.controllerAs = "appHeader";
+                this.templateUrl = "/src/app/toDo/directives/toDoItems.html";
                 this.scope = {
-                    title: "@",
-                    isLoggedIn: "&",
-                    getUsername: "&"
+                    toDoItems: "="
                 };
             }
-            AppHeader.instance = function () {
-                return new AppHeader();
+            ToDoItems.instance = function () {
+                return new ToDoItems();
             };
-            return AppHeader;
+            return ToDoItems;
         })();
-        ui.AppHeader = AppHeader;
-        angular.module("app.ui").directive("appHeader", [AppHeader.instance]);
-    })(ui = app.ui || (app.ui = {}));
+        angular.module("app.toDo").directive("toDoItems", [ToDoItems.instance]);
+    })(toDo = app.toDo || (app.toDo = {}));
 })(app || (app = {}));
 
-//# sourceMappingURL=../../ui/appHeader/appHeader.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        var AppHeaderController = (function () {
-            function AppHeaderController() {
-            }
-            return AppHeaderController;
-        })();
-        ui.AppHeaderController = AppHeaderController;
-        angular.module("app.ui").controller("appHeaderController", [AppHeaderController]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/appHeader/appHeaderController.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        "use strict";
-        var AppBar = (function () {
-            function AppBar() {
-                this.templateUrl = "src/app/ui/appBar/appBar.html";
-                this.replace = true;
-                this.restrict = "E";
-                this.controller = "appBarController";
-                this.controllerAs = "appBar";
-            }
-            AppBar.instance = function () {
-                return new AppBar();
-            };
-            return AppBar;
-        })();
-        ui.AppBar = AppBar;
-        angular.module("app.ui").directive("appBar", [AppBar.instance]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/appBar/appBar.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        "use strict";
-        var AppBarController = (function () {
-            function AppBarController(appBarService) {
-                this.appBarService = appBarService;
-            }
-            return AppBarController;
-        })();
-        angular.module("app.ui").controller("appBarController", ["appBarService", AppBarController]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/appBar/appBarController.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        "use strict";
-        var AppBarService = (function () {
-            function AppBarService($rootScope, historyService, notificationService) {
-                var _this = this;
-                this.historyService = historyService;
-                this.notificationService = notificationService;
-                this.getPreviousUrl = function () {
-                    return null;
-                };
-                this.goBack = function () {
-                };
-                this.hasNotifications = function () {
-                    return false;
-                };
-                this.setButtons = function (buttons) {
-                    _this.buttons = buttons;
-                };
-                this.resetButtons = function () {
-                    _this.buttons = null;
-                };
-                this.getButtons = function () {
-                    return _this.buttons;
-                };
-                this.buttons = [];
-                $rootScope.$on("$locationChangeStart", this.resetButtons);
-            }
-            return AppBarService;
-        })();
-        ui.AppBarService = AppBarService;
-        angular.module("app.ui").service("appBarService", ["$rootScope", "historyService", "notificationService", AppBarService]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/appBar/appBarService.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        var Backdrop = (function () {
-            function Backdrop($timeout) {
-                var _this = this;
-                this.$timeout = $timeout;
-                this.replace = true;
-                this.restrict = "E";
-                this.link = function (scope, element, attributes) {
-                    scope.backdropClass = attributes.backdropClass || '';
-                    scope.animate = false;
-                    _this.$timeout(function () {
-                        scope.animate = true;
-                    });
-                };
-            }
-            Backdrop.instance = function ($timeout) {
-                return new Backdrop($timeout);
-            };
-            return Backdrop;
-        })();
-        ui.Backdrop = Backdrop;
-        angular.module("app.ui").directive("modalBackdrop", [Backdrop.instance]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/backdrop/backdrop.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        angular.module("app.ui").value("clientRectEquals", function (clientRectA, clientRectB) {
-            if (!clientRectA || !clientRectB) {
-                return false;
-            }
-            return (clientRectA.top === clientRectB.top && clientRectA.left === clientRectB.left && clientRectA.bottom === clientRectB.bottom && clientRectA.right === clientRectB.right);
-        });
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/functions/clientRectEquals.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        angular.module("app.ui").value("getBoundingRectForDetachedElement", function (detachedElement) {
-            var clientRect;
-            detachedElement.style.visibility = 'none';
-            document.body.appendChild(detachedElement);
-            clientRect = detachedElement.getBoundingClientRect();
-            detachedElement.parentNode.removeChild(detachedElement);
-            return clientRect;
-        });
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/functions/getBoundingRectForDetachedElement.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        angular.module("app.ui").value("getSurroundingWindowSpace", function (element, _window) {
-            var clientRect = element.getBoundingClientRect();
-            return {
-                top: clientRect.top,
-                left: clientRect.left,
-                bottom: _window.innerHeight - clientRect.bottom,
-                right: _window.innerWidth - clientRect.right
-            };
-        });
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/functions/getSurroundingWindowSpace.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        angular.module("app.ui").value("positionDetachedElement", function (triggerElement, element, directionPriorityList, elementRect, alignment, elementSurroundingWindowSpaceRect) {
-            var triggerElementRect = triggerElement.getBoundingClientRect();
-            if (alignment === "center") {
-                var triggerElementVerticalMiddle = ((triggerElementRect.bottom - triggerElementRect.top) / 2) + triggerElementRect.top;
-                var triggerElementHorizontalMiddle = ((triggerElementRect.right - triggerElementRect.left) / 2) + triggerElementRect.left;
-                for (var i = 0; i < directionPriorityList.length; i++) {
-                    var lastOption = directionPriorityList.length == i + 1;
-                    switch (directionPriorityList[i]) {
-                        case "top":
-                            if (triggerElementRect.top > elementRect.height || lastOption) {
-                                if (triggerElementRect.width > elementRect.width || lastOption) {
-                                    element.style.top = (triggerElementRect.top - elementRect.height) + "px";
-                                    element.style.left = triggerElementHorizontalMiddle - (elementRect.width / 2) + "px";
-                                    return {
-                                        position: directionPriorityList[i],
-                                        elementRect: elementRect
-                                    };
-                                }
-                                else {
-                                    var diff = (elementRect.width - triggerElementRect.width) / 2;
-                                    if (((triggerElementRect.right + diff) < window.innerWidth) && triggerElementRect.left > diff) {
-                                        element.style.top = (triggerElementRect.top - elementRect.height) + "px";
-                                        element.style.left = triggerElementHorizontalMiddle - (elementRect.width / 2) + "px";
-                                        return {
-                                            position: directionPriorityList[i],
-                                            elementRect: elementRect
-                                        };
-                                    }
-                                }
-                            }
-                            break;
-                        case "left":
-                            if (triggerElementRect.left > elementRect.width || lastOption) {
-                                if (triggerElementRect.height > elementRect.height || lastOption) {
-                                    element.style.left = (triggerElementRect.left - elementRect.width) + "px";
-                                    element.style.top = triggerElementVerticalMiddle - (elementRect.height / 2) + "px";
-                                    return {
-                                        position: directionPriorityList[i],
-                                        elementRect: elementRect
-                                    };
-                                }
-                                else {
-                                    var diff = (elementRect.height - triggerElementRect.height) / 2;
-                                    if (((triggerElementRect.bottom + diff) < window.innerHeight) && triggerElementRect.top > diff) {
-                                        element.style.left = (triggerElementRect.left - elementRect.width) + "px";
-                                        element.style.top = triggerElementVerticalMiddle - (elementRect.height / 2) + "px";
-                                        return {
-                                            position: directionPriorityList[i],
-                                            elementRect: elementRect
-                                        };
-                                    }
-                                }
-                            }
-                            break;
-                        case "bottom":
-                            if (((window.innerHeight - triggerElementRect.bottom) > elementRect.height) || lastOption) {
-                                if (triggerElementRect.width > elementRect.width || lastOption) {
-                                    element.style.top = triggerElementRect.bottom + "px";
-                                    element.style.left = triggerElementHorizontalMiddle - (elementRect.width / 2) + "px";
-                                    return {
-                                        position: directionPriorityList[i],
-                                        elementRect: elementRect
-                                    };
-                                }
-                                else {
-                                    var diff = (elementRect.width - triggerElementRect.width) / 2;
-                                    if (((triggerElementRect.right + diff) < window.innerWidth) && triggerElementRect.left > diff) {
-                                        element.style.top = triggerElementRect.bottom + "px";
-                                        element.style.left = triggerElementHorizontalMiddle - (elementRect.width / 2) + "px";
-                                        return {
-                                            position: directionPriorityList[i],
-                                            elementRect: elementRect
-                                        };
-                                    }
-                                }
-                            }
-                            break;
-                        case "right":
-                            if (((window.innerWidth - triggerElementRect.right) > elementRect.width) || lastOption) {
-                                if (triggerElementRect.height > elementRect.height || lastOption) {
-                                    element.style.left = triggerElementRect.right + "px";
-                                    element.style.top = triggerElementVerticalMiddle - (elementRect.height / 2) + "px";
-                                    return {
-                                        position: directionPriorityList[i],
-                                        elementRect: elementRect
-                                    };
-                                }
-                                else {
-                                    var diff = (elementRect.height - triggerElementRect.height) / 2;
-                                    if (((triggerElementRect.bottom + diff) < window.innerHeight) && triggerElementRect.top > diff) {
-                                        element.style.left = triggerElementRect.right + "px";
-                                        element.style.top = triggerElementVerticalMiddle - (elementRect.height / 2) + "px";
-                                        return {
-                                            position: directionPriorityList[i],
-                                            elementRect: elementRect
-                                        };
-                                    }
-                                }
-                            }
-                            break;
-                    }
-                }
-                throw new Error("Unable to position place pop up.");
-            }
-            if (alignment === "left") {
-                element.style.left = triggerElementRect.left + "px";
-                for (var i = 0; i < directionPriorityList.length; i++) {
-                    var lastOption = directionPriorityList.length == i + 1;
-                    if (directionPriorityList[i] === "top") {
-                        if (triggerElementRect.top >= elementRect.height || lastOption) {
-                            element.style.bottom = triggerElementRect.top + "px";
-                            return {
-                                position: directionPriorityList[i],
-                                elementRect: elementRect
-                            };
-                        }
-                    }
-                    if (directionPriorityList[i] === "bottom") {
-                        if (window.innerHeight - triggerElementRect.bottom >= elementRect.height || lastOption) {
-                            element.style.top = triggerElementRect.bottom + "px";
-                            return {
-                                position: directionPriorityList[i],
-                                elementRect: elementRect
-                            };
-                        }
-                    }
-                }
-            }
-        });
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/functions/positionDetachedElement.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        "use strict";
-        var HamburgerButton = (function () {
-            function HamburgerButton() {
-                this.templateUrl = "src/app/ui/hamburgerButton/hamburgerButton.html";
-                this.replace = true;
-                this.restrict = "E";
-                this.scope = {
-                    onClick: "&"
-                };
-            }
-            HamburgerButton.instance = function () {
-                return new HamburgerButton();
-            };
-            return HamburgerButton;
-        })();
-        angular.module("app.ui").directive("hamburgerButton", [HamburgerButton.instance]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/hamburgerButton/hamburgerButton.js.map
-var app;
-(function (app) {
-    var ui;
-    (function (ui) {
-        "use strict";
-        var ModalService = (function () {
-            function ModalService($q) {
-                var _this = this;
-                this.$q = $q;
-                this.showModal = function (options) {
-                    var deferred = _this.$q.defer();
-                    return deferred.promise;
-                };
-            }
-            return ModalService;
-        })();
-        angular.module("app.ui").service("modalService", [ModalService]);
-    })(ui = app.ui || (app.ui = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../ui/modal/modalService.js.map
+//# sourceMappingURL=../../toDo/directives/toDoItems.js.map
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1716,54 +1352,6 @@ var app;
 })(app || (app = {}));
 
 //# sourceMappingURL=../../toDo/controllers/toDosController.js.map
-var app;
-(function (app) {
-    var toDo;
-    (function (toDo) {
-        "use strict";
-        var ToDoItem = (function () {
-            function ToDoItem() {
-                this.restrict = "E";
-                this.replace = true;
-                this.templateUrl = "/src/app/toDo/directives/toDoItem.html";
-                this.scope = {
-                    toDoItem: "="
-                };
-            }
-            ToDoItem.instance = function () {
-                return new ToDoItem();
-            };
-            return ToDoItem;
-        })();
-        angular.module("app.toDo").directive("toDoItem", [ToDoItem.instance]);
-    })(toDo = app.toDo || (app.toDo = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../toDo/directives/toDoItem.js.map
-var app;
-(function (app) {
-    var toDo;
-    (function (toDo) {
-        "use strict";
-        var ToDoItems = (function () {
-            function ToDoItems() {
-                this.replace = true;
-                this.restrict = "E";
-                this.templateUrl = "/src/app/toDo/directives/toDoItems.html";
-                this.scope = {
-                    toDoItems: "="
-                };
-            }
-            ToDoItems.instance = function () {
-                return new ToDoItems();
-            };
-            return ToDoItems;
-        })();
-        angular.module("app.toDo").directive("toDoItems", [ToDoItems.instance]);
-    })(toDo = app.toDo || (app.toDo = {}));
-})(app || (app = {}));
-
-//# sourceMappingURL=../../toDo/directives/toDoItems.js.map
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -1997,6 +1585,410 @@ var app;
 })(app || (app = {}));
 
 //# sourceMappingURL=../../toDo/services/toDoStatuses.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        "use strict";
+        var AppBar = (function () {
+            function AppBar() {
+                this.templateUrl = "src/app/ui/appBar/appBar.html";
+                this.replace = true;
+                this.restrict = "E";
+                this.controller = "appBarController";
+                this.controllerAs = "appBar";
+            }
+            AppBar.instance = function () {
+                return new AppBar();
+            };
+            return AppBar;
+        })();
+        ui.AppBar = AppBar;
+        angular.module("app.ui").directive("appBar", [AppBar.instance]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appBar/appBar.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        "use strict";
+        var AppBarController = (function () {
+            function AppBarController(appBarService) {
+                this.appBarService = appBarService;
+            }
+            return AppBarController;
+        })();
+        angular.module("app.ui").controller("appBarController", ["appBarService", AppBarController]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appBar/appBarController.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        "use strict";
+        var AppBarService = (function () {
+            function AppBarService($rootScope, historyService, notificationService) {
+                var _this = this;
+                this.historyService = historyService;
+                this.notificationService = notificationService;
+                this.getPreviousUrl = function () {
+                    return null;
+                };
+                this.goBack = function () {
+                };
+                this.hasNotifications = function () {
+                    return false;
+                };
+                this.setButtons = function (buttons) {
+                    _this.buttons = buttons;
+                };
+                this.resetButtons = function () {
+                    _this.buttons = null;
+                };
+                this.getButtons = function () {
+                    return _this.buttons;
+                };
+                this.buttons = [];
+                $rootScope.$on("$locationChangeStart", this.resetButtons);
+            }
+            return AppBarService;
+        })();
+        ui.AppBarService = AppBarService;
+        angular.module("app.ui").service("appBarService", ["$rootScope", "historyService", "notificationService", AppBarService]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appBar/appBarService.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        var Backdrop = (function () {
+            function Backdrop($timeout) {
+                var _this = this;
+                this.$timeout = $timeout;
+                this.replace = true;
+                this.restrict = "E";
+                this.link = function (scope, element, attributes) {
+                    scope.backdropClass = attributes.backdropClass || '';
+                    scope.animate = false;
+                    _this.$timeout(function () {
+                        scope.animate = true;
+                    });
+                };
+            }
+            Backdrop.instance = function ($timeout) {
+                return new Backdrop($timeout);
+            };
+            return Backdrop;
+        })();
+        ui.Backdrop = Backdrop;
+        angular.module("app.ui").directive("modalBackdrop", [Backdrop.instance]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/backdrop/backdrop.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        "use strict";
+        var AppBarButton = (function () {
+            function AppBarButton() {
+                this.restrict = "E";
+                this.replace = true;
+                this.templateUrl = "/src/app/ui/appBarButton/appBarButton.html";
+                this.scope = {
+                    button: "="
+                };
+            }
+            AppBarButton.instance = function () {
+                return new AppBarButton();
+            };
+            return AppBarButton;
+        })();
+        ui.AppBarButton = AppBarButton;
+        angular.module("app.ui").directive("appBarButton", [AppBarButton.instance]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appBarButton/appBarButton.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        var AppHeader = (function () {
+            function AppHeader() {
+                this.templateUrl = "src/app/ui/appHeader/appHeader.html";
+                this.replace = true;
+                this.restrict = "E";
+                this.controller = "appHeaderController";
+                this.controllerAs = "appHeader";
+                this.scope = {
+                    title: "@",
+                    isLoggedIn: "&",
+                    getUsername: "&"
+                };
+            }
+            AppHeader.instance = function () {
+                return new AppHeader();
+            };
+            return AppHeader;
+        })();
+        ui.AppHeader = AppHeader;
+        angular.module("app.ui").directive("appHeader", [AppHeader.instance]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appHeader/appHeader.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        var AppHeaderController = (function () {
+            function AppHeaderController() {
+            }
+            return AppHeaderController;
+        })();
+        ui.AppHeaderController = AppHeaderController;
+        angular.module("app.ui").controller("appHeaderController", [AppHeaderController]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/appHeader/appHeaderController.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        "use strict";
+        var HamburgerButton = (function () {
+            function HamburgerButton() {
+                this.templateUrl = "src/app/ui/hamburgerButton/hamburgerButton.html";
+                this.replace = true;
+                this.restrict = "E";
+                this.scope = {
+                    onClick: "&"
+                };
+            }
+            HamburgerButton.instance = function () {
+                return new HamburgerButton();
+            };
+            return HamburgerButton;
+        })();
+        angular.module("app.ui").directive("hamburgerButton", [HamburgerButton.instance]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/hamburgerButton/hamburgerButton.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        angular.module("app.ui").value("clientRectEquals", function (clientRectA, clientRectB) {
+            if (!clientRectA || !clientRectB) {
+                return false;
+            }
+            return (clientRectA.top === clientRectB.top && clientRectA.left === clientRectB.left && clientRectA.bottom === clientRectB.bottom && clientRectA.right === clientRectB.right);
+        });
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/functions/clientRectEquals.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        angular.module("app.ui").value("getBoundingRectForDetachedElement", function (detachedElement) {
+            var clientRect;
+            detachedElement.style.visibility = 'none';
+            document.body.appendChild(detachedElement);
+            clientRect = detachedElement.getBoundingClientRect();
+            detachedElement.parentNode.removeChild(detachedElement);
+            return clientRect;
+        });
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/functions/getBoundingRectForDetachedElement.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        angular.module("app.ui").value("getSurroundingWindowSpace", function (element, _window) {
+            var clientRect = element.getBoundingClientRect();
+            return {
+                top: clientRect.top,
+                left: clientRect.left,
+                bottom: _window.innerHeight - clientRect.bottom,
+                right: _window.innerWidth - clientRect.right
+            };
+        });
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/functions/getSurroundingWindowSpace.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        angular.module("app.ui").value("positionDetachedElement", function (triggerElement, element, directionPriorityList, elementRect, alignment, elementSurroundingWindowSpaceRect) {
+            var triggerElementRect = triggerElement.getBoundingClientRect();
+            if (alignment === "center") {
+                var triggerElementVerticalMiddle = ((triggerElementRect.bottom - triggerElementRect.top) / 2) + triggerElementRect.top;
+                var triggerElementHorizontalMiddle = ((triggerElementRect.right - triggerElementRect.left) / 2) + triggerElementRect.left;
+                for (var i = 0; i < directionPriorityList.length; i++) {
+                    var lastOption = directionPriorityList.length == i + 1;
+                    switch (directionPriorityList[i]) {
+                        case "top":
+                            if (triggerElementRect.top > elementRect.height || lastOption) {
+                                if (triggerElementRect.width > elementRect.width || lastOption) {
+                                    element.style.top = (triggerElementRect.top - elementRect.height) + "px";
+                                    element.style.left = triggerElementHorizontalMiddle - (elementRect.width / 2) + "px";
+                                    return {
+                                        position: directionPriorityList[i],
+                                        elementRect: elementRect
+                                    };
+                                }
+                                else {
+                                    var diff = (elementRect.width - triggerElementRect.width) / 2;
+                                    if (((triggerElementRect.right + diff) < window.innerWidth) && triggerElementRect.left > diff) {
+                                        element.style.top = (triggerElementRect.top - elementRect.height) + "px";
+                                        element.style.left = triggerElementHorizontalMiddle - (elementRect.width / 2) + "px";
+                                        return {
+                                            position: directionPriorityList[i],
+                                            elementRect: elementRect
+                                        };
+                                    }
+                                }
+                            }
+                            break;
+                        case "left":
+                            if (triggerElementRect.left > elementRect.width || lastOption) {
+                                if (triggerElementRect.height > elementRect.height || lastOption) {
+                                    element.style.left = (triggerElementRect.left - elementRect.width) + "px";
+                                    element.style.top = triggerElementVerticalMiddle - (elementRect.height / 2) + "px";
+                                    return {
+                                        position: directionPriorityList[i],
+                                        elementRect: elementRect
+                                    };
+                                }
+                                else {
+                                    var diff = (elementRect.height - triggerElementRect.height) / 2;
+                                    if (((triggerElementRect.bottom + diff) < window.innerHeight) && triggerElementRect.top > diff) {
+                                        element.style.left = (triggerElementRect.left - elementRect.width) + "px";
+                                        element.style.top = triggerElementVerticalMiddle - (elementRect.height / 2) + "px";
+                                        return {
+                                            position: directionPriorityList[i],
+                                            elementRect: elementRect
+                                        };
+                                    }
+                                }
+                            }
+                            break;
+                        case "bottom":
+                            if (((window.innerHeight - triggerElementRect.bottom) > elementRect.height) || lastOption) {
+                                if (triggerElementRect.width > elementRect.width || lastOption) {
+                                    element.style.top = triggerElementRect.bottom + "px";
+                                    element.style.left = triggerElementHorizontalMiddle - (elementRect.width / 2) + "px";
+                                    return {
+                                        position: directionPriorityList[i],
+                                        elementRect: elementRect
+                                    };
+                                }
+                                else {
+                                    var diff = (elementRect.width - triggerElementRect.width) / 2;
+                                    if (((triggerElementRect.right + diff) < window.innerWidth) && triggerElementRect.left > diff) {
+                                        element.style.top = triggerElementRect.bottom + "px";
+                                        element.style.left = triggerElementHorizontalMiddle - (elementRect.width / 2) + "px";
+                                        return {
+                                            position: directionPriorityList[i],
+                                            elementRect: elementRect
+                                        };
+                                    }
+                                }
+                            }
+                            break;
+                        case "right":
+                            if (((window.innerWidth - triggerElementRect.right) > elementRect.width) || lastOption) {
+                                if (triggerElementRect.height > elementRect.height || lastOption) {
+                                    element.style.left = triggerElementRect.right + "px";
+                                    element.style.top = triggerElementVerticalMiddle - (elementRect.height / 2) + "px";
+                                    return {
+                                        position: directionPriorityList[i],
+                                        elementRect: elementRect
+                                    };
+                                }
+                                else {
+                                    var diff = (elementRect.height - triggerElementRect.height) / 2;
+                                    if (((triggerElementRect.bottom + diff) < window.innerHeight) && triggerElementRect.top > diff) {
+                                        element.style.left = triggerElementRect.right + "px";
+                                        element.style.top = triggerElementVerticalMiddle - (elementRect.height / 2) + "px";
+                                        return {
+                                            position: directionPriorityList[i],
+                                            elementRect: elementRect
+                                        };
+                                    }
+                                }
+                            }
+                            break;
+                    }
+                }
+                throw new Error("Unable to position place pop up.");
+            }
+            if (alignment === "left") {
+                element.style.left = triggerElementRect.left + "px";
+                for (var i = 0; i < directionPriorityList.length; i++) {
+                    var lastOption = directionPriorityList.length == i + 1;
+                    if (directionPriorityList[i] === "top") {
+                        if (triggerElementRect.top >= elementRect.height || lastOption) {
+                            element.style.bottom = triggerElementRect.top + "px";
+                            return {
+                                position: directionPriorityList[i],
+                                elementRect: elementRect
+                            };
+                        }
+                    }
+                    if (directionPriorityList[i] === "bottom") {
+                        if (window.innerHeight - triggerElementRect.bottom >= elementRect.height || lastOption) {
+                            element.style.top = triggerElementRect.bottom + "px";
+                            return {
+                                position: directionPriorityList[i],
+                                elementRect: elementRect
+                            };
+                        }
+                    }
+                }
+            }
+        });
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/functions/positionDetachedElement.js.map
+var app;
+(function (app) {
+    var ui;
+    (function (ui) {
+        "use strict";
+        var ModalService = (function () {
+            function ModalService($q) {
+                var _this = this;
+                this.$q = $q;
+                this.showModal = function (options) {
+                    var deferred = _this.$q.defer();
+                    return deferred.promise;
+                };
+            }
+            return ModalService;
+        })();
+        angular.module("app.ui").service("modalService", [ModalService]);
+    })(ui = app.ui || (app.ui = {}));
+})(app || (app = {}));
+
+//# sourceMappingURL=../../ui/modal/modalService.js.map
 var app;
 (function (app) {
     var ui;

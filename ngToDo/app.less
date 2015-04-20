@@ -69,6 +69,80 @@ html, body, body > .container {
 .about > div {
            margin-top:30px;
        }
+.work-spinner {
+    position:fixed;
+    top:0px;
+    left:0px;
+    width:100%;
+    height:100%;
+
+    display: -ms-flex;
+	display: -webkit-flex;
+	display: flex;
+
+	-ms-flex-align: center;
+	-webkit-align-items: center;
+	-webkit-box-align: center;
+	align-items: center;
+    text-align:center;
+
+    background-color: rgba(0,0,0,.2);
+
+    z-index:9999;
+    transition: all 300ms linear;
+}
+
+
+
+.work-spinner img {
+    margin:0 auto;
+}
+
+
+.work-spinner i {
+    margin:0 auto;
+    font-size:10em;
+    color:black;
+}
+.login-form {
+
+}
+h1 {
+    display:inline-block;
+}
+
+h1.completed {
+    text-decoration:line-through;
+}
+.to-do-items h1 {
+    font-weight:500;
+}
+.app-bar {
+    background: none repeat scroll 0 0 #222222;
+    bottom: 0;
+    height: 70px;
+    overflow-y: hidden;
+    position: fixed;
+    width: 100%;
+    color:rgb(221,221,221);
+}
+
+.app-bar > div {
+    max-width:1024px;
+    margin:0 auto;
+    text-align:center;
+}
+.app-bar-button {
+    display:inline-block;
+    margin-top:10px;
+    cursor:pointer;
+    padding-right:7.5px;
+    padding-left:7.5px;
+}
+
+.app-bar-button.disabled a {
+    color:rgb(72, 72, 72);
+}
 .app-header {
     background-color: rgb(34,34,34);
     height: 50px;
@@ -136,32 +210,6 @@ html, body, body > .container {
     }
 
 }
-.app-bar {
-    background: none repeat scroll 0 0 #222222;
-    bottom: 0;
-    height: 70px;
-    overflow-y: hidden;
-    position: fixed;
-    width: 100%;
-    color:rgb(221,221,221);
-}
-
-.app-bar > div {
-    max-width:1024px;
-    margin:0 auto;
-    text-align:center;
-}
-.app-bar-button {
-    display:inline-block;
-    margin-top:10px;
-    cursor:pointer;
-    padding-right:7.5px;
-    padding-left:7.5px;
-}
-
-.app-bar-button.disabled a {
-    color:rgb(72, 72, 72);
-}
 .hamburger-button {
     width:20px;
     height:24px;
@@ -178,52 +226,4 @@ html, body, body > .container {
     background: #333;
     margin: 3px 0;
     border-radius: 4px;
-}
-.work-spinner {
-    position:fixed;
-    top:0px;
-    left:0px;
-    width:100%;
-    height:100%;
-
-    display: -ms-flex;
-	display: -webkit-flex;
-	display: flex;
-
-	-ms-flex-align: center;
-	-webkit-align-items: center;
-	-webkit-box-align: center;
-	align-items: center;
-    text-align:center;
-
-    background-color: rgba(0,0,0,.2);
-
-    z-index:9999;
-    transition: all 300ms linear;
-}
-
-
-
-.work-spinner img {
-    margin:0 auto;
-}
-
-
-.work-spinner i {
-    margin:0 auto;
-    font-size:10em;
-    color:black;
-}
-.login-form {
-
-}
-h1 {
-    display:inline-block;
-}
-
-h1.completed {
-    text-decoration:line-through;
-}
-.to-do-items h1 {
-    font-weight:500;
 }

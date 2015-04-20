@@ -2,7 +2,7 @@
 
     "use strict";
 
-    class RoutesProvider implements ng.IServiceProvider, IRoutesProvider {
+    class RoutesProvider implements IRoutesProvider {
 
         public routes: IRouteConfig[] = [];
 

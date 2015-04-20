@@ -3,17 +3,23 @@ var app;
     var common;
     (function (common) {
         var DataService = (function () {
-            function DataService($http, $q, baseUri, entityName, storage) {
+            function DataService($http, $q, _baseUri, entityName, storage) {
                 var _this = this;
                 this.$http = $http;
                 this.$q = $q;
-                this.baseUri = baseUri;
+                this._baseUri = _baseUri;
                 this.entityName = entityName;
                 this.storage = storage;
+                this.getById = function (id) {
+                    return _this.fromCacheOrService({ method: "GET", uri: _this.baseUri + "/getbyid", params: { id: id } });
+                };
+                this.getAll = function () {
+                    return _this.fromCacheOrService({ method: "GET", uri: _this.baseUri + "/getAll" });
+                };
                 this.add = function (entity) {
                     var deferred = _this.$q.defer();
                     _this.$http({ method: "POST", url: _this.baseUri + "/add", data: entity }).then(function (results) {
-                        _this.notifySaved();
+                        _this.invalidateCache();
                         deferred.resolve(results);
                     }).catch(function (error) {
                         deferred.reject(error);
@@ -23,51 +29,30 @@ var app;
                 this.update = function (entity) {
                     var deferred = _this.$q.defer();
                     _this.$http({ method: "PUT", url: _this.baseUri + "/update", data: JSON.stringify(entity) }).then(function (results) {
-                        _this.notifySaved();
+                        _this.invalidateCache();
                         deferred.resolve(results);
                     }).catch(function (error) {
                         deferred.reject(error);
                     });
                     return deferred.promise;
-                };
-                this.getById = function (id) {
-                    return _this.fromCacheOrService({ method: "GET", uri: _this.baseUri + "/getbyid", params: { id: id } });
-                };
-                this.getAll = function () {
-                    return _this.fromCacheOrService({ method: "GET", uri: _this.baseUri + "/getAll" });
                 };
                 this.remove = function (id) {
                     var deferred = _this.$q.defer();
                     _this.$http({ method: "DELETE", url: _this.baseUri + "/remove?id=" + id }).then(function (results) {
-                        _this.notifyDeleted();
+                        _this.invalidateCache();
                         deferred.resolve(results);
                     }).catch(function (error) {
                         deferred.reject(error);
                     });
                     return deferred.promise;
                 };
-                this.notifySaved = function () {
-                    _this.notifyChanged("saved");
-                };
-                this.notifyDeleted = function () {
-                    _this.notifyChanged("deleted");
-                };
-                this.notifyChanged = function (changeType) {
-                    _this.notify(_this.entityName + "InvalidateCache", { changeType: changeType });
-                };
-                this.notify = function (name, detailArg) {
-                    var event = document.createEvent('CustomEvent');
-                    event.initCustomEvent(name, false, false, detailArg);
-                    document.dispatchEvent(event);
-                };
-                this.baseUri = this.baseUri + "/" + entityName;
-                document.addEventListener(this.entityName + "InvalidateCache", function (event) {
+                this.invalidateCache = function () {
                     _this.storage.get().forEach(function (item) {
-                        if (item.category === entityName) {
+                        if (item.category === _this.entityName) {
                             _this.storage.put({ name: item.name, value: null });
                         }
                     });
-                });
+                };
             }
             DataService.prototype.fromCacheOrService = function (action) {
                 var _this = this;
@@ -86,6 +71,13 @@ var app;
                 }
                 return deferred.promise;
             };
+            Object.defineProperty(DataService.prototype, "baseUri", {
+                get: function () {
+                    return this._baseUri + "/" + this.entityName;
+                },
+                enumerable: true,
+                configurable: true
+            });
             return DataService;
         })();
         common.DataService = DataService;
