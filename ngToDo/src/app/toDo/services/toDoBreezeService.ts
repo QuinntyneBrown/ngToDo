@@ -75,6 +75,16 @@
             return deferred.promise;
         }
 
+        public fromCacheOrService = (action: common.IHttpAction) => {
+            var deferred = this.$q.defer();
+
+            return deferred.promise;
+        }
+
+        public invalidateCache = () => {
+            
+        }
+
         private entityManager: breeze.EntityManager;
     }
 

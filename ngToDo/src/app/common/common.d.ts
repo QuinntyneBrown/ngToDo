@@ -1,5 +1,4 @@
 ﻿declare module app.common {
-    
     export interface IEntity<T> {
         id: number;
         instance(data: any): ng.IPromise<any>;
@@ -10,12 +9,19 @@
         isValid(): boolean;
         getValidationErrors():string[];
     }
+
     export interface IApiEndpointConfig {
-        baseUrl: string;
+        baseUrls: IEndpointDefinition[];
+        getBaseUrl(name?:string):string;
+    }
+
+    export interface IEndpointDefinition {
+        name?: string;
+        url: string;
     }
 
     export interface IApiEndpointProvider extends ng.IServiceProvider {
-        configure(baseUrl: string): void;
+        configure(baseUrl: string, name?: string): void;
     }
 
     export interface IBind {
@@ -65,6 +71,10 @@
     }
 
     export interface IDataService {
+
+        fromCacheOrService(action: IHttpAction) : ng.IPromise<any>;
+
+        invalidateCache(): void;
 
         getAll(): ng.IPromise<any>;
 

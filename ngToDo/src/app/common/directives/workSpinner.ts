@@ -5,7 +5,7 @@
     class WorkSpinner implements ng.IDirective {
 
         constructor(private requestCounter: IRequestCounter) {
-            
+
         }
 
         public static instance = (requestCounter: IRequestCounter) => {
@@ -23,7 +23,7 @@
         public link = (scope: ng.IScope) => {
             scope.$watch(() => {
                 return this.requestCounter.getRequestCount();
-            },(requestCount) => {
+            },(requestCount:number) => {
                     scope["requestCount"] = requestCount;
             });
 

@@ -3,11 +3,14 @@
     angular.module("app.security", [
         "app.common",
         "app.ui"
-    ]).config(["featureComponentsMappingsProvider", "routesProvider",config]);
+    ]).config(["apiEndpointProvider","featureComponentsMappingsProvider", "routesProvider",config]);
 
     function config(
+        apiEndpointProvider: common.IApiEndpointProvider,
         featureComponentsMappingsProvider: common.IFeatureComponentsMappingsProvider,
         routesProvider: common.IRoutesProvider) {
+
+        apiEndpointProvider.configure("/login", "login");
 
         featureComponentsMappingsProvider.mappings.push(
             {

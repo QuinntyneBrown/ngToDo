@@ -17,7 +17,7 @@ namespace ngToDo.Migrations
             {
                 var password = SecurityConfiguration.Config.StorePasswordsInPlainText
                     ? "P@ssw0rd"
-                    : new EncryptionService().TransformPassword("P@ssw0rd");
+                    : PasswordHash.PasswordHash.CreateHash("P@ssw0rd");
 
                 context.Users.Add(new User()
                 {

@@ -16,6 +16,22 @@ var app;
                 this.getAll = function () {
                     return _this.fromCacheOrService({ method: "GET", uri: _this.baseUri + "/getAll" });
                 };
+                this.fromCacheOrService = function (action) {
+                    var deferred = _this.$q.defer();
+                    var cachedData = _this.storage.getByName({ name: action.uri + JSON.stringify(action.params) });
+                    if (!cachedData || !cachedData.value) {
+                        _this.$http({ method: action.method, url: action.uri, data: action.data, params: action.params }).then(function (results) {
+                            _this.storage.put({ category: _this.entityName, name: action.uri + JSON.stringify(action.params), value: results });
+                            deferred.resolve(results);
+                        }).catch(function (error) {
+                            deferred.reject(error);
+                        });
+                    }
+                    else {
+                        deferred.resolve(cachedData.value);
+                    }
+                    return deferred.promise;
+                };
                 this.add = function (entity) {
                     var deferred = _this.$q.defer();
                     _this.$http({ method: "POST", url: _this.baseUri + "/add", data: entity }).then(function (results) {
@@ -54,23 +70,6 @@ var app;
                     });
                 };
             }
-            DataService.prototype.fromCacheOrService = function (action) {
-                var _this = this;
-                var deferred = this.$q.defer();
-                var dataCache = this.storage.getByName({ name: action.uri + JSON.stringify(action.params) });
-                if (!dataCache || !dataCache.value) {
-                    this.$http({ method: action.method, url: action.uri, data: action.data, params: action.params }).then(function (results) {
-                        _this.storage.put({ category: _this.entityName, name: action.uri + JSON.stringify(action.params), value: results });
-                        deferred.resolve(results);
-                    }).catch(function (error) {
-                        deferred.reject(error);
-                    });
-                }
-                else {
-                    deferred.resolve(dataCache.value);
-                }
-                return deferred.promise;
-            };
             Object.defineProperty(DataService.prototype, "baseUri", {
                 get: function () {
                     return this._baseUri + "/" + this.entityName;

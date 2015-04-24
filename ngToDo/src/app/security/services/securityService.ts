@@ -11,7 +11,7 @@
             public $q: ng.IQService,
             public currentUser: common.ISessionStorageProperty,
             public formEncode: common.IFormEncode,
-            public oauthEndpoint: common.IApiEndpointConfig,
+            public apiEndpoint: common.IApiEndpointConfig,
             public token: common.ISessionStorageProperty,
             public tokenExpiryDate: common.ISessionStorageProperty) {
 
@@ -32,7 +32,7 @@
                 grant_type: "password"
             });
 
-            this.$http.post(this.oauthEndpoint.baseUrl, data, configuration).then((response) => {
+            this.$http.post(this.apiEndpoint.getBaseUrl("login") , data, configuration).then((response) => {
                 this.processToken(username, response).then((results) => {
                     deferred.resolve(true);
                 });
@@ -63,7 +63,7 @@
 
             var deferred = this.$q.defer();
 
-            this.$http({ method: "GET", url: "api/identity/getCurrentUser" }).then((results) => {
+            this.$http({ method: "GET", url: this.apiEndpoint.getBaseUrl() + "/identity/getCurrentUser" }).then((results) => {
                 deferred.resolve(results.data);
             }).catch((error) => {
                 deferred.reject(error);
@@ -77,5 +77,5 @@
         }
     }
 
-    angular.module("app.security").service("securityService", ["$http", "$interval", "$location", "$q", "currentUser", "formEncode", "oauthEndpoint", "token","tokenExpiryDate", SecurityService]);
+    angular.module("app.security").service("securityService", ["$http", "$interval", "$location", "$q", "currentUser", "formEncode", "apiEndpoint", "token","tokenExpiryDate", SecurityService]);
 } 

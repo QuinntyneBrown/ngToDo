@@ -5,8 +5,9 @@ var app;
         angular.module("app.security", [
             "app.common",
             "app.ui"
-        ]).config(["featureComponentsMappingsProvider", "routesProvider", config]);
-        function config(featureComponentsMappingsProvider, routesProvider) {
+        ]).config(["apiEndpointProvider", "featureComponentsMappingsProvider", "routesProvider", config]);
+        function config(apiEndpointProvider, featureComponentsMappingsProvider, routesProvider) {
+            apiEndpointProvider.configure("/login", "login");
             featureComponentsMappingsProvider.mappings.push({
                 feature: "security",
                 components: ["login"]

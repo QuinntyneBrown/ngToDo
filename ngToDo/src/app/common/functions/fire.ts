@@ -1,6 +1,8 @@
 ﻿module app.common {
 
-    angular.module("app.common").value("fire",(target, type, properties) =>{
+    "use strict";
+
+    angular.module("app.common").value("fire",(target: HTMLElement, type:string, properties:any) =>{
         var htmlEvent = document.createEvent("HTMLEvents");
 
         htmlEvent.initEvent(type, true, true);

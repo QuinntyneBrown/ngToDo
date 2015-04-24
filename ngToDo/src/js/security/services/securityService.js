@@ -4,7 +4,7 @@ var app;
     (function (security) {
         "use strict";
         var SecurityService = (function () {
-            function SecurityService($http, $interval, $location, $q, currentUser, formEncode, oauthEndpoint, token, tokenExpiryDate) {
+            function SecurityService($http, $interval, $location, $q, currentUser, formEncode, apiEndpoint, token, tokenExpiryDate) {
                 var _this = this;
                 this.$http = $http;
                 this.$interval = $interval;
@@ -12,7 +12,7 @@ var app;
                 this.$q = $q;
                 this.currentUser = currentUser;
                 this.formEncode = formEncode;
-                this.oauthEndpoint = oauthEndpoint;
+                this.apiEndpoint = apiEndpoint;
                 this.token = token;
                 this.tokenExpiryDate = tokenExpiryDate;
                 this.login = function (username, password) {
@@ -27,7 +27,7 @@ var app;
                         password: password,
                         grant_type: "password"
                     });
-                    _this.$http.post(_this.oauthEndpoint.baseUrl, data, configuration).then(function (response) {
+                    _this.$http.post(_this.apiEndpoint.getBaseUrl("login"), data, configuration).then(function (response) {
                         _this.processToken(username, response).then(function (results) {
                             deferred.resolve(true);
                         });
@@ -48,7 +48,7 @@ var app;
                 };
                 this.getCurrentUser = function () {
                     var deferred = _this.$q.defer();
-                    _this.$http({ method: "GET", url: "api/identity/getCurrentUser" }).then(function (results) {
+                    _this.$http({ method: "GET", url: _this.apiEndpoint.getBaseUrl() + "/identity/getCurrentUser" }).then(function (results) {
                         deferred.resolve(results.data);
                     }).catch(function (error) {
                         deferred.reject(error);
@@ -62,7 +62,7 @@ var app;
             return SecurityService;
         })();
         security.SecurityService = SecurityService;
-        angular.module("app.security").service("securityService", ["$http", "$interval", "$location", "$q", "currentUser", "formEncode", "oauthEndpoint", "token", "tokenExpiryDate", SecurityService]);
+        angular.module("app.security").service("securityService", ["$http", "$interval", "$location", "$q", "currentUser", "formEncode", "apiEndpoint", "token", "tokenExpiryDate", SecurityService]);
     })(security = app.security || (app.security = {}));
 })(app || (app = {}));
 

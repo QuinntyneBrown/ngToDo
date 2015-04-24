@@ -40,11 +40,9 @@ var app;
                     _this.promise = null;
                 };
                 this.onToDoRemoved = function (event) {
-                    if (event.action === "remove") {
-                        for (var i = 0; i < _this.toDos.length; i++) {
-                            if (_this.toDos[i].id === event.entity.id) {
-                                _this.toDos.splice(i, 1);
-                            }
+                    for (var i = 0; i < _this.toDos.length; i++) {
+                        if (_this.toDos[i].id === event.originalEvent.entity.id) {
+                            _this.toDos.splice(i, 1);
                         }
                     }
                 };

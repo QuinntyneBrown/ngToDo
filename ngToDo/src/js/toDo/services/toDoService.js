@@ -13,13 +13,13 @@ var app;
             __extends(ToDoService, _super);
             function ToDoService($http, $q, apiEndpoint, storage) {
                 var _this = this;
-                _super.call(this, $http, $q, apiEndpoint.baseUrl, "toDo", storage);
+                _super.call(this, $http, $q, apiEndpoint.getBaseUrl(), "toDo", storage);
                 this.$http = $http;
                 this.$q = $q;
                 this.apiEndpoint = apiEndpoint;
                 this.storage = storage;
                 this.getRecent = function () {
-                    return _this.fromCacheOrService({ method: "GET", uri: _this.baseUri + "getRecent" });
+                    return _this.fromCacheOrService({ method: "GET", uri: _this.baseUri + "/getRecent" });
                 };
             }
             return ToDoService;

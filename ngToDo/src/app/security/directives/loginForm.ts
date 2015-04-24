@@ -3,7 +3,6 @@
     "use strict";
 
     class LoginForm {
-
         constructor() {
             
         }
@@ -20,8 +19,7 @@
 
         public restrict: string = "E";
 
-        public replace: boolean = true;
-        
+        public replace: boolean = true;        
     }
 
     angular.module("app.security").directive("loginForm", ["securityService",LoginForm.instance]);

@@ -9,14 +9,12 @@
             public $q: ng.IQService,
             public apiEndpoint: common.IApiEndpointConfig,
             public storage: common.IStorage) {
-            super($http,$q, apiEndpoint.baseUrl, "toDo", storage);
+            super($http,$q, apiEndpoint.getBaseUrl(), "toDo", storage);
 
         }
 
         public getRecent = () => {
-
-            return this.fromCacheOrService({ method: "GET", uri: this.baseUri + "getRecent" });
-
+            return this.fromCacheOrService({ method: "GET", uri: this.baseUri + "/getRecent" });
         }
     }
 

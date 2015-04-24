@@ -13,7 +13,7 @@ var app;
                         _this.mappings.forEach(function (mapping) {
                             mapping.components.forEach(function (component) {
                                 if (name === component) {
-                                    viewLocation = 'src/app/' + mapping.feature + '/views/' + name + '.html';
+                                    viewLocation = "src/app/" + mapping.feature + "/views/" + name + ".html";
                                 }
                             });
                         });
@@ -33,7 +33,7 @@ var app;
             function ($componentLoaderProvider, featureComponentsMappingsProvider) {
                 featureComponentsMappingsProvider.setTemplateMapping($componentLoaderProvider);
                 $componentLoaderProvider.setCtrlNameMapping(function (name) {
-                    return name[0].toLowerCase() + name.substr(1) + 'Controller';
+                    return name[0].toLowerCase() + name.substr(1) + "Controller";
                 });
             }
         ]);

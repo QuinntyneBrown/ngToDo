@@ -19,10 +19,10 @@
             return this.fromCacheOrService({ method: "GET", uri: this.baseUri + "/getAll" });
         }
 
-        public fromCacheOrService(action: IHttpAction) {
+        public fromCacheOrService = (action: IHttpAction) => {
             var deferred = this.$q.defer();
-            var dataCache = this.storage.getByName({ name: action.uri + JSON.stringify(action.params) });
-            if (!dataCache || !dataCache.value) {
+            var cachedData = this.storage.getByName({ name: action.uri + JSON.stringify(action.params) });
+            if (!cachedData || !cachedData.value) {
                 this.$http({ method: action.method, url: action.uri, data: action.data, params: action.params }).then((results) => {
                     this.storage.put({ category: this.entityName, name: action.uri + JSON.stringify(action.params), value: results });
                     deferred.resolve(results);
@@ -30,7 +30,7 @@
                     deferred.reject(error);
                 });
             } else {
-                deferred.resolve(dataCache.value);
+                deferred.resolve(cachedData.value);
             }
             return deferred.promise;
         }

@@ -51,6 +51,12 @@ var app;
                     _this.entityManager.saveChanges();
                     return deferred.promise;
                 };
+                this.fromCacheOrService = function (action) {
+                    var deferred = _this.$q.defer();
+                    return deferred.promise;
+                };
+                this.invalidateCache = function () {
+                };
                 breeze.config.initializeAdapterInstance('modelLibrary', 'backingStore', true);
                 breeze.NamingConvention.camelCase.setAsDefault();
                 this.entityManager = new breeze.EntityManager("breeze/breezedataservice");

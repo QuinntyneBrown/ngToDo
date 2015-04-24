@@ -2,6 +2,7 @@ var app;
 (function (app) {
     var common;
     (function (common) {
+        "use strict";
         var Storage = (function () {
             function Storage(storageId) {
                 var _this = this;
@@ -10,10 +11,10 @@ var app;
                     return new Storage(storageId);
                 };
                 this.get = function () {
-                    return JSON.parse(localStorage.getItem(_this.storageId) || '[]');
+                    return JSON.parse(localStorage.getItem(_this.storageId) || "[]");
                 };
                 this.getByName = function (params) {
-                    var items = JSON.parse(localStorage.getItem(_this.storageId) || '[]');
+                    var items = JSON.parse(localStorage.getItem(_this.storageId) || "[]");
                     var storageItem = null;
                     items.forEach(function (item) {
                         if (params.name === item.name) {
@@ -23,7 +24,7 @@ var app;
                     return storageItem;
                 };
                 this.put = function (params) {
-                    var items = JSON.parse(localStorage.getItem(_this.storageId) || '[]');
+                    var items = JSON.parse(localStorage.getItem(_this.storageId) || "[]");
                     var itemExist = false;
                     items.forEach(function (item) {
                         if (params.name === item.name) {

@@ -44,14 +44,12 @@
             this.promise = null;
         }
 
-        private onToDoRemoved = (event: any) => {
-            if (event.action === "remove") {
-                for (var i = 0; i < this.toDos.length; i++) {
-                    if (this.toDos[i].id === event.entity.id) {
-                        this.toDos.splice(i, 1);
-                    }
+        private onToDoRemoved = (event: any) => {            
+            for (var i = 0; i < this.toDos.length; i++) {
+                if (this.toDos[i].id === event.originalEvent.entity.id) {
+                    this.toDos.splice(i, 1);
                 }
-            }
+            }            
         }
 
         private toDos: IToDo[];

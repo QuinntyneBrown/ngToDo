@@ -7,16 +7,15 @@
         public mappings: IFeatureComponentsMapping[] = [];
 
         public setTemplateMapping = ($componentLoaderProvider: any) => {
-            $componentLoaderProvider.setTemplateMapping((name) => {
+            $componentLoaderProvider.setTemplateMapping((name:string) => {
                 var viewLocation = null;
-                this.mappings.forEach((mapping) => {
-                    mapping.components.forEach((component) => {
+                this.mappings.forEach((mapping: IFeatureComponentsMapping) => {
+                    mapping.components.forEach((component:string) => {
                         if (name === component) {
-                            viewLocation = 'src/app/' + mapping.feature + '/views/' + name + '.html';
+                            viewLocation = "src/app/" + mapping.feature + "/views/" + name + ".html";
                         }
                     });
                 });
-
                 return viewLocation;
             });
         }
@@ -29,13 +28,14 @@
     angular.module("app.common")
         .provider("featureComponentsMappings", FeatureComponentsMappingsProvider)
         .config([
-        "$componentLoaderProvider", "featureComponentsMappingsProvider", ($componentLoaderProvider, featureComponentsMappingsProvider) => {
+        "$componentLoaderProvider", "featureComponentsMappingsProvider",
+        ($componentLoaderProvider: any, featureComponentsMappingsProvider: IFeatureComponentsMappingsProvider) => {
             featureComponentsMappingsProvider.setTemplateMapping($componentLoaderProvider);
 
-            $componentLoaderProvider.setCtrlNameMapping((name) => {
+            $componentLoaderProvider.setCtrlNameMapping((name:string) => {
                 return name[0].toLowerCase() +
                     name.substr(1) +
-                    'Controller';
+                    "Controller";
             });
 
             }

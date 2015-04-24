@@ -2,11 +2,12 @@ var app;
 (function (app) {
     var common;
     (function (common) {
+        "use strict";
         angular.module("app.common").value("bind", function (element, object) {
             if (element) {
-                for (var event in object) {
-                    var callback = object[event];
-                    event.split(/\s+/).forEach(function (event) {
+                for (var events in object) {
+                    var callback = object[events];
+                    events.split(/\s+/).forEach(function (event) {
                         element.addEventListener(event, callback);
                     });
                 }

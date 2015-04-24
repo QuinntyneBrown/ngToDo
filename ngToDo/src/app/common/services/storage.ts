@@ -8,12 +8,11 @@
 
             $rootScope.$on("$locationChangeStart",(event: ng.IAngularEvent, newState: string) => {
                 if (newState.indexOf("/login") > 0) {
-                    this.get().forEach((item) => {
+                    this.get().forEach((item: INameValuePair) => {
                         this.put({ name: item.name, value: null });
                     });
-                }                
+                }
             });
-            
         }
     }
 

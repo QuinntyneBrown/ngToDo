@@ -2,15 +2,33 @@
 
     "use strict";
 
-    export class ApiEndpointProvider implements ng.IServiceProvider, IApiEndpointProvider {
+    export class ApiEndpointProvider implements IApiEndpointProvider {
         config: IApiEndpointConfig = {
-            baseUrl: "/api"
+            getBaseUrl: (name?:string) => {
+                var baseUrl = "";
+
+                if (name) {
+                    this.config.baseUrls.forEach((endpointDefinition: IEndpointDefinition) => {
+                        if (name === endpointDefinition.name) {
+                            baseUrl = endpointDefinition.url;
+                        }
+                    });
+                }
+
+                if (!name || baseUrl === "") {
+                    this.config.baseUrls.forEach((endpointDefinition: IEndpointDefinition ) => {
+                        if (!endpointDefinition.name && baseUrl === "") {
+                            baseUrl = endpointDefinition.url;
+                        }
+                    });
+                }
+                return baseUrl;
+            },
+            baseUrls: []
         };
 
-        configure(baseUrl: string): void {
-            this.config = {
-                baseUrl: baseUrl
-            };
+        configure(baseUrl: string, name?: string): void {
+            this.config.baseUrls.push({ url: baseUrl, name: name });
         }
 
         $get(): IApiEndpointConfig {

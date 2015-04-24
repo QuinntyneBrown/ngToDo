@@ -7,7 +7,7 @@
         public routes: IRouteConfig[] = [];
 
         public configure = (routes: IRouteConfig[]) => {
-            routes.forEach((route) => {
+            routes.forEach((route:any) => {
                 this.routes.push(route);
             });
         }

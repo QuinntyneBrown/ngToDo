@@ -2,6 +2,7 @@ var app;
 (function (app) {
     var common;
     (function (common) {
+        "use strict";
         angular.module("app.common").value("fire", function (target, type, properties) {
             var htmlEvent = document.createEvent("HTMLEvents");
             htmlEvent.initEvent(type, true, true);

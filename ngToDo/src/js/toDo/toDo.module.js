@@ -15,11 +15,10 @@ var app;
             "apiEndpointProvider",
             "featureComponentsMappingsProvider",
             "loginRedirectProvider",
-            "oauthEndpointProvider",
             "routesProvider",
             config
         ]);
-        function config($componentLoaderProvider, $httpProvider, $locationProvider, apiEndpointProvider, featureComponentsMappingsProvider, loginRedirectProvider, oauthEndpointProvider, routesProvider) {
+        function config($componentLoaderProvider, $httpProvider, $locationProvider, apiEndpointProvider, featureComponentsMappingsProvider, loginRedirectProvider, routesProvider) {
             loginRedirectProvider.setDefaultUrl("/toDo/list");
             featureComponentsMappingsProvider.mappings.push({
                 feature: "toDo",
@@ -28,12 +27,12 @@ var app;
             routesProvider.configure([
                 { path: '/', redirectTo: '/login' },
                 { path: '/toDo/about', component: 'toDoAbout' },
-                { path: '/toDo/list', component: 'toDos' },
-                { path: '/toDo/detail/:toDoId', component: 'toDoDetail' },
+                { path: '/toDo/list', components: { default: 'toDos' } },
+                { path: '/toDo/detail/:toDoId', components: { default: 'toDoDetail' } },
                 { path: '/toDo/create', component: 'toDoForm' },
                 { path: '/toDo/edit/:toDoId', component: 'toDoForm' }
             ]);
-            apiEndpointProvider.configure("/api");
+            apiEndpointProvider.configure("/api/v1");
         }
     })(toDo = app.toDo || (app.toDo = {}));
 })(app || (app = {}));

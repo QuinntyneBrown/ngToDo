@@ -277,6 +277,7 @@
     <Content Include="scripts\npm.js" />
     <Content Include="scripts\q.js" />
     <Content Include="scripts\q.min.js" />
+    <Content Include="scripts\wurfl.js" />
     <Content Include="Server\ExcelWorkbook-DataSource\ngToDo.xlsx" />
     <Content Include="scripts\angular-animate.min.js.map" />
     <Content Include="scripts\angular-route.min.js.map" />
@@ -426,6 +427,7 @@
     <Compile Include="Server\Data\EF\ToDoRepository.cs" />
     <Compile Include="Server\Data\IToDoRepository.cs" />
     <Compile Include="Server\Models\ToDoPriority.cs" />
+    <Compile Include="Server\Services\PasswordHash.cs" />
     <Compile Include="Server\StartUp\BreezeWebApiConfig.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -483,6 +485,7 @@
     <TypeScriptCompile Include="scripts\typings\moment\moment.d.ts" />
     <TypeScriptCompile Include="scripts\typings\q\Q.d.ts" />
     <TypeScriptCompile Include="scripts\typings\velocity-animate\velocity-animate.d.ts" />
+    <TypeScriptCompile Include="scripts\typings\youTube\youTube.d.ts" />
     <TypeScriptCompile Include="src\app\common\common.d.ts">
       <DependentUpon>common.module.ts</DependentUpon>
     </TypeScriptCompile>
@@ -515,7 +518,6 @@
     <TypeScriptCompile Include="src\app\security\security.module.ts" />
     <TypeScriptCompile Include="src\app\security\services\authorizationInterceptor.ts" />
     <TypeScriptCompile Include="src\app\security\services\currentUser.ts" />
-    <TypeScriptCompile Include="src\app\security\services\oauthEndpointProvider.ts" />
     <TypeScriptCompile Include="src\app\security\services\securityService.ts" />
     <TypeScriptCompile Include="src\app\security\services\token.ts" />
     <TypeScriptCompile Include="src\app\toDo\controllers\toDoAboutController.ts" />
@@ -554,6 +556,7 @@
     <TypeScriptCompile Include="src\app\ui\modal\modalService.ts" />
     <TypeScriptCompile Include="src\app\ui\ui.d.ts" />
     <TypeScriptCompile Include="src\app\ui\ui.module.ts" />
+    <TypeScriptCompile Include="src\app\ui\youTubeVideo\youTubeVideo.ts" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="Microsoft.Office.Core">
@@ -584,7 +587,9 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="src\app\common\validators\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

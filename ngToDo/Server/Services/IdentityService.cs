@@ -18,7 +18,12 @@ namespace ngToDo.Server.Services
 
         public bool ValidateUser(string usermame, string password)
         {
-            return this.userRepository.GetAll().Where(x => x.Username == usermame && x.Password == password).Count() > 0;
+            if (SecurityConfiguration.Config.StorePasswordsInPlainText)
+                return this.userRepository.GetAll().Count(x => x.Username == usermame && x.Password == password) > 0;
+
+            return PasswordHash.PasswordHash.ValidatePassword(password, this.userRepository.GetAll().FirstOrDefault(x => x.Username == usermame).Password);
+
+            
         }
         public TokenDto TryToRegister(RegistrationRequestDto registrationRequestDto)
         {

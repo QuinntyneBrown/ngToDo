@@ -14,7 +14,6 @@
             "apiEndpointProvider",
             "featureComponentsMappingsProvider",
             "loginRedirectProvider",
-            "oauthEndpointProvider",
             "routesProvider",
              config
          ]);
@@ -25,7 +24,6 @@
          apiEndpointProvider: common.IApiEndpointProvider,
          featureComponentsMappingsProvider: common.IFeatureComponentsMappingsProvider,
          loginRedirectProvider: any,
-         oauthEndpointProvider: common.IApiEndpointProvider,
          routesProvider: common.IRoutesProvider) {
 
          loginRedirectProvider.setDefaultUrl("/toDo/list");
@@ -39,13 +37,13 @@
          routesProvider.configure([
              { path: '/', redirectTo: '/login' },
              { path: '/toDo/about', component: 'toDoAbout' },
-             { path: '/toDo/list', component: 'toDos' },
-             { path: '/toDo/detail/:toDoId', component: 'toDoDetail' },
+             { path: '/toDo/list', components: { default: 'toDos' } },
+             { path: '/toDo/detail/:toDoId', components: { default: 'toDoDetail' } },
              { path: '/toDo/create', component: 'toDoForm' },
              { path: '/toDo/edit/:toDoId', component: 'toDoForm' }
          ]);
 
-         apiEndpointProvider.configure("/api");
+         apiEndpointProvider.configure("/api/v1");
 
      }
 
