@@ -11,11 +11,7 @@ namespace ngToDo.Migrations
     {
         public static void Seed(ToDoContext context)
         {
-            if (context.ToDos.Count() < 1)
-            {
 
-                context.SaveChanges();
-            }
         }
     }
 }

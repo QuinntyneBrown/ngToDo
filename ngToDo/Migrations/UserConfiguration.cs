@@ -1,4 +1,5 @@
-﻿using ngToDo.Server.Data.EF;
+﻿using System.Data.Entity.Migrations;
+using ngToDo.Server.Data.EF;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,23 +14,23 @@ namespace ngToDo.Migrations
     {
         public static void Seed(ToDoContext context)
         {
-            if (context.Users.Count() < 1)
+            var password = SecurityConfiguration.Config.StorePasswordsInPlainText
+                ? "P@ssw0rd"
+                : PasswordHash.PasswordHash.CreateHash("P@ssw0rd");
+
+
+            context.Users.AddOrUpdate(new User()
             {
-                var password = SecurityConfiguration.Config.StorePasswordsInPlainText
-                    ? "P@ssw0rd"
-                    : PasswordHash.PasswordHash.CreateHash("P@ssw0rd");
+                Id=1,
+                Firstname = "Quinntyne",
+                Lastname = "Brown",
+                Username = "quinntynebrown@gmail.com",
+                Password = password,
+                IsDeleted = false
+            });
 
-                context.Users.Add(new User()
-                {
-                    Firstname = "Quinntyne", 
-                    Lastname = "Brown", 
-                    Username = "quinntynebrown@gmail.com",
-                    Password = password, 
-                    IsDeleted = false
-                });
-
-                context.SaveChanges();
-            }
+            context.SaveChanges();
+            
         }
     }
 }

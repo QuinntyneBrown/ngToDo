@@ -12,8 +12,6 @@ namespace ngToDo.Migrations
 
         protected override void Seed(ngToDo.Server.Data.EF.ToDoContext context)
         {
-            context.Database.Delete();
-            context.Database.CreateIfNotExists();
             UserConfiguration.Seed(context);
             ToDoConfiguration.Seed(context);
         }
