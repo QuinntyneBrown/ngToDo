@@ -20,11 +20,11 @@ var app;
         ]);
         function config($componentLoaderProvider, $httpProvider, $locationProvider, apiEndpointProvider, featureComponentsMappingsProvider, loginRedirectProvider, routesProvider) {
             loginRedirectProvider.setDefaultUrl("/toDo/list");
-            featureComponentsMappingsProvider.mappings.push({
+            featureComponentsMappingsProvider.mapFeatureComponents({
                 feature: "toDo",
                 components: ["toDoRecent", "toDoForm", "toDos", "toDoDetail", "toDoAbout"]
             });
-            routesProvider.configure([
+            routesProvider.mapRoutes([
                 { path: '/', redirectTo: '/login' },
                 { path: '/toDo/about', component: 'toDoAbout' },
                 { path: '/toDo/list', components: { default: 'toDos' } },

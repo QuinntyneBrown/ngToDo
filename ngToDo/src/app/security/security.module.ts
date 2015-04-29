@@ -12,13 +12,12 @@
 
         apiEndpointProvider.configure("/login", "login");
 
-        featureComponentsMappingsProvider.mappings.push(
-            {
-                feature: "security",
-                components: ["login"]
-            });
+        featureComponentsMappingsProvider.mapFeatureComponents({
+            feature: "security",
+            components: ["login"]
+        });
 
-        routesProvider.configure([
+        routesProvider.mapRoutes([
             { path: '/login', component: 'login' }
         ]);
     }

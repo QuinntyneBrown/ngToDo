@@ -38,7 +38,12 @@ var app;
                         _this.invalidateCache();
                         deferred.resolve(results);
                     }).catch(function (error) {
-                        deferred.reject(error);
+                        if (error.status && error.status === 400) {
+                            deferred.resolve(error);
+                        }
+                        else {
+                            deferred.reject(error);
+                        }
                     });
                     return deferred.promise;
                 };

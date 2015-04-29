@@ -57,13 +57,13 @@
     }
 
     export interface IFeatureComponentsMappingsProvider extends ng.IServiceProvider {
-        mappings: IFeatureComponentsMapping[];
+        mapFeatureComponents? (featureComponentsMapping: IFeatureComponentsMapping):void;
         setTemplateMapping($componentLoaderProvider: any):void;
     }
 
     export interface IRoutesProvider extends ng.IServiceProvider {
         routes: IRouteConfig[];
-        configure(routes:IRouteConfig[]);
+        mapRoutes(routes:IRouteConfig[]);
     }
 
     export interface IFormEncode {

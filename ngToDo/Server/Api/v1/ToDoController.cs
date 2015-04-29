@@ -1,8 +1,10 @@
 ﻿using System.Linq;
 using System.Web.Http;
+using System.Web.Http.OData;
 using ngToDo.Server.Data;
 using ngToDo.Server.Models;
 using WebApi.OutputCache.V2;
+using ngToDo.Server.Attributes;
 
 namespace ngToDo.Server.Api.v1
 {
@@ -65,6 +67,7 @@ namespace ngToDo.Server.Api.v1
         [InvalidateCacheOutput("GetAll")]
         [InvalidateCacheOutput("GetById")]
         [InvalidateCacheOutput("GetRecent")]
+        [ValidateModelStateAttribute]
         public IHttpActionResult Add(ToDo entity)
         {
             using (repository)
@@ -81,14 +84,22 @@ namespace ngToDo.Server.Api.v1
         [InvalidateCacheOutput("GetAll")]
         [InvalidateCacheOutput("GetById")]
         [InvalidateCacheOutput("GetRecent")]
+        [ValidateModelStateAttribute]
         public IHttpActionResult Update(ToDo entity)
         {
             using (repository)
             {
+
                 repository.Update(entity);
                 repository.SaveChanges();
                 return Ok(repository.GetById(entity.Id));
             }
+        }
+
+        [HttpGet]
+        public IHttpActionResult GetModelState(ToDo toDo)
+        {            
+            return Ok(this.ModelState);
         }
 
         private IRepository<ToDo> repository { get; set; } 

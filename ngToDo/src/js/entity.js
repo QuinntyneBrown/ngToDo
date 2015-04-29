@@ -40,23 +40,23 @@ var app;
                 };
                 this.save = function () {
                     var deferred = _this.$q.defer();
-                    var promises = [];
                     var action;
+                    var promise;
                     if (_this.isValid()) {
                         if (_this.id) {
                             action = "update";
-                            promises.push(_this.dataService.update(_this));
+                            promise = _this.dataService.update(_this);
                         }
                         else {
                             action = "add";
-                            promises.push(_this.dataService.add(_this));
+                            promise = _this.dataService.add(_this);
                         }
                     }
                     else {
                         deferred.reject();
                     }
-                    _this.$q.all(promises).then(function (results) {
-                        _this.instance(results[0].data).then(function (results) {
+                    _this.$q.when(promise).then(function (result) {
+                        _this.instance(result.data).then(function (results) {
                             _this.fire(document.getElementsByTagName("body")[0], _this.entityName + "Saved", { entity: _this, action: action });
                             deferred.resolve();
                         });

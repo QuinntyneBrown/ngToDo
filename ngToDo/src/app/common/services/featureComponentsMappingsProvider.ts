@@ -4,7 +4,11 @@
 
     export class FeatureComponentsMappingsProvider implements IFeatureComponentsMappingsProvider {
 
-        public mappings: IFeatureComponentsMapping[] = [];
+        private mappings: IFeatureComponentsMapping[] = [];
+
+        public mapFeatureComponents = (featureComponentsMapping: common.IFeatureComponentsMapping) => {
+            this.mappings.push(featureComponentsMapping);
+        };
 
         public setTemplateMapping = ($componentLoaderProvider: any) => {
             $componentLoaderProvider.setTemplateMapping((name:string) => {

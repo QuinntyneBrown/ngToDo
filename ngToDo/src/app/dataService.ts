@@ -41,7 +41,12 @@
                 this.invalidateCache();
                 deferred.resolve(results);
             }).catch((error) => {
-                deferred.reject(error);
+                if (error.status && error.status === 400) {
+                    deferred.resolve(error);
+                } else {
+                    deferred.reject(error);    
+                }
+                
             });
             return deferred.promise;
         }

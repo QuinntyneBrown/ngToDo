@@ -55,24 +55,24 @@
             
             var deferred = this.$q.defer();
 
-            var promises = [];
-
             var action: string;
+
+            var promise: ng.IPromise<any>;
 
             if (this.isValid()) {
                 if (this.id) {
                     action = "update";
-                    promises.push(this.dataService.update(this));
+                    promise = this.dataService.update(this);
                 } else {
                     action = "add";
-                    promises.push(this.dataService.add(this));
+                    promise = this.dataService.add(this);
                 }
             } else {
                 deferred.reject();
             }
 
-            this.$q.all(promises).then((results) => {
-                this.instance(results[0].data).then((results) => {                    
+            this.$q.when(promise).then((result:any) => {
+                this.instance(result.data).then((results) => {                    
                     this.fire(document.getElementsByTagName("body")[0], this.entityName + "Saved", { entity: this, action: action });
                     deferred.resolve();
                 });

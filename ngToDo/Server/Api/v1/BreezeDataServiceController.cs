@@ -25,6 +25,10 @@ namespace ngToDo.Server.Api.v1
         [HttpGet]
         public string Metadata()
         {
+            var toDoContext = new ToDoContext();
+
+            return EFContextProvider<ToDoContext>.GetMetadataFromContext(toDoContext);
+
             return _contextProvider.Metadata();
         }
 

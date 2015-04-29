@@ -6,7 +6,7 @@
 
         public routes: IRouteConfig[] = [];
 
-        public configure = (routes: IRouteConfig[]) => {
+        public mapRoutes = (routes: IRouteConfig[]) => {
             routes.forEach((route:any) => {
                 this.routes.push(route);
             });

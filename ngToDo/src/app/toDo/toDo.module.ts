@@ -28,13 +28,12 @@
 
          loginRedirectProvider.setDefaultUrl("/toDo/list");
 
-         featureComponentsMappingsProvider.mappings.push(
-             {
-                 feature: "toDo",
-                 components: ["toDoRecent", "toDoForm", "toDos", "toDoDetail", "toDoAbout"]
-             });
+         featureComponentsMappingsProvider.mapFeatureComponents({
+             feature: "toDo",
+             components: ["toDoRecent", "toDoForm", "toDos", "toDoDetail", "toDoAbout"]
+         });
 
-         routesProvider.configure([
+         routesProvider.mapRoutes([
              { path: '/', redirectTo: '/login' },
              { path: '/toDo/about', component: 'toDoAbout' },
              { path: '/toDo/list', components: { default: 'toDos' } },

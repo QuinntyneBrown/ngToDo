@@ -7,6 +7,9 @@ var app;
             function FeatureComponentsMappingsProvider() {
                 var _this = this;
                 this.mappings = [];
+                this.mapFeatureComponents = function (featureComponentsMapping) {
+                    _this.mappings.push(featureComponentsMapping);
+                };
                 this.setTemplateMapping = function ($componentLoaderProvider) {
                     $componentLoaderProvider.setTemplateMapping(function (name) {
                         var viewLocation = null;

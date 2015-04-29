@@ -8,11 +8,11 @@ var app;
         ]).config(["apiEndpointProvider", "featureComponentsMappingsProvider", "routesProvider", config]);
         function config(apiEndpointProvider, featureComponentsMappingsProvider, routesProvider) {
             apiEndpointProvider.configure("/login", "login");
-            featureComponentsMappingsProvider.mappings.push({
+            featureComponentsMappingsProvider.mapFeatureComponents({
                 feature: "security",
                 components: ["login"]
             });
-            routesProvider.configure([
+            routesProvider.mapRoutes([
                 { path: '/login', component: 'login' }
             ]);
         }

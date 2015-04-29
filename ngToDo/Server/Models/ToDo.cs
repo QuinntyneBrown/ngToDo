@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace ngToDo.Server.Models
 {
@@ -12,8 +13,10 @@ namespace ngToDo.Server.Models
 
         public int Id { get; set; }
 
+        [Required, MaxLength(30)]
         public string Name { get; set; }
 
+        [MaxLength(4000)]
         public string Description { get; set; }
 
         public string Username { get; set; }

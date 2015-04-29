@@ -24,7 +24,6 @@
                     //  this.$location.path('/login');
                     //}
 
-
                     $location.path("/login");
                 }
             }, 6000);

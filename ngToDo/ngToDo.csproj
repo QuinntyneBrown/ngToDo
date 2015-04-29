@@ -424,7 +424,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Server\Api\v1\BreezeDataServiceController.cs" />
-    <Compile Include="Server\Api\v1\ODataController.cs" />
+    <Compile Include="Server\Attributes\ValidateModelStateAttribute.cs" />
     <Compile Include="Server\Data\EF\ToDoRepository.cs" />
     <Compile Include="Server\Data\IToDoRepository.cs" />
     <Compile Include="Server\Models\ToDoPriority.cs" />

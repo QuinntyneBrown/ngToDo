@@ -7,7 +7,7 @@ var app;
             function RoutesProvider() {
                 var _this = this;
                 this.routes = [];
-                this.configure = function (routes) {
+                this.mapRoutes = function (routes) {
                     routes.forEach(function (route) {
                         _this.routes.push(route);
                     });
